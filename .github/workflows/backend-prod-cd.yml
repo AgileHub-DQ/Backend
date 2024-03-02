@@ -1,4 +1,4 @@
-name: 애자일허브 backend DEV CD
+name: 애자일허브 backend PROD CD
 
 env:
   DOCKER_HUB_REPOSITORY: ${{ secrets.DOCKERHUB_USERNAME }}/agilehub-backend
