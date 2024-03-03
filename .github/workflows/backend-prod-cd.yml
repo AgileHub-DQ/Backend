@@ -45,6 +45,7 @@ jobs:
   backend-docker-pull-and-run:
     needs: [ backend-docker-build-and-push ]
     if: ${{ needs.backend-docker-build-and-push.result == 'success' }}
+    # 이 부분에서 Runner를 수시로 바뀝니다
     runs-on: [ self-hosted, evo-actions ]
 
     steps:
