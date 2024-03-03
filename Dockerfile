@@ -1,6 +1,6 @@
 # Dockerfile
 # gradle && jdk17 이미지 빌드 - build 별명
-FROM --platform=linux/arm64 gradle:8.3-jdk17-alpine AS build
+FROM --platform=linux/arm64 gradle:8.3-jdk17-jammy AS build
 
 # 작업 디렉토리 /app 생성
 WORKDIR /app
