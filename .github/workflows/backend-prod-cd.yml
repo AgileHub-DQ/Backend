@@ -39,7 +39,8 @@ jobs:
   attempt-with-first-runner:
     needs: [ backend-docker-build-and-push ]
     if: ${{ needs.backend-docker-build-and-push.result == 'success' }}
-    runs-on: [ self-hosted, enable-runner ]
+    runs-on: [ self-hosted, enble-runner ]
+    timeout-minutes: 2 # 이 작업은 2분 후에 타임아웃됩니다.
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
