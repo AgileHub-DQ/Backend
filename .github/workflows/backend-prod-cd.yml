@@ -14,14 +14,12 @@ on:
 jobs:
   backend-docker-build-and-push:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
-        # Docker Buildx를 설정한다
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3.0.0
@@ -33,21 +31,15 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          # Dockerfile이 있는 위치
           file: ./Dockerfile
-          # Dockerfile의 이름
           push: true
-          # 이미지를 레지스트리에 푸시
           tags: ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
           platforms: linux/amd64,linux/arm64,windows/amd64
 
-
-  backend-docker-pull-and-run:
+  attempt-with-first-runner:
     needs: [ backend-docker-build-and-push ]
     if: ${{ needs.backend-docker-build-and-push.result == 'success' }}
-    # 이 부분에서 Runner를 수시로 바뀝니다
-    runs-on: [ self-hosted, evo-actions ]
-
+    runs-on: [ self-hosted, enable-runner ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -57,7 +49,28 @@ jobs:
           echo "${{ secrets.PEM_KEY }}" > pem_key
           chmod 600 pem_key
 
-      - name: WAS인스턴스 접속 및 애플리케이션 실행
+      - name: WAS 인스턴스 접속 및 애플리케이션 실행 (첫 번째 시도)
+        run: |
+          ssh -i pem_key -o StrictHostKeyChecking=no ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_PUBLIC_IP }} << EOF
+          docker rm -f agilehub-backend || true
+          docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
+          docker run -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
+          EOF
+
+  attempt-with-second-runner:
+    needs: [ attempt-with-first-runner ]
+    if: needs.attempt-with-first-runner.result != 'success'
+    runs-on: [ self-hosted, evo-actions ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup SSH Key
+        run: |
+          echo "${{ secrets.PEM_KEY }}" > pem_key
+          chmod 600 pem_key
+
+      - name: WAS 인스턴스 접속 및 애플리케이션 실행 (두 번째 시도)
         run: |
           ssh -i pem_key -o StrictHostKeyChecking=no ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_PUBLIC_IP }} << EOF
           docker rm -f agilehub-backend || true
