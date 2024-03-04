@@ -26,4 +26,4 @@ COPY --from=build /app/build/libs/*.jar /app/agile.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java"]
-CMD ["-jar","agile.jar"]
+CMD ["-jar","-Dspring.profiles.active=prod","agile.jar"]
