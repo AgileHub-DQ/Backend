@@ -40,7 +40,7 @@ spring:
     url: ${aws.db.url}
     username: ${aws.db.username}
     password: ${aws.db.password}
-    driver-class-name: org.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
       mode: never
