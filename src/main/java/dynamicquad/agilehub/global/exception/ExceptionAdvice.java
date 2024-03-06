@@ -36,12 +36,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e,
                                                                   HttpHeaders headers, HttpStatusCode status,
                                                                   WebRequest request) {
         Map<String, String> errors = new LinkedHashMap<>();
 
-        ex.getBindingResult().getFieldErrors()
+        e.getBindingResult().getFieldErrors()
                 .forEach(fieldError -> {
                     String fieldName = fieldError.getField();
                     String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
@@ -49,13 +49,13 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                             (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
                 });
 
-        return handleExceptionInternalArgs(ex, HttpHeaders.EMPTY, ErrorStatus.BAD_REQUEST, request, errors);
+        return handleExceptionInternalArgs(e, HttpHeaders.EMPTY, ErrorStatus.BAD_REQUEST, request, errors);
     }
 
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity<Object> handleGeneral(GeneralException generalException, HttpServletRequest request) {
         ReasonDto errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
-        
+
         return handleExceptionInternalGeneral(generalException, errorReasonHttpStatus, null, request);
     }
 
