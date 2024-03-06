@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.global.header.status;
 
+import dynamicquad.agilehub.global.header.ReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

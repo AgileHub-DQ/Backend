@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.header.status;
+package dynamicquad.agilehub.global.header;
 
 import lombok.Builder;
 import lombok.Getter;
