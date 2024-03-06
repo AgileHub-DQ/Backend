@@ -33,8 +33,8 @@ public class CommonResponse<T> {
     }
 
     // 실패시 응답 생성
-    public static <T> CommonResponse<T> onFailure(BaseStatus status, T data) {
-        return new CommonResponse<>(false, status.getReason().getCode(), status.getReason().getMessage(), data);
+    public static <T> CommonResponse<T> onFailure(String code, String message, T data) {
+        return new CommonResponse<>(false, code, message, data);
     }
 
 }
