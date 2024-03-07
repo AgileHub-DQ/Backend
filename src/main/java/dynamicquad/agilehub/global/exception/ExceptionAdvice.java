@@ -32,7 +32,15 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 .orElseThrow(() -> new IllegalArgumentException(
                         "ConstraintViolationException이 ConstraintViolation을 포함하지 않습니다."));
 
-        return handleExceptionInternalConstraint(e, ErrorStatus.valueOf(errorMessage), HttpHeaders.EMPTY, request);
+        ErrorStatus errorStatus = ErrorStatus.BAD_REQUEST;
+        for (ErrorStatus value : ErrorStatus.values()) {
+            if (value.name().equals(errorMessage)) {
+                errorStatus = value;
+                break;
+            }
+        }
+
+        return handleExceptionInternalConstraint(e, errorStatus, HttpHeaders.EMPTY, request);
     }
 
     @Override
