@@ -17,7 +17,7 @@ COPY . /app
 # Gradle 빌드를 실행하여 JAR 파일 생성
 RUN gradle clean build --no-daemon
 
-FROM --platform=linux/arm64 openjdk:17-ea-33-jdk-buster
+FROM --platform=linux/arm64/v8 eclipse-temurin:17-jdk
 
 WORKDIR /app
 
