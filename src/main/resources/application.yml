@@ -5,6 +5,8 @@ spring:
 springdoc:
   swagger-ui:
     path: /api/api-docs
+  api-docs:
+    path: /api/v3/api-docs
   cache:
     disabled: true
   use-fqn: true
