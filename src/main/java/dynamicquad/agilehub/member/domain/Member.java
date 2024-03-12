@@ -1,7 +1,6 @@
 package dynamicquad.agilehub.member.domain;
 
 import dynamicquad.agilehub.global.domain.BaseEntity;
-import dynamicquad.agilehub.project.domain.MemberProject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,10 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,26 +36,18 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "profile_image_url")
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    @OneToMany(mappedBy = "member")
-    private List<MemberProject> memberProjects = new ArrayList<>();
-
     @Builder
-    private Member(String email, String name, String profileImageUrl, MemberStatus status) {
+    public Member(String email, String name, String profileImageUrl, MemberStatus status) {
         this.email = email;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
+        this.status = status;
     }
-
-    public void delete() {
-        this.status = MemberStatus.DELETED;
-    }
-
 
 }
 

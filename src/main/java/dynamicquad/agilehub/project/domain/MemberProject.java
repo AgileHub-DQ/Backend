@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
@@ -45,18 +46,11 @@ public class MemberProject {
     @Column(nullable = false)
     private MemberProjectRole role;
 
-
-    public static MemberProject createMemberProject(Member member, Project project, MemberProjectRole role) {
-        MemberProject memberProject = new MemberProject();
-        memberProject.member = member;
-        memberProject.project = project;
-        memberProject.role = role;
-
-        // 연관관계 설정
-        member.getMemberProjects().add(memberProject);
-        project.getMemberProjects().add(memberProject);
-
-        return memberProject;
+    @Builder
+    public MemberProject(Member member, Project project, MemberProjectRole role) {
+        this.member = member;
+        this.project = project;
+        this.role = role;
     }
 
     public MemberProject updateRole(MemberProjectRole role) {

@@ -6,10 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,14 +30,11 @@ public class Project extends BaseEntity {
 
     private String name;
 
-    @Column(name = "project_key", nullable = false, unique = true)
+    @Column(name = "project_key", unique = true)
     private String key;
 
-    @OneToMany(mappedBy = "project")
-    private List<MemberProject> memberProjects = new ArrayList<>();
-
     @Builder
-    private Project(String name, String key) {
+    public Project(String name, String key) {
         this.name = name;
         this.key = key;
     }
