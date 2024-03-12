@@ -3,7 +3,7 @@ package dynamicquad.agilehub.global.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +20,10 @@ public abstract class BaseEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at", nullable = false)
     @LastModifiedDate
-    private Timestamp updatedAt;
+    private LocalDate updatedAt;
 
 }
