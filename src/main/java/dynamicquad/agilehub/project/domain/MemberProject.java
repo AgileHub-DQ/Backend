@@ -14,17 +14,21 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "member_project")
 @Entity
 public class MemberProject {
 
     @Id
+    @Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_project_id")
     private Long id;
@@ -59,6 +63,5 @@ public class MemberProject {
         this.role = role;
         return this;
     }
-
 
 }

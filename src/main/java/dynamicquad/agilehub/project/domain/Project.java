@@ -10,20 +10,23 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "project")
 @Entity
 public class Project extends BaseEntity {
     @Id
+    @Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
     private Long id;
@@ -42,25 +45,10 @@ public class Project extends BaseEntity {
         this.key = key;
     }
 
-    public Project update(String name, String key) {
+    public Project updateProject(String name, String key) {
         this.name = name;
         this.key = key;
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Project project)) {
-            return false;
-        }
-        return Objects.equals(name, project.name) && Objects.equals(key, project.key);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, key);
-    }
 }
