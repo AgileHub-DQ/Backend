@@ -38,4 +38,13 @@ public class Story extends Issue {
         this.endDate = endDate;
         this.epic = epic;
     }
+
+    public void updateStory(int storyPoint, LocalDate startDate, LocalDate endDate, Epic epic) {
+        this.storyPoint = storyPoint;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.epic = epic;
+    }
+
+
 }
