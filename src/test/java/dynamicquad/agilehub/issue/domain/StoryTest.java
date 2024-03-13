@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +71,6 @@ class StoryTest {
     }
 
     @Test
-    @Rollback(value = false)
     void 스토리생성후_상위에픽_조회() {
         // given
         Epic epic = Epic.builder()

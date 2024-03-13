@@ -43,6 +43,11 @@ spring:
   sql:
     init:
       mode: never
+logging:
+  level:
+    org.hibernate.SQL: debug
+    root: info
+    org.hibernate.orm.jdbc.bind: trace
 ---
 
 # prod profile
