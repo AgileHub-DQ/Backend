@@ -6,13 +6,11 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DiscriminatorValue("EPIC")
 @Entity
@@ -22,8 +20,8 @@ public class Epic extends Issue {
     private LocalDate endDate;
 
     @Builder
-    public Epic(String title, String content, int number, IssueStatus status, Member assignee, Project project,
-                LocalDate startDate, LocalDate endDate) {
+    private Epic(String title, String content, int number, IssueStatus status, Member assignee, Project project,
+                 LocalDate startDate, LocalDate endDate) {
         super(title, content, number, status, assignee, project);
         this.startDate = startDate;
         this.endDate = endDate;

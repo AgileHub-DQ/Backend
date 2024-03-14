@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
@@ -21,7 +20,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "member_project")
@@ -47,7 +45,7 @@ public class MemberProject {
     private MemberProjectRole role;
 
     @Builder
-    public MemberProject(Member member, Project project, MemberProjectRole role) {
+    private MemberProject(Member member, Project project, MemberProjectRole role) {
         this.member = member;
         this.project = project;
         this.role = role;

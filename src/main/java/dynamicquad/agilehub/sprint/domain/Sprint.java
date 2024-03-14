@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
@@ -18,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "sprint")
@@ -42,8 +40,8 @@ public class Sprint {
     private LocalDate endDate;
 
     @Builder
-    public Sprint(String title, String targetDescription, LocalDate startDate, LocalDate endDate,
-                  SprintStatus status) {
+    private Sprint(String title, String targetDescription, LocalDate startDate, LocalDate endDate,
+                   SprintStatus status) {
         this.title = title;
         this.targetDescription = targetDescription;
         this.startDate = startDate;

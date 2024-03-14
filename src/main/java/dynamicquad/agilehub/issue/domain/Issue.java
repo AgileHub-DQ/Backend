@@ -18,14 +18,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -65,7 +63,7 @@ public abstract class Issue {
         this.sprint = newSprint;
     }
 
-    public Issue(String title, String content, int number, IssueStatus status, Member assignee, Project project) {
+    protected Issue(String title, String content, int number, IssueStatus status, Member assignee, Project project) {
         this.title = title;
         this.content = content;
         this.number = number;

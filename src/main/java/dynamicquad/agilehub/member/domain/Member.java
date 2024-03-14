@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
@@ -18,7 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
@@ -42,7 +40,7 @@ public class Member extends BaseEntity {
     private MemberStatus status;
 
     @Builder
-    public Member(String email, String name, String profileImageUrl, MemberStatus status) {
+    private Member(String email, String name, String profileImageUrl, MemberStatus status) {
         this.email = email;
         this.name = name;
         this.profileImageUrl = profileImageUrl;

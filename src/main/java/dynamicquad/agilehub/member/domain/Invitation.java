@@ -14,14 +14,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "invitation")
@@ -45,7 +44,8 @@ public class Invitation {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Invitation(String token, String email, LocalDateTime expiryDate, Project project) {
+    @Builder
+    private Invitation(String token, String email, LocalDateTime expiryDate, Project project) {
         this.token = token;
         this.email = email;
         this.expiryDate = expiryDate;
