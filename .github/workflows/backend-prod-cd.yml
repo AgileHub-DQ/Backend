@@ -50,5 +50,5 @@ jobs:
           ssh -i pem_key -o StrictHostKeyChecking=no ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_PUBLIC_IP }} << EOF
           docker rm -f agilehub-backend || true
           docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
-          docker run -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
+          docker run  -e AWS_DB_URL=$AWS_DB_URL -e AWS_DB_USERNAME=$AWS_DB_USERNAME -e AWS_DB_PASSWORD=$AWS_DB_PASSWORD -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
           EOF
