@@ -8,24 +8,9 @@ CREATE TABLE comment (
                          PRIMARY KEY (comment_id)
 )ENGINE=InnoDB;
 
-CREATE TABLE invitation (
-                            invitation_id BIGINT NOT NULL AUTO_INCREMENT,
-                            expiry_date TIMESTAMP NOT NULL,
-                            project_id BIGINT,
-                            email VARCHAR(255),
-                            status VARCHAR(255),
-                            token VARCHAR(255),
-                            PRIMARY KEY (invitation_id),
-                            CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED'))
-)ENGINE=InnoDB;
-
 CREATE TABLE issue (
                        issue_id BIGINT NOT NULL AUTO_INCREMENT,
                        number INTEGER NOT NULL,
-                       start_date TIMESTAMP,
-                       end_date TIMESTAMP,
-                       story_point INTEGER,
-                       epic_id BIGINT,
                        member_id BIGINT,
                        project_id BIGINT,
                        sprint_id BIGINT,
@@ -79,6 +64,34 @@ CREATE TABLE sprint (
                         CHECK (status IN ('PLANNED', 'ACTIVE', 'COMPLETED'))
 )ENGINE=InnoDB;
 
+CREATE TABLE epic(
+                     start_date TIMESTAMP,
+                     end_date TIMESTAMP,
+                     issue_id BIGINT not null,
+                     PRIMARY KEY (issue_id)
+)ENGINE=InnoDB;
+
+CREATE TABLE story(
+                      start_date TIMESTAMP,
+                      end_date TIMESTAMP,
+                      story_point INTEGER,
+                      epic_id BIGINT,
+                      issue_id BIGINT not null,
+                      PRIMARY KEY (issue_id)
+)ENGINE=InnoDB;
+
+CREATE TABLE task(
+    issue_id BIGINT not null,
+    story_id BIGINT,
+    PRIMARY KEY (issue_id)
+)ENGINE=InnoDB;
+
+ALTER TABLE epic
+    ADD CONSTRAINT fk_epic_issue
+        FOREIGN KEY (issue_id)
+            REFERENCES issue(issue_id);
+
+
 ALTER TABLE comment
     ADD CONSTRAINT fk_comment_issue
         FOREIGN KEY (issue_id)
@@ -90,10 +103,6 @@ ALTER TABLE comment
         FOREIGN KEY (member_id)
             REFERENCES member(member_id);
 
-ALTER TABLE invitation
-    ADD CONSTRAINT fk_invitation_project
-        FOREIGN KEY (project_id)
-            REFERENCES project(project_id);
 
 ALTER TABLE issue
     ADD CONSTRAINT fk_issue_member
@@ -110,15 +119,6 @@ ALTER TABLE issue
         FOREIGN KEY (sprint_id)
             REFERENCES sprint(sprint_id);
 
-ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_epic
-        FOREIGN KEY (epic_id)
-            REFERENCES issue(issue_id);
-
-ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_story
-        FOREIGN KEY (story_id)
-            REFERENCES issue(issue_id);
 
 ALTER TABLE member_project
     ADD CONSTRAINT fk_member_project_member
@@ -129,3 +129,13 @@ ALTER TABLE  member_project
     ADD CONSTRAINT fk_member_project_project
         FOREIGN KEY (project_id)
             REFERENCES project(project_id);
+
+ALTER TABLE story
+    ADD CONSTRAINT fk_story_issue
+    FOREIGN KEY (issue_id)
+    REFERENCES issue(issue_id);
+
+ALTER TABLE task
+    ADD CONSTRAINT fk_task_issue
+    FOREIGN KEY (issue_id)
+    REFERENCES issue(issue_id);
