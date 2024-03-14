@@ -8,13 +8,19 @@ CREATE TABLE comment (
                          PRIMARY KEY (comment_id)
 )ENGINE=InnoDB;
 
+CREATE TABLE epic(
+                     start_date TIMESTAMP,
+                     end_date TIMESTAMP,
+                     issue_id BIGINT not null,
+                     PRIMARY KEY (issue_id)
+)ENGINE=InnoDB;
+
 CREATE TABLE issue (
                        issue_id BIGINT NOT NULL AUTO_INCREMENT,
                        number INTEGER NOT NULL,
                        member_id BIGINT,
                        project_id BIGINT,
                        sprint_id BIGINT,
-                       story_id BIGINT,
                        issue_type VARCHAR(31) NOT NULL,
                        content TEXT,
                        status VARCHAR(255),
@@ -64,13 +70,6 @@ CREATE TABLE sprint (
                         CHECK (status IN ('PLANNED', 'ACTIVE', 'COMPLETED'))
 )ENGINE=InnoDB;
 
-CREATE TABLE epic(
-                     start_date TIMESTAMP,
-                     end_date TIMESTAMP,
-                     issue_id BIGINT not null,
-                     PRIMARY KEY (issue_id)
-)ENGINE=InnoDB;
-
 CREATE TABLE story(
                       start_date TIMESTAMP,
                       end_date TIMESTAMP,
@@ -86,23 +85,20 @@ CREATE TABLE task(
     PRIMARY KEY (issue_id)
 )ENGINE=InnoDB;
 
-ALTER TABLE epic
-    ADD CONSTRAINT fk_epic_issue
-        FOREIGN KEY (issue_id)
-            REFERENCES issue(issue_id);
-
-
 ALTER TABLE comment
     ADD CONSTRAINT fk_comment_issue
         FOREIGN KEY (issue_id)
             REFERENCES issue(issue_id);
-
 
 ALTER TABLE comment
     ADD CONSTRAINT fk_comment_member
         FOREIGN KEY (member_id)
             REFERENCES member(member_id);
 
+ALTER TABLE epic
+    ADD CONSTRAINT fk_epic_issue
+        FOREIGN KEY (issue_id)
+            REFERENCES issue(issue_id);
 
 ALTER TABLE issue
     ADD CONSTRAINT fk_issue_member
@@ -131,9 +127,19 @@ ALTER TABLE  member_project
             REFERENCES project(project_id);
 
 ALTER TABLE story
+    ADD CONSTRAINT fk_story_epic
+    FOREIGN KEY (epic_id)
+    REFERENCES epic(issue_id);
+
+ALTER TABLE story
     ADD CONSTRAINT fk_story_issue
     FOREIGN KEY (issue_id)
     REFERENCES issue(issue_id);
+
+ALTER TABLE task
+    ADD CONSTRAINT fk_task_story
+    FOREIGN KEY (story_id)
+    REFERENCES story(issue_id);
 
 ALTER TABLE task
     ADD CONSTRAINT fk_task_issue
