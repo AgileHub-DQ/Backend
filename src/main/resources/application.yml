@@ -23,7 +23,7 @@ spring:
       enabled: true
       path: /h2
   datasource:
-    url: jdbc:h2:~/agile-hub
+    url: jdbc:h2:~/agile-hub;MODE=MySQL
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -37,7 +37,17 @@ spring:
         show_sql: true
         use_sql_comments: true
         default_batch_fetch_size: 1000
+    defer-datasource-initialization: true
 
+
+  sql:
+    init:
+      mode: never
+logging:
+  level:
+    org.hibernate.SQL: debug
+    root: info
+    org.hibernate.orm.jdbc.bind: trace
 ---
 
 # prod profile
