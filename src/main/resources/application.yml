@@ -13,11 +13,11 @@ springdoc:
 
 ---
 
-# local profile
+# test profile
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: test
   h2:
     console:
       enabled: true
