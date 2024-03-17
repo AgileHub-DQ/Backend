@@ -1,0 +1,35 @@
+# test profile
+spring:
+  config:
+    activate:
+      on-profile: test
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    url: jdbc:h2:~/agile-hub;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 100
+
+    open-in-view: false
+
+  sql:
+    init:
+      mode: never
+logging:
+  level:
+    org.hibernate.SQL: debug
+    root: info
+    org.hibernate.orm.jdbc.bind: trace
