@@ -6,15 +6,15 @@ import lombok.Getter;
 @Getter
 public class OAuth2UserInfo {
 
-    private final Map<String, Object> attributes;
+    private Map<String, Object> attributes;
 
-    private final String id;
+    private String id;
 
-    private final String nickname;
+    private String nickname;
 
-    private final String profileImage;
+    private String profileImage;
 
-    private final boolean isExist;
+    private boolean isExist;
 
     public OAuth2UserInfo(Map<String, Object> attributes, String id, String nickname, String profileImage,
                           boolean isExist) {
@@ -24,4 +24,9 @@ public class OAuth2UserInfo {
         this.profileImage = profileImage;
         this.isExist = isExist;
     }
+
+    public void setExist(boolean isExist) {
+        this.isExist = isExist;
+    }
+
 }
