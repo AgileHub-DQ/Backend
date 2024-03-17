@@ -1,23 +1,27 @@
 package dynamicquad.agilehub.global.domain;
 
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class OAuth2UserInfo {
 
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
-    private String id;
+    private final String id;
 
-    private String nickname;
+    private final String nickname;
 
-    private String profileImage;
+    private final String profileImage;
 
-    private String email;
+    private final boolean isExist;
 
-    private boolean isExist;
-
+    public OAuth2UserInfo(Map<String, Object> attributes, String id, String nickname, String profileImage,
+                          boolean isExist) {
+        this.attributes = attributes;
+        this.id = id;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.isExist = isExist;
+    }
 }
