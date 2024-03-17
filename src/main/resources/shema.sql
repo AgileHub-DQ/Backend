@@ -1,147 +1,140 @@
-CREATE TABLE comment (
-                         comment_id BIGINT NOT NULL AUTO_INCREMENT,
-                         created_at TIMESTAMP NOT NULL,
-                         updated_at TIMESTAMP NOT NULL,
-                         issue_id BIGINT,
-                         member_id BIGINT,
-                         content TEXT,
-                         PRIMARY KEY (comment_id)
-)ENGINE=InnoDB;
+create table comment (
+                         comment_id bigint not null auto_increment,
+                         created_at timestamp(6) not null,
+                         issue_id bigint,
+                         member_id bigint,
+                         updated_at timestamp(6) not null,
+                         content varchar(255),
+                         primary key (comment_id)
+) engine=InnoDB;
 
-CREATE TABLE epic(
-                     start_date TIMESTAMP,
-                     end_date TIMESTAMP,
-                     issue_id BIGINT not null,
-                     PRIMARY KEY (issue_id)
-)ENGINE=InnoDB;
+create table epic (
+                      end_date timestamp(6),
+                      issue_id bigint not null,
+                      start_date timestamp(6),
+                      primary key (issue_id)
+) engine=InnoDB;
+create table issue (
+                       number integer not null,
+                       issue_id bigint not null auto_increment,
+                       member_id bigint,
+                       project_id bigint,
+                       sprint_id bigint,
+                       issue_type varchar(31) not null,
+                       content varchar(255),
+                       title varchar(255),
+                       status enum ('DO','PROGRESS','DONE'),
+                       primary key (issue_id)
+) engine=InnoDB;
+create table member (
+                        created_at timestamp(6) not null,
+                        member_id bigint not null auto_increment,
+                        updated_at timestamp(6) not null,
+                        email varchar(255) not null,
+                        name varchar(255) not null,
+                        profile_image_url varchar(255),
+                        status enum ('ACTIVE','DELETED'),
+                        primary key (member_id)
+) engine=InnoDB;
 
-CREATE TABLE issue (
-                       issue_id BIGINT NOT NULL AUTO_INCREMENT,
-                       number INTEGER NOT NULL,
-                       member_id BIGINT,
-                       project_id BIGINT,
-                       sprint_id BIGINT,
-                       issue_type VARCHAR(31) NOT NULL,
-                       content TEXT,
-                       status VARCHAR(255),
-                       title VARCHAR(255),
-                       PRIMARY KEY (issue_id),
-                       CHECK (status IN ('DO', 'PROGRESS', 'DONE'))
-)ENGINE=InnoDB;
+create table member_project (
+                                member_id bigint,
+                                member_project_id bigint not null auto_increment,
+                                project_id bigint,
+                                role enum ('VIEWER','EDITOR','ADMIN') not null,
+                                primary key (member_project_id)
+) engine=InnoDB;
+create table project (
+                         created_at timestamp(6) not null,
+                         project_id bigint not null auto_increment,
+                         updated_at timestamp(6) not null,
+                         name varchar(255),
+                         project_key varchar(255),
+                         primary key (project_id)
+) engine=InnoDB;
+create table sprint (
+                        end_date timestamp,
+                        start_date timestamp,
+                        sprint_id bigint not null auto_increment,
+                        target_description varchar(255),
+                        title varchar(255),
+                        status enum ('PLANNED','ACTIVE','COMPLETED'),
+                        primary key (sprint_id)
+) engine=InnoDB;
+create table story (
+                       story_point integer not null,
+                       end_date timestamp(6),
+                       epic_id bigint,
+                       issue_id bigint not null,
+                       start_date timestamp(6),
+                       primary key (issue_id)
+) engine=InnoDB;
+create table task (
+                      issue_id bigint not null,
+                      story_id bigint,
+                      primary key (issue_id)
+) engine=InnoDB;
 
-CREATE TABLE member (
-                        member_id BIGINT NOT NULL AUTO_INCREMENT,
-                        created_at TIMESTAMP NOT NULL,
-                        updated_at TIMESTAMP NOT NULL,
-                        email VARCHAR(255) NOT NULL UNIQUE,
-                        name VARCHAR(255) NOT NULL,
-                        profile_image_url VARCHAR(255),
-                        status VARCHAR(255),
-                        PRIMARY KEY (member_id),
-                        CHECK (status IN ('ACTIVE', 'DELETED'))
-)ENGINE=InnoDB;
+alter table member
+    add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);
 
-CREATE TABLE member_project (
-                                member_project_id BIGINT NOT NULL AUTO_INCREMENT,
-                                member_id BIGINT,
-                                project_id BIGINT,
-                                role VARCHAR(255) NOT NULL,
-                                PRIMARY KEY (member_project_id),
-                                CHECK (role IN ('VIEWER', 'EDITOR', 'ADMIN'))
-)ENGINE=InnoDB;
+alter table project
+    add constraint UK_6nmhlci6jh2k2fv7ipcfv1drm unique (project_key);
 
-CREATE TABLE project (
-                         project_id BIGINT NOT NULL AUTO_INCREMENT,
-                         created_at TIMESTAMP NOT NULL,
-                         updated_at TIMESTAMP NOT NULL,
-                         name VARCHAR(255),
-                         project_key VARCHAR(255) UNIQUE,
-                         PRIMARY KEY (project_id)
-)ENGINE=InnoDB;
+alter table comment
+    add constraint FKomjg70m9sundkar1el2rtonrn
+        foreign key (issue_id)
+            references issue (issue_id);
 
-CREATE TABLE sprint (
-                        sprint_id BIGINT NOT NULL AUTO_INCREMENT,
-                        start_date TIMESTAMP,
-                        end_date TIMESTAMP,
-                        status VARCHAR(255),
-                        target_description TEXT,
-                        title VARCHAR(255),
-                        PRIMARY KEY (sprint_id),
-                        CHECK (status IN ('PLANNED', 'ACTIVE', 'COMPLETED'))
-)ENGINE=InnoDB;
+alter table comment
+    add constraint FKmrrrpi513ssu63i2783jyiv9m
+        foreign key (member_id)
+            references member (member_id);
 
-CREATE TABLE story(
-                      start_date TIMESTAMP,
-                      end_date TIMESTAMP,
-                      story_point INTEGER,
-                      epic_id BIGINT,
-                      issue_id BIGINT not null,
-                      PRIMARY KEY (issue_id)
-)ENGINE=InnoDB;
+alter table epic
+    add constraint FK4eyvsgi51pqc8poxrax7taten
+        foreign key (issue_id)
+            references issue (issue_id);
 
-CREATE TABLE task(
-    issue_id BIGINT not null,
-    story_id BIGINT,
-    PRIMARY KEY (issue_id)
-)ENGINE=InnoDB;
+alter table issue
+    add constraint FKgj9b27brkevgyi6mit3uq92lp
+        foreign key (member_id)
+            references member (member_id);
 
-ALTER TABLE comment
-    ADD CONSTRAINT fk_comment_issue
-        FOREIGN KEY (issue_id)
-            REFERENCES issue(issue_id);
+alter table issue
+    add constraint FKcombytcpeogaqi2012phvvvhy
+        foreign key (project_id)
+            references project (project_id);
 
-ALTER TABLE comment
-    ADD CONSTRAINT fk_comment_member
-        FOREIGN KEY (member_id)
-            REFERENCES member(member_id);
+alter table issue
+    add constraint FK5k39vkuty9g6w3n7iwye1nh0i
+        foreign key (sprint_id)
+            references sprint (sprint_id);
 
-ALTER TABLE epic
-    ADD CONSTRAINT fk_epic_issue
-        FOREIGN KEY (issue_id)
-            REFERENCES issue(issue_id);
+alter table member_project
+    add constraint FKp4v2smu74i6vrd6ek1b3o2755
+        foreign key (member_id)
+            references member (member_id);
 
-ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_member
-        FOREIGN KEY (member_id)
-            REFERENCES member(member_id);
+alter table member_project
+    add constraint FKl2brpp0how3olc7qjtqyrb207
+        foreign key (project_id)
+            references project (project_id);
+alter table story
+    add constraint FKko1b0e8un4fsbgefy1yxb2gop
+        foreign key (epic_id)
+            references epic (issue_id);
 
-ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_project
-        FOREIGN KEY (project_id)
-            REFERENCES project(project_id);
+alter table story
+    add constraint FKpfu6u7489ep194jam944exg06
+        foreign key (issue_id)
+            references issue (issue_id);
 
-ALTER TABLE issue
-    ADD CONSTRAINT fk_issue_sprint
-        FOREIGN KEY (sprint_id)
-            REFERENCES sprint(sprint_id);
-
-
-ALTER TABLE member_project
-    ADD CONSTRAINT fk_member_project_member
-        FOREIGN KEY (member_id)
-            REFERENCES member(member_id);
-
-ALTER TABLE  member_project
-    ADD CONSTRAINT fk_member_project_project
-        FOREIGN KEY (project_id)
-            REFERENCES project(project_id);
-
-ALTER TABLE story
-    ADD CONSTRAINT fk_story_epic
-    FOREIGN KEY (epic_id)
-    REFERENCES epic(issue_id);
-
-ALTER TABLE story
-    ADD CONSTRAINT fk_story_issue
-    FOREIGN KEY (issue_id)
-    REFERENCES issue(issue_id);
-
-ALTER TABLE task
-    ADD CONSTRAINT fk_task_story
-    FOREIGN KEY (story_id)
-    REFERENCES story(issue_id);
-
-ALTER TABLE task
-    ADD CONSTRAINT fk_task_issue
-    FOREIGN KEY (issue_id)
-    REFERENCES issue(issue_id);
+alter table task
+    add constraint FKe9tetnt4jmubgpo046re1eiqo
+        foreign key (story_id)
+            references story (issue_id);
+alter table task
+    add constraint FKl1lxu2i4hcd67rxqa6qi6evdo
+        foreign key (issue_id)
+            references issue (issue_id);
