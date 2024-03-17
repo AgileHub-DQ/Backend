@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.domain;
+package dynamicquad.agilehub.global.auth.oauth2info;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;

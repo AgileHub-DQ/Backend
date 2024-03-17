@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.member.repository;
 
-import dynamicquad.agilehub.global.domain.OAuth2Attribute;
+import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
 import dynamicquad.agilehub.member.domain.SocialLogin;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

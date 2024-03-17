@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.member.service;
 
-import dynamicquad.agilehub.global.domain.OAuth2Attribute;
+import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.SocialLogin;
 import dynamicquad.agilehub.member.repository.SocialLoginRepository;

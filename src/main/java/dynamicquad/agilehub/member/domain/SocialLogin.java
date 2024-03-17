@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.member.domain;
 
 import dynamicquad.agilehub.global.domain.BaseEntity;
-import dynamicquad.agilehub.global.domain.OAuth2Attribute;
+import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

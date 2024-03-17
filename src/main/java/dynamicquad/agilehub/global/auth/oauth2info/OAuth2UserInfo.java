@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.domain;
+package dynamicquad.agilehub.global.auth.oauth2info;
 
 import java.util.Map;
 import lombok.Getter;
