@@ -32,8 +32,8 @@ public class SocialLogin extends BaseEntity {
     @Column(name = "provider", nullable = false)
     private OAuth2Attribute provider;
 
-    @Column(name = "distinct_code", nullable = false)
-    private String distinctCode;
+    @Column(name = "distinct_id", nullable = false)
+    private String distinctId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
