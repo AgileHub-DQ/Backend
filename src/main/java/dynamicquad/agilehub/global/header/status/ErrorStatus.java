@@ -17,6 +17,9 @@ public enum ErrorStatus implements BaseStatus {
     // Member Error
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER_4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER_4002", "닉네임은 필수 입니다."),
+
+    // Project Error
+    PROJECT_DUPLICATE(HttpStatus.BAD_REQUEST, "PROJECT_4001", "프로젝트 키가 중복됩니다."),
     ;
 
     private final HttpStatus httpStatus;
@@ -26,19 +29,19 @@ public enum ErrorStatus implements BaseStatus {
     @Override
     public ReasonDto getReason() {
         return ReasonDto.builder()
-                .message(message)
-                .code(code)
-                .isSuccess(false)
-                .build();
+            .message(message)
+            .code(code)
+            .isSuccess(false)
+            .build();
     }
 
     @Override
     public ReasonDto getReasonHttpStatus() {
         return ReasonDto.builder()
-                .status(httpStatus)
-                .message(message)
-                .code(code)
-                .isSuccess(false)
-                .build();
+            .status(httpStatus)
+            .message(message)
+            .code(code)
+            .isSuccess(false)
+            .build();
     }
 }
