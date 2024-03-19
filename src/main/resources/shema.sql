@@ -30,7 +30,6 @@ create table member (
                         created_at timestamp(6) not null,
                         member_id bigint not null auto_increment,
                         updated_at timestamp(6) not null,
-                        email varchar(255) not null,
                         name varchar(255) not null,
                         profile_image_url varchar(255),
                         status enum ('ACTIVE','DELETED'),
@@ -75,8 +74,6 @@ create table task (
                       primary key (issue_id)
 ) engine=InnoDB;
 
-alter table member
-    add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);
 
 alter table project
     add constraint UK_6nmhlci6jh2k2fv7ipcfv1drm unique (project_key);

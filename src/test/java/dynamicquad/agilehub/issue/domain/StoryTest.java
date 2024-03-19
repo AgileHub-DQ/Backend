@@ -39,14 +39,12 @@ class StoryTest {
 
         member1 = Member.builder()
             .name("멤버1")
-            .email("sads@naver.com")
             .profileImageUrl("https://naver.com")
             .status(MemberStatus.ACTIVE)
             .build();
 
         member2 = Member.builder()
             .name("멤버2")
-            .email("sese@google.com")
             .build();
 
         em.persist(member1);
