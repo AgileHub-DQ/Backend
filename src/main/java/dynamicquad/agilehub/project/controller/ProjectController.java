@@ -19,6 +19,11 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "302", description = "프로젝트 생성 후 보드 페이지로 이동합니다."),
+        @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다.")
+    })
     @PostMapping("/api/projects")
     public String createProject(@RequestBody @Valid ProjectCreateReq request, RedirectAttributes redirectAttributes) {
         log.info("createProject");
