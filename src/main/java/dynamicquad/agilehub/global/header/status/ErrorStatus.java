@@ -20,6 +20,7 @@ public enum ErrorStatus implements BaseStatus {
 
     // Project Error
     PROJECT_DUPLICATE(HttpStatus.BAD_REQUEST, "PROJECT_4001", "프로젝트 키가 중복됩니다."),
+    PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROJECT_4002", "프로젝트가 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
