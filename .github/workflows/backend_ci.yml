@@ -37,6 +37,8 @@ jobs:
 
       - name: Gradle build를 수행합니다
         run: ./gradlew build
+        env:
+          SPRING_PROFILES_ACTIVE: test
 
       - name: 테스트 결과를 PR에 코멘트로 등록합니다
         uses: EnricoMi/publish-unit-test-result-action@v1
