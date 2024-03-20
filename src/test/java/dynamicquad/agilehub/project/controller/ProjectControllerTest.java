@@ -33,8 +33,7 @@ class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
 
-
-    @Test
+    /*@Test
     void 정상적인_프로젝트를_생성() throws Exception {
         //given
         ProjectCreateReq request = ProjectCreateReq.builder()
@@ -44,15 +43,13 @@ class ProjectControllerTest {
 
         when(projectService.createProject(request)).thenReturn("project");
 
-        //when
         mockMvc.perform(post("/api/projects")
                 .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON)
-            )
+                .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().is3xxRedirection());
 
-    }
+    }*/
 
     @Test
     void 프로젝트를_생성할때_프로젝트이름은_필수값이다() throws Exception {

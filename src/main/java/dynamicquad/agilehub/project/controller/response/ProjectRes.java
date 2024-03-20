@@ -3,9 +3,15 @@ package dynamicquad.agilehub.project.controller.response;
 import dynamicquad.agilehub.project.domain.Project;
 import java.time.LocalDateTime;
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
-public record ProjectRes(Long id, String key, String name, LocalDateTime createdAt) {
+@Getter
+public class ProjectRes {
+    private Long id;
+    private String key;
+    private String name;
+    private LocalDateTime createdAt;
 
     public static ProjectRes fromEntity(Project project) {
         return ProjectRes.builder()

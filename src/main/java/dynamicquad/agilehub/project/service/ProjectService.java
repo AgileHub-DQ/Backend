@@ -26,7 +26,7 @@ public class ProjectService {
 
     @Transactional
     public String createProject(ProjectCreateReq request) {
-        if (projectRepository.existsByKey(request.key())) {
+        if (projectRepository.existsByKey(request.getKey())) {
             throw new GeneralException(ErrorStatus.PROJECT_DUPLICATE);
         }
 
