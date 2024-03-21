@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -35,12 +35,12 @@ public class Sprint {
 
     private String targetDescription;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Builder
-    private Sprint(String title, String targetDescription, LocalDate startDate, LocalDate endDate,
+    private Sprint(String title, String targetDescription, LocalDateTime startDate, LocalDateTime endDate,
                    SprintStatus status) {
         this.title = title;
         this.targetDescription = targetDescription;
@@ -50,8 +50,8 @@ public class Sprint {
     }
 
 
-    public Sprint updateSprint(String title, String targetDescription, SprintStatus status, LocalDate startDate,
-                               LocalDate endDate) {
+    public Sprint updateSprint(String title, String targetDescription, SprintStatus status, LocalDateTime startDate,
+                               LocalDateTime endDate) {
         this.title = title;
         this.targetDescription = targetDescription;
         this.status = status;
