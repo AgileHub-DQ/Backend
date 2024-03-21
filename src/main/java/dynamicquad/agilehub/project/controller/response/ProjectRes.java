@@ -3,10 +3,12 @@ package dynamicquad.agilehub.project.controller.response;
 import dynamicquad.agilehub.project.domain.Project;
 import java.time.LocalDateTime;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Builder
 @Getter
+@EqualsAndHashCode
 public class ProjectRes {
     private Long id;
     private String key;

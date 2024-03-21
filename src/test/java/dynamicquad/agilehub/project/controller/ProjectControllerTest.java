@@ -2,12 +2,15 @@ package dynamicquad.agilehub.project.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
+import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
 import dynamicquad.agilehub.project.controller.response.ProjectRes;
 import dynamicquad.agilehub.project.service.ProjectService;
 import java.util.List;
@@ -33,7 +36,7 @@ class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
 
-    /*@Test
+    @Test
     void 정상적인_프로젝트를_생성() throws Exception {
         //given
         ProjectCreateReq request = ProjectCreateReq.builder()
@@ -49,7 +52,7 @@ class ProjectControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().is3xxRedirection());
 
-    }*/
+    }
 
     @Test
     void 프로젝트를_생성할때_프로젝트이름은_필수값이다() throws Exception {
