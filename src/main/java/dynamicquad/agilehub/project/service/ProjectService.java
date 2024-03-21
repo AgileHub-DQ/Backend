@@ -4,6 +4,7 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
+import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
 import dynamicquad.agilehub.project.controller.response.ProjectRes;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
@@ -26,9 +27,8 @@ public class ProjectService {
 
     @Transactional
     public String createProject(ProjectCreateReq request) {
-        if (projectRepository.existsByKey(request.getKey())) {
-            throw new GeneralException(ErrorStatus.PROJECT_DUPLICATE);
-        }
+
+        validateKeyUniqueness(request.getKey());
 
         //유저 확인후 유저 - 프로젝트 매핑하는 로직 필요
 
@@ -38,9 +38,7 @@ public class ProjectService {
 
     public List<ProjectRes> getProjects(Long memberId) {
 
-        if (!memberRepository.existsById(memberId)) {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
+        validateMemberExist(memberId);
 
         //member로 project 조회
         List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
@@ -52,5 +50,29 @@ public class ProjectService {
         log.info("projects : {}", projects);
 
         return projects.stream().map(ProjectRes::fromEntity).toList();
+    }
+
+    @Transactional
+    public String updateProject(String originKey, ProjectUpdateReq request) {
+
+        Project project = projectRepository.findByKey(originKey)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+
+        validateKeyUniqueness(request.getKey());
+
+        return project.updateProject(request).getKey();
+
+    }
+
+    private void validateKeyUniqueness(String key) {
+        if (projectRepository.existsByKey(key)) {
+            throw new GeneralException(ErrorStatus.PROJECT_DUPLICATE);
+        }
+    }
+
+    private void validateMemberExist(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        }
     }
 }

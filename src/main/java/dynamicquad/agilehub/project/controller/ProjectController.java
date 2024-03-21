@@ -2,6 +2,7 @@ package dynamicquad.agilehub.project.controller;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
+import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
 import dynamicquad.agilehub.project.controller.response.ProjectRes;
 import dynamicquad.agilehub.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +60,15 @@ public class ProjectController {
         List<ProjectRes> projects = projectService.getProjects(memberId);
 
         return CommonResponse.onSuccess(projects);
+    }
+
+    @PatchMapping("/api/projects/{key}")
+    public String updateProject(@RequestBody @Valid ProjectUpdateReq request, @PathVariable String key,
+                                RedirectAttributes redirectAttributes) {
+        log.info("updateProject");
+        redirectAttributes.addAttribute("key", projectService.updateProject(key, request));
+
+        return "redirect:/api/projects/{key}/boards";
     }
 
     @ResponseBody

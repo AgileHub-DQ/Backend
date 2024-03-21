@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.member.domain.MemberStatus;
 import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
+import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
 import dynamicquad.agilehub.project.controller.response.ProjectRes;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
@@ -96,6 +98,74 @@ class ProjectServiceTest {
         assertThatThrownBy(() -> projectService.getProjects(m1.getId()))
             .isInstanceOf(GeneralException.class);
     }
+
+    @Test
+    void 기존키가_존재하지않은키일때_예외를_반환한다() {
+        // given
+        Project p1 = createProject("프로젝트1", "PK1");
+        projectRepository.save(p1);
+        //when
+        ProjectUpdateReq request = ProjectUpdateReq.builder()
+            .name("프로젝트1")
+            .key("PK2")
+            .build();
+        //then
+        assertThatThrownBy(() -> projectService.updateProject("pk13", request))
+            .isInstanceOf(GeneralException.class)
+            .extracting("status").isEqualTo(ErrorStatus.PROJECT_NOT_FOUND);
+    }
+
+    @Test
+    void 변경하려는키가_이미존재하는키면_예외를_반환한다() {
+        // given
+        Project p1 = createProject("프로젝트1", "PK1");
+        Project p2 = createProject("프로젝트2", "PK2");
+        projectRepository.saveAll(List.of(p1, p2));
+        //when
+        ProjectUpdateReq request = ProjectUpdateReq.builder()
+            .name("프로젝트1")
+            .key("PK2")
+            .build();
+        //then
+        assertThatThrownBy(() -> projectService.updateProject("PK1", request))
+            .isInstanceOf(GeneralException.class)
+            .extracting("status").isEqualTo(ErrorStatus.PROJECT_DUPLICATE);
+
+    }
+
+    @Test
+    void 변경하려는키가_원래기존키와같으면_예외를_반환한다() {
+        // given
+        Project p1 = createProject("프로젝트1", "PK1");
+        Project p2 = createProject("프로젝트2", "PK2");
+        projectRepository.saveAll(List.of(p1, p2));
+        //when
+        ProjectUpdateReq request = ProjectUpdateReq.builder()
+            .name("프로젝트1")
+            .key("PK1")
+            .build();
+        //then
+        assertThatThrownBy(() -> projectService.updateProject("PK1", request))
+            .isInstanceOf(GeneralException.class)
+            .extracting("status").isEqualTo(ErrorStatus.PROJECT_DUPLICATE);
+
+    }
+
+    @Test
+    void 변경된키가_정상적으로_프로젝트에_반영() {
+        // given
+        Project p1 = createProject("프로젝트1", "PK1");
+        projectRepository.save(p1);
+        //when
+        ProjectUpdateReq request = ProjectUpdateReq.builder()
+            .name("프로젝트1")
+            .key("PK2")
+            .build();
+        //then
+        assertThat(projectService.updateProject("PK1", request))
+            .isEqualTo("PK2");
+    }
+
 
     private Project createProject(String projectName, String projectKey) {
         return projectRepository.save(Project.builder()

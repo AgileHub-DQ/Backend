@@ -157,4 +157,26 @@ class ProjectControllerTest {
 
     }
 
+    @Test
+    void 프로젝트를_수정이_성공하면_리다이렉트된다() throws Exception {
+        //given
+        String originKey = "project1";
+        String updateKey = "project12";
+        ProjectUpdateReq request = ProjectUpdateReq.builder()
+            .name("프로젝트")
+            .key(updateKey)
+            .build();
+
+        when(projectService.updateProject(originKey, request)).thenReturn(updateKey);
+
+        mockMvc.perform(patch("/api/projects/" + originKey)
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/api/projects/" + updateKey + "/boards"));
+
+
+    }
+
 }
