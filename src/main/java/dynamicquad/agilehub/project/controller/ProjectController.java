@@ -5,6 +5,7 @@ import static dynamicquad.agilehub.project.controller.request.ProjectRequest.Pro
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -33,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectQueryService projectQueryService;
 
     @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
     @ApiResponses({
@@ -59,7 +61,7 @@ public class ProjectController {
     public CommonResponse<?> getProjects() {
         log.info("getProjects");
         final Long memberId = 1L;
-        List<ProjectResponse> projects = projectService.getProjects(memberId);
+        List<ProjectResponse> projects = projectQueryService.getProjects(memberId);
 
         return CommonResponse.onSuccess(projects);
     }

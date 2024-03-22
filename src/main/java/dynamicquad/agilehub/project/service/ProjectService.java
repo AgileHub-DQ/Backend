@@ -2,14 +2,10 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
-import dynamicquad.agilehub.project.controller.response.ProjectResponse;
-import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final MemberRepository memberRepository;
-    private final MemberProjectRepository memberProjectRepository;
 
     @Transactional
     public String createProject(ProjectCreateRequest request) {
@@ -33,23 +27,6 @@ public class ProjectService {
         //유저 확인후 유저 - 프로젝트 매핑하는 로직 필요
 
         return projectRepository.save(request.toEntity()).getKey();
-    }
-
-
-    public List<ProjectResponse> getProjects(Long memberId) {
-
-        validateMemberExist(memberId);
-
-        //member로 project 조회
-        List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
-
-        if (projects.isEmpty()) {
-            throw new GeneralException(ErrorStatus.PROJECT_NOT_FOUND);
-        }
-
-        log.info("projects : {}", projects);
-
-        return projects.stream().map(ProjectResponse::fromEntity).toList();
     }
 
     @Transactional
@@ -70,9 +47,4 @@ public class ProjectService {
         }
     }
 
-    private void validateMemberExist(Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
-    }
 }

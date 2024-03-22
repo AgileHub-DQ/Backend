@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,9 @@ class ProjectControllerTest {
 
     @MockBean
     private ProjectService projectService;
+
+    @MockBean
+    private ProjectQueryService projectQueryService;
 
     @Test
     void 정상적인_프로젝트를_생성() throws Exception {
@@ -145,7 +149,7 @@ class ProjectControllerTest {
                 .build()
         );
         final Long memberId = 1L;
-        when(projectService.getProjects(memberId)).thenReturn(projects);
+        when(projectQueryService.getProjects(memberId)).thenReturn(projects);
 
         //when
         //then
