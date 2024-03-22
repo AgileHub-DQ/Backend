@@ -2,8 +2,8 @@ package dynamicquad.agilehub.project.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -169,7 +169,7 @@ class ProjectControllerTest {
 
         when(projectService.updateProject(originKey, request)).thenReturn(updateKey);
 
-        mockMvc.perform(patch("/api/projects/" + originKey)
+        mockMvc.perform(put("/api/projects/" + originKey)
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
