@@ -3,9 +3,9 @@ package dynamicquad.agilehub.project.service;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.member.domain.MemberRepository;
-import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
-import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
-import dynamicquad.agilehub.project.controller.response.ProjectRes;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
@@ -26,7 +26,7 @@ public class ProjectService {
     private final MemberProjectRepository memberProjectRepository;
 
     @Transactional
-    public String createProject(ProjectCreateReq request) {
+    public String createProject(ProjectCreateRequest request) {
 
         validateKeyUniqueness(request.getKey());
 
@@ -36,7 +36,7 @@ public class ProjectService {
     }
 
 
-    public List<ProjectRes> getProjects(Long memberId) {
+    public List<ProjectResponse> getProjects(Long memberId) {
 
         validateMemberExist(memberId);
 
@@ -49,11 +49,11 @@ public class ProjectService {
 
         log.info("projects : {}", projects);
 
-        return projects.stream().map(ProjectRes::fromEntity).toList();
+        return projects.stream().map(ProjectResponse::fromEntity).toList();
     }
 
     @Transactional
-    public String updateProject(String originKey, ProjectUpdateReq request) {
+    public String updateProject(String originKey, ProjectUpdateRequest request) {
 
         Project project = projectRepository.findByKey(originKey)
             .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
