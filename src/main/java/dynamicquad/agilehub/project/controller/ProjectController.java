@@ -1,9 +1,11 @@
 package dynamicquad.agilehub.project.controller;
 
+import static dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
+import static dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+
 import dynamicquad.agilehub.global.header.CommonResponse;
-import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
-import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
-import dynamicquad.agilehub.project.controller.response.ProjectRes;
+import dynamicquad.agilehub.project.controller.response.ProjectResponse;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectQueryService projectQueryService;
 
     @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
     @ApiResponses({
@@ -39,7 +42,8 @@ public class ProjectController {
         @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
     })
     @PostMapping("/api/projects")
-    public String createProject(@RequestBody @Valid ProjectCreateReq request, RedirectAttributes redirectAttributes) {
+    public String createProject(@RequestBody @Valid ProjectCreateRequest request,
+                                RedirectAttributes redirectAttributes) {
         log.info("createProject");
         redirectAttributes.addAttribute("key", projectService.createProject(request));
         return "redirect:/api/projects/{key}/boards";
@@ -48,7 +52,7 @@ public class ProjectController {
     @Operation(summary = "프로젝트 목록 조회", description = "유저의 프로젝트 목록을 조회합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "프로젝트 목록 조회 성공", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectRes.class)))}),
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectResponse.class)))}),
         @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다."),
         @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
@@ -57,18 +61,25 @@ public class ProjectController {
     public CommonResponse<?> getProjects() {
         log.info("getProjects");
         final Long memberId = 1L;
-        List<ProjectRes> projects = projectService.getProjects(memberId);
+        List<ProjectResponse> projects = projectQueryService.getProjects(memberId);
 
         return CommonResponse.onSuccess(projects);
     }
 
-    @PatchMapping("/api/projects/{key}")
-    public String updateProject(@RequestBody @Valid ProjectUpdateReq request, @PathVariable String key,
+    @Operation(summary = "프로젝트 수정", description = "프로젝트를 수정합니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "302", description = "프로젝트 수정 후 보드 페이지로 이동합니다."),
+        @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
+        @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
+    })
+    @PutMapping("/api/projects/{key}")
+    public String updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key,
                                 RedirectAttributes redirectAttributes) {
         log.info("updateProject");
         redirectAttributes.addAttribute("key", projectService.updateProject(key, request));
 
         return "redirect:/api/projects/{key}/boards";
     }
+
 
 }
