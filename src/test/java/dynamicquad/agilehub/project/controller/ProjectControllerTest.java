@@ -2,16 +2,17 @@ package dynamicquad.agilehub.project.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
-import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
-import dynamicquad.agilehub.project.controller.response.ProjectRes;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+import dynamicquad.agilehub.project.controller.response.ProjectResponse;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -36,10 +37,13 @@ class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
 
+    @MockBean
+    private ProjectQueryService projectQueryService;
+
     @Test
     void 정상적인_프로젝트를_생성() throws Exception {
         //given
-        ProjectCreateReq request = ProjectCreateReq.builder()
+        ProjectCreateRequest request = ProjectCreateRequest.builder()
             .name("프로젝트")
             .key("project")
             .build();
@@ -57,7 +61,7 @@ class ProjectControllerTest {
     @Test
     void 프로젝트를_생성할때_프로젝트이름은_필수값이다() throws Exception {
         //given
-        ProjectCreateReq request = ProjectCreateReq.builder()
+        ProjectCreateRequest request = ProjectCreateRequest.builder()
             .key("project")
             .build();
 
@@ -76,7 +80,7 @@ class ProjectControllerTest {
     @Test
     void 프로젝트를_생성할때_프로젝트이름은_공백이될수없다() throws Exception {
         //given
-        ProjectCreateReq request = ProjectCreateReq.builder()
+        ProjectCreateRequest request = ProjectCreateRequest.builder()
             .name("")
             .key("project")
             .build();
@@ -95,7 +99,7 @@ class ProjectControllerTest {
     @Test
     void 프로젝트를_생성할때_프로젝트키는_최소2글자이상이다() throws Exception {
         //given
-        ProjectCreateReq request = ProjectCreateReq.builder()
+        ProjectCreateRequest request = ProjectCreateRequest.builder()
             .name("프로젝트")
             .key("p")
             .build();
@@ -114,7 +118,7 @@ class ProjectControllerTest {
     @Test
     void 프로젝트를_생성할떄_프로젝트키는_한글이_불가능하다() throws Exception {
         //given
-        ProjectCreateReq request = ProjectCreateReq.builder()
+        ProjectCreateRequest request = ProjectCreateRequest.builder()
             .name("프로젝트")
             .key("프로젝트")
             .build();
@@ -134,18 +138,18 @@ class ProjectControllerTest {
     @Test
     void 멤버가_소속된_프로젝트를_조회() throws Exception {
         //given
-        List<ProjectRes> projects = List.of(
-            ProjectRes.builder()
+        List<ProjectResponse> projects = List.of(
+            ProjectResponse.builder()
                 .key("project")
                 .name("프로젝트")
                 .build(),
-            ProjectRes.builder()
+            ProjectResponse.builder()
                 .key("project2")
                 .name("프로젝트2")
                 .build()
         );
         final Long memberId = 1L;
-        when(projectService.getProjects(memberId)).thenReturn(projects);
+        when(projectQueryService.getProjects(memberId)).thenReturn(projects);
 
         //when
         //then
@@ -162,14 +166,14 @@ class ProjectControllerTest {
         //given
         String originKey = "project1";
         String updateKey = "project12";
-        ProjectUpdateReq request = ProjectUpdateReq.builder()
+        ProjectUpdateRequest request = ProjectUpdateRequest.builder()
             .name("프로젝트")
             .key(updateKey)
             .build();
 
         when(projectService.updateProject(originKey, request)).thenReturn(updateKey);
 
-        mockMvc.perform(patch("/api/projects/" + originKey)
+        mockMvc.perform(put("/api/projects/" + originKey)
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
