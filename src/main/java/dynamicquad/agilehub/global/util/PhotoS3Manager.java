@@ -2,11 +2,14 @@ package dynamicquad.agilehub.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PhotoS3Manager implements PhotoManager {
 
     private static final String SYSTEM_PATH = System.getProperty("user.dir"); // 현재 디렉터리
@@ -35,7 +39,7 @@ public class PhotoS3Manager implements PhotoManager {
     public String upload(MultipartFile multipartFile, String workingDirectory) {
 
         if (multipartFile == null || multipartFile.isEmpty()) {
-            throw new IllegalArgumentException("이미지 파일이 존재하지 않습니다. multipartFile" + null);
+            throw new GeneralException(ErrorStatus.FILE_NOT_EXIST);
         }
 
         return uploadPhoto(multipartFile, workingDirectory);
@@ -60,7 +64,8 @@ public class PhotoS3Manager implements PhotoManager {
         try {
             multipartFile.transferTo(tempUploadPath);
         } catch (IOException e) {
-            throw new IllegalArgumentException("파일 변환 실패");
+            log.error("파일 변환 실패", e);
+            throw new GeneralException(ErrorStatus.FILE_CONVERT_FAIL);
         }
         return tempUploadPath;
     }
@@ -79,19 +84,22 @@ public class PhotoS3Manager implements PhotoManager {
 
 
     private String createFileName(String originalFileName) {
-        String extension = StringUtils.getFilenameExtension(originalFileName); // 파일 확장자
+        String extension = StringUtils.getFilenameExtension(originalFileName); // 확장자
         if (extension == null) {
-            throw new IllegalArgumentException("파일 확장자는 반드시 포함되어야 합니다. filename: " + originalFileName);
+            throw new GeneralException(ErrorStatus.FILE_EXTENSION_NOT_EXIST);
         }
         String fileBaseName = UUID.randomUUID().toString().substring(0, 8);
         validateFileName(fileBaseName);
         validateExtension(extension);
-        return fileBaseName + "_" + System.currentTimeMillis() + "." + extension;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(fileBaseName).append("_").append(System.currentTimeMillis()).append(".").append(extension);
+        return sb.toString();
     }
 
     private void validateFileName(String fileName) {
-        if (fileName == null || fileName.isBlank()) {
-            throw new IllegalArgumentException("파일 이름은 반드시 포함되어야 합니다. filename: " + fileName);
+        if (StringUtils.hasText(fileName)) {
+            throw new GeneralException(ErrorStatus.FILE_NAME_NOT_EXIST);
         }
     }
 
@@ -99,7 +107,7 @@ public class PhotoS3Manager implements PhotoManager {
         Set<String> IMAGE_EXTENSIONS = Set.of("jpeg", "jpg", "png", "webp", "heic", "heif");
 
         if (!IMAGE_EXTENSIONS.contains(extension.toLowerCase())) {
-            throw new IllegalArgumentException("이미지 파일 확장자만 업로드 가능합니다. extension: " + extension);
+            throw new GeneralException(ErrorStatus.FILE_EXTENSION_NOT_IMAGE);
         }
     }
 
