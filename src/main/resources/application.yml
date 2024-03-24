@@ -2,6 +2,12 @@ spring:
   profiles:
     active: local
     include: oauth
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      file-size-threshold: 0B
+      enabled: true
 
 springdoc:
   swagger-ui:
@@ -11,3 +17,10 @@ springdoc:
   cache:
     disabled: true
   use-fqn: true
+
+
+aws:
+  s3:
+    rootURL: https://image.agilehub.store
+    bucket: agilehub
+    directory: /images
