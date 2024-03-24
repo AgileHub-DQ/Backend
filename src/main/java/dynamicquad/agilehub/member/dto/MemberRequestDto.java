@@ -1,8 +1,10 @@
 package dynamicquad.agilehub.member.dto;
 
 import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class MemberRequestDto {
 
@@ -11,7 +13,9 @@ public class MemberRequestDto {
 
     @Getter
     @Builder
-    public static class MemberCreate {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CreateMember {
         private String name;
 
         private String profileImageUrl;
@@ -19,7 +23,9 @@ public class MemberRequestDto {
 
     @Getter
     @Builder
-    public static class SocialLoginCreate {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CreateSocialLogin {
         private OAuth2Attribute provider;
 
         private String distinctId;
