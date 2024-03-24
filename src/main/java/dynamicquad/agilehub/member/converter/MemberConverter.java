@@ -9,7 +9,7 @@ public class MemberConverter {
     private MemberConverter() {
     }
 
-    public static Member toEntity(MemberRequestDto.CreateMember dto) {
+    public static Member toMember(MemberRequestDto.CreateMember dto) {
         return Member.builder()
                 .name(dto.getName())
                 .profileImageUrl(dto.getProfileImageUrl())
