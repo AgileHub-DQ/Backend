@@ -14,19 +14,11 @@ public class OAuth2UserInfo {
 
     private String profileImage;
 
-    private boolean isExist;
-
-    public OAuth2UserInfo(Map<String, Object> attributes, String id, String nickname, String profileImage,
-                          boolean isExist) {
+    public OAuth2UserInfo(Map<String, Object> attributes, String id, String nickname, String profileImage) {
         this.attributes = attributes;
         this.id = id;
         this.nickname = nickname;
         this.profileImage = profileImage;
-        this.isExist = isExist;
-    }
-
-    public void setExist(boolean isExist) {
-        this.isExist = isExist;
     }
 
 }

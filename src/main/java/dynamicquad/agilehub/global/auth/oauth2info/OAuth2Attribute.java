@@ -17,8 +17,7 @@ public enum OAuth2Attribute {
                 attributes,
                 attributes.get("id").toString(),
                 profile.get("nickname").toString(),
-                profile.get("profile_image_url").toString(),
-                false
+                profile.get("profile_image_url").toString()
         );
     });
 
