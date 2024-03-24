@@ -20,9 +20,4 @@ public class MemberService {
         return memberRepository.save(member).getId();
     }
 
-    public Member findById(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-    }
-
 }
