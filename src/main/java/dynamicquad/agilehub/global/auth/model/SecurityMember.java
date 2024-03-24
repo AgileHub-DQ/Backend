@@ -22,6 +22,10 @@ public class SecurityMember implements OAuth2User {
         return userInfo.getNickname();
     }
 
+    public String getId() {
+        return userInfo.getId();
+    }
+
     @Override
     public Map<String, Object> getAttributes() {
         return userInfo.getAttributes();
