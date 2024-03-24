@@ -2,14 +2,10 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.member.domain.MemberRepository;
-import dynamicquad.agilehub.project.controller.request.ProjectCreateReq;
-import dynamicquad.agilehub.project.controller.request.ProjectUpdateReq;
-import dynamicquad.agilehub.project.controller.response.ProjectRes;
-import dynamicquad.agilehub.project.domain.MemberProjectRepository;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,11 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-    private final MemberRepository memberRepository;
-    private final MemberProjectRepository memberProjectRepository;
 
     @Transactional
-    public String createProject(ProjectCreateReq request) {
+    public String createProject(ProjectCreateRequest request) {
 
         validateKeyUniqueness(request.getKey());
 
@@ -35,25 +29,8 @@ public class ProjectService {
         return projectRepository.save(request.toEntity()).getKey();
     }
 
-
-    public List<ProjectRes> getProjects(Long memberId) {
-
-        validateMemberExist(memberId);
-
-        //member로 project 조회
-        List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
-
-        if (projects.isEmpty()) {
-            throw new GeneralException(ErrorStatus.PROJECT_NOT_FOUND);
-        }
-
-        log.info("projects : {}", projects);
-
-        return projects.stream().map(ProjectRes::fromEntity).toList();
-    }
-
     @Transactional
-    public String updateProject(String originKey, ProjectUpdateReq request) {
+    public String updateProject(String originKey, ProjectUpdateRequest request) {
 
         Project project = projectRepository.findByKey(originKey)
             .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
@@ -70,9 +47,4 @@ public class ProjectService {
         }
     }
 
-    private void validateMemberExist(Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
-    }
 }
