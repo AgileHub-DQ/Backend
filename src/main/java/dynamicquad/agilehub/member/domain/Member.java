@@ -28,9 +28,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
     private String name;
 
@@ -40,8 +37,7 @@ public class Member extends BaseEntity {
     private MemberStatus status;
 
     @Builder
-    private Member(String email, String name, String profileImageUrl, MemberStatus status) {
-        this.email = email;
+    private Member(String name, String profileImageUrl, MemberStatus status) {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.status = status;
