@@ -1,0 +1,10 @@
+jwt:
+  secret: ${JWT_SECRET}
+
+  access:
+    expiration: 20
+    header: Authorization
+
+  refresh:
+    expiration: 40
+    header: Refresh
