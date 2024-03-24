@@ -29,8 +29,6 @@ public class MemberRequestDto {
         private OAuth2Attribute provider;
 
         private String distinctId;
-
-        private Long memberId;
     }
 
 }

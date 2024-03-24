@@ -15,8 +15,8 @@ public class SocialLoginService {
 
     private final SocialLoginRepository socialLoginRepository;
 
-    public Long save(SocialLogin socialLogin) {
-        return socialLoginRepository.save(socialLogin).getId();
+    public SocialLogin save(SocialLogin socialLogin) {
+        return socialLoginRepository.save(socialLogin);
     }
 
 }

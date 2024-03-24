@@ -15,9 +15,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Long save(MemberRequestDto.CreateMember dto) {
-        Member member = MemberConverter.toMember(dto);
-        return memberRepository.save(member).getId();
+    public Member save(Member member) {
+        return memberRepository.save(member);
     }
 
 }
