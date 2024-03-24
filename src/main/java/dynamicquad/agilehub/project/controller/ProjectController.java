@@ -71,11 +71,4 @@ public class ProjectController {
         return "redirect:/api/projects/{key}/boards";
     }
 
-    @ResponseBody
-    @GetMapping("/api/projects/{key}/boards")
-    public String getProjectBoards(@PathVariable("key") String key) {
-        log.info("getProjectBoards");
-        log.info("key: {}", key);
-        return "project-boards";
-    }
 }
