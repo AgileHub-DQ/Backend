@@ -10,7 +10,6 @@ import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -93,8 +92,8 @@ class StoryTest {
             .assignee(member1)
             .project(project)
             .storyPoint(5)
-            .startDate(LocalDateTime.now())
-            .endDate(LocalDateTime.now().plusDays(7))
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now().plusDays(7))
             .epic(epic)
             .build();
 
