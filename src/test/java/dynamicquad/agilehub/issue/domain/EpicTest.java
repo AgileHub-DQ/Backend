@@ -9,14 +9,14 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@ActiveProfiles("local")
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 class EpicTest {
@@ -39,14 +39,12 @@ class EpicTest {
 
         member1 = Member.builder()
             .name("멤버1")
-            .email("sads@naver.com")
             .profileImageUrl("https://naver.com")
             .status(MemberStatus.ACTIVE)
             .build();
 
         member2 = Member.builder()
             .name("멤버2")
-            .email("sese@google.com")
             .build();
 
         em.persist(member1);
@@ -79,8 +77,8 @@ class EpicTest {
             .content("에픽1 내용")
             .number(1)
             .status(IssueStatus.DO)
-            .startDate(LocalDate.of(2024, 3, 1))
-            .endDate(LocalDate.of(2024, 3, 31))
+            .startDate(LocalDateTime.of(2024, 1, 1, 0, 0))
+            .endDate(LocalDateTime.of(2024, 1, 1, 0, 1))
             .assignee(member1)
             .project(project)
             .build();

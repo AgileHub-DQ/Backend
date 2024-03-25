@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.project.domain;
 
 import dynamicquad.agilehub.global.domain.BaseEntity;
+import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,9 +38,9 @@ public class Project extends BaseEntity {
         this.key = key;
     }
 
-    public Project updateProject(String name, String key) {
-        this.name = name;
-        this.key = key;
+    public Project updateProject(ProjectUpdateRequest request) {
+        this.name = request.getName();
+        this.key = request.getKey();
         return this;
     }
 
