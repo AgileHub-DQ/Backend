@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class IssueRequest {
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode
