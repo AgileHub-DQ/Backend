@@ -6,6 +6,7 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -121,4 +122,7 @@ public class PhotoS3Manager implements PhotoManager {
         }
     }
 
+    public List<String> uploadPhotos(List<MultipartFile> files) {
+        return null;
+    }
 }

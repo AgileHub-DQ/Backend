@@ -9,6 +9,7 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,8 +79,8 @@ class StoryTest {
             .status(IssueStatus.DO)
             .assignee(member1)
             .project(project)
-            .startDate(LocalDateTime.now())
-            .endDate(LocalDateTime.now().plusDays(7))
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now().plusDays(8))
             .build();
 
         em.persist(epic);
