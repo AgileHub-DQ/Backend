@@ -23,3 +23,5 @@ aws:
     rootURL: https://image.agilehub.store
     bucket: agilehub
     directory: /images
+    workingDirectory:
+      issue: /issue

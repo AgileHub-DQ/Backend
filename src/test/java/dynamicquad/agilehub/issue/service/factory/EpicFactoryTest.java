@@ -2,12 +2,15 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.global.util.PhotoS3Manager;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Image;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -16,11 +19,16 @@ import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -32,6 +40,9 @@ class EpicFactoryTest {
 
     @Autowired
     private EpicFactory epicFactory;
+
+    @MockBean
+    private PhotoS3Manager photoS3Manager;
 
     @Test
     void 이미지없는_에픽이슈를_정상적으로_생성() {
@@ -148,6 +159,45 @@ class EpicFactoryTest {
         //then
         assertThatThrownBy(() -> epicFactory.createIssue(request, project2)
         ).isInstanceOf(GeneralException.class).extracting("status").isEqualTo(ErrorStatus.MEMBER_NOT_IN_PROJECT);
+
+    }
+
+    @Test
+    void 이슈에_등록한_이미지두개를_정상적으로_저장() {
+        //given
+        Project project1 = createProject("프로젝트1", "project1");
+        em.persist(project1);
+
+        MultipartFile file1 = new MockMultipartFile("file1", "file1.jpg", MediaType.IMAGE_PNG_VALUE,
+            "file1".getBytes());
+        MultipartFile file2 = new MockMultipartFile("file2", "file2.jpg", MediaType.IMAGE_PNG_VALUE,
+            "file2".getBytes());
+        List<MultipartFile> files = List.of(file1, file2);
+
+        IssueCreateRequest request = IssueCreateRequest.builder()
+            .title("이슈 제목")
+            .type(IssueType.EPIC)
+            .status(IssueStatus.DO)
+            .content("content 내용")
+            .files(files)
+            .startDate(LocalDate.of(2024, 2, 19))
+            .endDate(LocalDate.of(2024, 2, 23))
+            .assigneeId(null)
+            .build();
+
+        when(photoS3Manager.uploadPhotos(files, "/issue")).thenReturn(List.of("https://file.jpg", "https://file2.jpg"));
+
+        //when
+        Long issueId = epicFactory.createIssue(request, project1);
+        //then
+        List<Image> images = em.createQuery("select i from Image i where i.issue = :issue", Image.class)
+            .setParameter("issue", em.find(Epic.class, issueId))
+            .getResultList();
+
+        assertThat(images).hasSize(2);
+        assertThat(images.get(0).getPath()).isNotNull();
+        assertThat(images.get(1).getPath()).isEqualTo("https://file2.jpg");
+
 
     }
 

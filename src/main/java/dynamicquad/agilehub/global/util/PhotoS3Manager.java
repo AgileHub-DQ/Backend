@@ -122,7 +122,15 @@ public class PhotoS3Manager implements PhotoManager {
         }
     }
 
-    public List<String> uploadPhotos(List<MultipartFile> files) {
-        return null;
+    public List<String> uploadPhotos(List<MultipartFile> files, String workingDirectory) {
+
+        if (files == null || files.isEmpty()) {
+            throw new GeneralException(ErrorStatus.FILE_NOT_EXIST);
+        }
+
+        return files.stream()
+            .map(file -> upload(file, workingDirectory))
+            .toList();
     }
+
 }
