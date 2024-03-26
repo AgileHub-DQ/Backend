@@ -50,7 +50,7 @@ class IssueControllerTest {
         when(issueService.createIssue(key, request)).thenReturn(1L);
 
         mockMvc.perform(post("/api/projects/" + key + "/issues")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .param("title", request.getTitle())
                 .param("type", request.getType().name())
                 .param("status", request.getStatus().name())

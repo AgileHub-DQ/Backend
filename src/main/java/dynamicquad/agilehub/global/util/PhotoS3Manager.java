@@ -49,10 +49,14 @@ public class PhotoS3Manager implements PhotoManager {
     private String uploadPhoto(MultipartFile multipartFile, String workingDirectory) {
         String fileName = createFileName(multipartFile.getOriginalFilename());
         //임시 디렉터리 생성
+        log.info("upload start");
         File tempUploadDirectory = uploadDirectory(getLocalDirectoryPath(workingDirectory));
+        log.info("upload directory : {}", tempUploadDirectory);
         File tempUploadPath = new File(tempUploadDirectory, fileName);
+        log.info("upload path : {}", tempUploadPath);
         File file = uploadFileInLocal(multipartFile, tempUploadPath);
 
+        log.info("s3 upload start");
         amazonS3.putObject(new PutObjectRequest(bucket + workingDirectory, fileName, file));
 
         file.delete();
@@ -90,6 +94,7 @@ public class PhotoS3Manager implements PhotoManager {
             throw new GeneralException(ErrorStatus.FILE_EXTENSION_NOT_EXIST);
         }
         String fileBaseName = UUID.randomUUID().toString().substring(0, 8);
+        log.info("fileBaseName : {}", fileBaseName);
         validateFileName(fileBaseName);
         validateExtension(extension);
 
@@ -99,7 +104,7 @@ public class PhotoS3Manager implements PhotoManager {
     }
 
     private void validateFileName(String fileName) {
-        if (StringUtils.hasText(fileName)) {
+        if (!StringUtils.hasText(fileName)) {
             throw new GeneralException(ErrorStatus.FILE_NAME_NOT_EXIST);
         }
     }
