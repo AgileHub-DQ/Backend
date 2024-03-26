@@ -4,6 +4,8 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.util.PhotoS3Manager;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Image;
 import dynamicquad.agilehub.issue.domain.ImageRepository;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
@@ -39,6 +41,7 @@ public class StoryFactory implements IssueFactory {
 
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
         Member assignee = findMember(request.getAssigneeId(), project.getId());
+        Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
 
         Story story = Story.builder()
             .title(request.getTitle())
@@ -49,6 +52,7 @@ public class StoryFactory implements IssueFactory {
             .project(project)
             .startDate(request.getStartDate())
             .endDate(request.getEndDate())
+            .epic(upEpic)
             .build();
 
         issueRepository.save(story);
@@ -58,6 +62,26 @@ public class StoryFactory implements IssueFactory {
         }
 
         return story.getId();
+    }
+
+    public Epic retrieveEpicFromParentIssue(Long parentId) {
+        if (parentId == null) {
+            return null;
+        }
+        validateParentIssue(parentId);
+        return (Epic) issueRepository.findById(parentId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_FOUND));
+
+    }
+
+    private void validateParentIssue(Long parentId) {
+        String type = issueRepository.findIssueTypeById(parentId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_FOUND));
+
+        if (!IssueType.EPIC.equals(IssueType.valueOf(type))) {
+            throw new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_EPIC);
+        }
+
     }
 
     private void saveImages(Story story, List<String> imagePath) {

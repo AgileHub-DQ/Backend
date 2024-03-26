@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,6 +63,32 @@ class IssueRepositoryTest {
         // when
         // then
         assertThat(issueRepository.countByProjectKey("project1")).isEqualTo(0);
+    }
+
+    @Test
+    void 스토리이슈의_타입을_조회하면_story_string을_반환한다() {
+        // given
+        Project project1 = createProject("프로젝트1", "project1");
+        em.persist(project1);
+
+        Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
+        em.persist(story1P1);
+
+        // when
+        String issueType = issueRepository.findIssueTypeById(story1P1.getId())
+            .orElseThrow(() -> new IllegalArgumentException("이슈가 없습니다."));
+        // then
+        assertThat(issueType).isEqualTo("STORY");
+
+    }
+
+    @Test
+    void 없는_이슈를_타입조회하면_빈_Optional을_반환한다() {
+        // given
+        // when
+        Optional<String> issueType = issueRepository.findIssueTypeById(1L);
+        // then
+        assertThat(issueType).isEmpty();
     }
 
     private Project createProject(String projectName, String projectKey) {
