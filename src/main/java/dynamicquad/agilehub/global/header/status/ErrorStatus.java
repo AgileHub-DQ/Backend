@@ -34,7 +34,8 @@ public enum ErrorStatus implements BaseStatus {
     // ISSUE Error
     ISSUE_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "ISSUE_4001", "이슈 타입을 찾을 수 없습니다."),
     PARENT_ISSUE_NOT_FOUND(HttpStatus.NOT_FOUND, "ISSUE_4002", "부모 이슈를 찾을 수 없습니다."),
-    PARENT_ISSUE_NOT_EPIC(HttpStatus.BAD_REQUEST, "ISSUE_4003", "부모 이슈는 EPIC이어야 합니다.");
+    PARENT_ISSUE_NOT_EPIC(HttpStatus.BAD_REQUEST, "ISSUE_4003", "부모 이슈는 EPIC이어야 합니다."),
+    PARENT_ISSUE_NOT_STORY(HttpStatus.BAD_REQUEST, "ISSUE_4004", "부모 이슈는 STORY이어야 합니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

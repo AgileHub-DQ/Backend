@@ -1,6 +1,7 @@
-package dynamicquad.agilehub.issue.domain;
+package dynamicquad.agilehub.issue.domain.image;
 
 import dynamicquad.agilehub.global.domain.BaseEntity;
+import dynamicquad.agilehub.issue.domain.Issue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
