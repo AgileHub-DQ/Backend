@@ -9,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,6 +22,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
+@Slf4j
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
@@ -68,6 +70,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleOthers(Exception e, WebRequest request) {
+        log.error("handleOthers", e);
         return handleExceptionInternalOthers(e, ErrorStatus.INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY,
             ErrorStatus.INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
     }
