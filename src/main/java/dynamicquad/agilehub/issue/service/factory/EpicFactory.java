@@ -70,7 +70,7 @@ public class EpicFactory implements IssueFactory {
         log.info("save images = {} ", imagePath);
 
         List<Image> images = imagePath.stream()
-            .map(path -> Image.builder().path(path).issue(epic).build())
+            .map(path -> Image.builder().path(path).build().setIssue(epic))
             .toList();
 
         imageRepository.saveAll(images);

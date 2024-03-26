@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class IssueControllerTest {
 
     @MockBean
     private IssueService issueService;
+
+    @MockBean
+    private IssueQueryService issueQueryService;
 
     @Test
     void 정상적인_이슈를_생성하면_해당_이슈를_가진_URL을_반환한다() throws Exception {

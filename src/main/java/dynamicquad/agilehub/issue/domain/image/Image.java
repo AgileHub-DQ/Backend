@@ -38,8 +38,14 @@ public class Image extends BaseEntity {
     private String path;
 
     @Builder
-    private Image(Issue issue, String path) {
-        this.issue = issue;
+    private Image(String path) {
         this.path = path;
     }
+
+    public Image setIssue(Issue issue) {
+        this.issue = issue;
+        issue.getImages().add(this);
+        return this;
+    }
+
 }

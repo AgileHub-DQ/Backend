@@ -1,8 +1,10 @@
 package dynamicquad.agilehub.issue.domain;
 
+import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.domain.Sprint;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -16,7 +18,10 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
@@ -58,6 +63,9 @@ public abstract class Issue {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sprint_id")
     private Sprint sprint;
+
+    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Image> images = new ArrayList<>();
 
     public void setSprint(Sprint newSprint) {
         this.sprint = newSprint;

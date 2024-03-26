@@ -90,7 +90,7 @@ public class StoryFactory implements IssueFactory {
         }
 
         List<Image> images = imagePath.stream()
-            .map(path -> Image.builder().path(path).issue(story).build())
+            .map(path -> Image.builder().path(path).build().setIssue(story))
             .toList();
 
         imageRepository.saveAll(images);
