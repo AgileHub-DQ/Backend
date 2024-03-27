@@ -2,7 +2,6 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.global.util.PhotoS3Manager;
 import dynamicquad.agilehub.issue.controller.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.IssueResponse.IssueDto;
@@ -12,9 +11,9 @@ import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.image.Image;
-import dynamicquad.agilehub.issue.domain.image.ImageRepository;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
+import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
@@ -34,13 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class EpicFactory implements IssueFactory {
 
-    private final PhotoS3Manager photoS3Manager;
-
     private final MemberProjectRepository memberProjectRepository;
     private final MemberRepository memberRepository;
     private final IssueRepository issueRepository;
-    private final ImageRepository imageRepository;
     private final StoryRepository storyRepository;
+
+    private final ImageService imageService;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -68,7 +66,7 @@ public class EpicFactory implements IssueFactory {
 
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
             log.info("uploading images");
-            saveImages(epic, photoS3Manager.uploadPhotos(request.getFiles(), WORKING_DIRECTORY));
+            imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
         }
 
         return epic.getId();
@@ -148,20 +146,6 @@ public class EpicFactory implements IssueFactory {
         }
         return epic;
     }
-
-    private void saveImages(Epic epic, List<String> imagePath) {
-        if (imagePath.isEmpty()) {
-            return;
-        }
-        log.info("save images = {} ", imagePath);
-
-        List<Image> images = imagePath.stream()
-            .map(path -> Image.builder().path(path).build().setIssue(epic))
-            .toList();
-
-        imageRepository.saveAll(images);
-    }
-
 
     private Member findMember(Long assigneeId, Long projectId) {
 
