@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberStatus;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -9,7 +10,7 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,8 +79,8 @@ class StoryTest {
             .status(IssueStatus.DO)
             .assignee(member1)
             .project(project)
-            .startDate(LocalDateTime.now())
-            .endDate(LocalDateTime.now().plusDays(7))
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now().plusDays(8))
             .build();
 
         em.persist(epic);
@@ -92,8 +93,8 @@ class StoryTest {
             .assignee(member1)
             .project(project)
             .storyPoint(5)
-            .startDate(LocalDateTime.now())
-            .endDate(LocalDateTime.now().plusDays(7))
+            .startDate(LocalDate.now())
+            .endDate(LocalDate.now().plusDays(7))
             .epic(epic)
             .build();
 

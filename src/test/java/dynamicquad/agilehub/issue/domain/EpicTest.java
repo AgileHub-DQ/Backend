@@ -9,7 +9,7 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -77,8 +77,8 @@ class EpicTest {
             .content("에픽1 내용")
             .number(1)
             .status(IssueStatus.DO)
-            .startDate(LocalDateTime.of(2024, 1, 1, 0, 0))
-            .endDate(LocalDateTime.of(2024, 1, 1, 0, 1))
+            .startDate(LocalDate.of(2024, 1, 1))
+            .endDate(LocalDate.of(2024, 1, 10))
             .assignee(member1)
             .project(project)
             .build();

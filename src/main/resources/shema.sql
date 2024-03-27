@@ -14,6 +14,14 @@ create table epic (
                       start_date timestamp(6),
                       primary key (issue_id)
 ) engine=InnoDB;
+create table image (
+                       created_at timestamp(6) not null,
+                       image_id bigint not null auto_increment,
+                       issue_id bigint,
+                       updated_at timestamp(6) not null,
+                       path varchar(255),
+                       primary key (image_id)
+) engine=InnoDB;
 create table issue (
                        number integer not null,
                        issue_id bigint not null auto_increment,
@@ -90,6 +98,11 @@ alter table comment
 
 alter table epic
     add constraint FK4eyvsgi51pqc8poxrax7taten
+        foreign key (issue_id)
+            references issue (issue_id);
+
+alter table image
+    add constraint FKg2eq37avh8iq48etswm7oc193
         foreign key (issue_id)
             references issue (issue_id);
 
