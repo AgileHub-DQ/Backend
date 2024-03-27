@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private final String PREFIX = "Bearer ";
-    private final String BLANK = "";
+    private static final String PREFIX = "Bearer ";
+    private static final String BLANK = "";
 
     @Value("${jwt.secret}")
     private String secretKey;
