@@ -9,8 +9,8 @@ import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateReq
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.domain.Task;
+import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

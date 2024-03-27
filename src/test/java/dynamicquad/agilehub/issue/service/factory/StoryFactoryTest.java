@@ -5,15 +5,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.issue.controller.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.domain.Task;
+import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -132,6 +134,56 @@ class StoryFactoryTest {
 
 
     }
+
+    @Test
+    void 하위_이슈들_정상적으로_가져오기() {
+        // given
+        Project project = createProject("프로젝트1", "project1");
+        em.persist(project);
+        Epic epic = Epic.builder()
+            .title("에픽 제목")
+            .project(project)
+            .status(IssueStatus.DO)
+            .build();
+        em.persist(epic);
+
+        Story story = Story.builder()
+            .project(project)
+            .title("스토리 제목")
+            .status(IssueStatus.DO)
+            .epic(epic)
+            .build();
+        em.persist(story);
+
+        Task task1 = Task.builder()
+            .project(project)
+            .title("task1")
+            .status(IssueStatus.DO)
+            .story(story)
+            .build();
+        em.persist(task1);
+
+        Task task2 = Task.builder()
+            .project(project)
+            .title("task2")
+            .status(IssueStatus.DO)
+            .story(story)
+            .build();
+        em.persist(task2);
+
+        // when
+        Story storyFromDB = em.find(Story.class, story.getId());
+        List<SubIssueDto> childIssueDtos = storyFactory.createChildIssueDtos(storyFromDB);
+        // then
+        assertThat(childIssueDtos).hasSize(2);
+        assertThat(childIssueDtos.get(0).getTitle()).isEqualTo("task1");
+        assertThat(childIssueDtos.get(1).getTitle()).isEqualTo("task2");
+        assertThat(childIssueDtos.get(0).getType()).isEqualTo("TASK");
+        assertThat(childIssueDtos.get(0).getAssignee()).isNotNull();
+        assertThat(childIssueDtos.get(0).getAssignee().getName()).isEqualTo("");
+
+    }
+
 
     private Project createProject(String projectName, String projectKey) {
         return Project.builder()
