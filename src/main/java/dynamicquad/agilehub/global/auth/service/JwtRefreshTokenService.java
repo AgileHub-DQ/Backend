@@ -19,9 +19,13 @@ public class JwtRefreshTokenService {
         repository.save(new JwtRefreshToken(accessToken, refreshToken));
     }
 
+    public void saveRefreshToken(JwtRefreshToken refreshToken) {
+        repository.save(refreshToken);
+    }
+
     public void removeRefreshToken(String accessToken) {
         JwtRefreshToken token = repository.findByAccessToken(accessToken)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.ACCESS_TOKEN_NOT_EXIST));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_ACCESS_TOKEN));
         repository.delete(token);
     }
 

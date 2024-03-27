@@ -17,7 +17,7 @@ public class JwtRefreshTokenQueryService {
 
     public JwtRefreshToken findByAccessToken(String accessToken) {
         return repository.findByAccessToken(accessToken)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.REFRESH_TOKEN_NOT_EXIST));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.INVALID_REFRESH_TOKEN));
     }
 
 }

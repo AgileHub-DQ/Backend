@@ -19,8 +19,8 @@ public enum ErrorStatus implements BaseStatus {
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER_4002", "닉네임은 필수 입니다."),
     UNSUPPORTED_PROVIDER(HttpStatus.BAD_REQUEST, "MEMBER_4003", "지원하지 않는 소셜 로그인입니다."),
     MEMBER_ROLE_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER_4004", "사용자 ROLE이 존재하지 않습니다."),
-    REFRESH_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER_4005", "존재하지 않는 Refresh Token입니다."),
-    ACCESS_TOKEN_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER_4006", "존재하지 않는 Access Token입니다."),
+    INVALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "MEMBER_4006", "유효하지 않은 Access Token입니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "MEMBER_4007", "유효하지 않은 Refresh Token입니다."),
 
     // Project Error
     PROJECT_DUPLICATE(HttpStatus.BAD_REQUEST, "PROJECT_4001", "프로젝트 키가 중복됩니다."),
