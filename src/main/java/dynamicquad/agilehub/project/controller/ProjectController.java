@@ -4,6 +4,7 @@ import static dynamicquad.agilehub.project.controller.request.ProjectRequest.Pro
 import static dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
+import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
@@ -15,20 +16,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "프로젝트", description = "프로젝트를 생성하고 조회합니다.")
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectController {
@@ -38,15 +39,16 @@ public class ProjectController {
 
     @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "302", description = "프로젝트 생성 후 보드 페이지로 이동합니다."),
+        @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공"),
         @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
     })
     @PostMapping("/api/projects")
-    public String createProject(@RequestBody @Valid ProjectCreateRequest request,
-                                RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> createProject(@RequestBody @Valid ProjectCreateRequest request) {
         log.info("createProject");
-        redirectAttributes.addAttribute("key", projectService.createProject(request));
-        return "redirect:/api/projects/{key}/boards";
+        String key = projectService.createProject(request);
+
+        return ResponseEntity.created(URI.create("/api/projects/" + key + "/issues"))
+            .body(CommonResponse.of(SuccessStatus.CREATED, key));
     }
 
     @Operation(summary = "프로젝트 목록 조회", description = "유저의 프로젝트 목록을 조회합니다.")
@@ -56,7 +58,6 @@ public class ProjectController {
         @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다."),
         @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
-    @ResponseBody
     @GetMapping("/api/projects")
     public CommonResponse<?> getProjects() {
         log.info("getProjects");
@@ -73,12 +74,12 @@ public class ProjectController {
         @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
     @PutMapping("/api/projects/{key}")
-    public String updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key,
-                                RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key) {
         log.info("updateProject");
-        redirectAttributes.addAttribute("key", projectService.updateProject(key, request));
+        String updateKey = projectService.updateProject(key, request);
 
-        return "redirect:/api/projects/{key}/boards";
+        return ResponseEntity.created(URI.create("/api/projects/" + updateKey + "/issues"))
+            .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
     }
 
 
