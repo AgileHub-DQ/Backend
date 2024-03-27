@@ -55,7 +55,7 @@ public class IssueResponse {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
-    public static class IssueResponseDto {
+    public static class IssueReadResponseDto {
         private IssueDto issue;
         private SubIssueDto parentIssue;
         private List<SubIssueDto> childIssues;
