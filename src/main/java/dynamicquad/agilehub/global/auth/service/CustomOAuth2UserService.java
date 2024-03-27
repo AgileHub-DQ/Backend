@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.auth;
+package dynamicquad.agilehub.global.auth.service;
 
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
 import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
