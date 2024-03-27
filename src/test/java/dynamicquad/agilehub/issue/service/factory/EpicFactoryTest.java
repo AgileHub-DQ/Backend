@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.util.PhotoS3Manager;
+import dynamicquad.agilehub.issue.controller.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Epic;
@@ -200,6 +201,72 @@ class EpicFactoryTest {
 
 
     }
+
+
+    @Test
+    void 이슈가_가지고있는_이미지들_ContentDto로_반환() {
+        //given
+        Project project1 = createProject("프로젝트1", "project1");
+        em.persist(project1);
+
+        Epic epic = Epic.builder()
+            .title("이슈 제목")
+            .content("content 내용")
+            .number(1)
+            .status(IssueStatus.DO)
+            .assignee(null)
+            .project(project1)
+            .startDate(LocalDate.of(2024, 2, 19))
+            .endDate(LocalDate.of(2024, 2, 23))
+            .build();
+        em.persist(epic);
+
+        Image image1 = Image.builder()
+            .path("https://file.jpg")
+            .build();
+        image1.setIssue(epic);
+        em.persist(image1);
+
+        Image image2 = Image.builder()
+            .path("https://file2.jpg")
+            .build();
+        image2.setIssue(epic);
+        em.persist(image2);
+
+        //when
+        ContentDto contentDto = epicFactory.createContentDto(epic);
+
+        //then
+        assertThat(contentDto.getText()).isEqualTo("content 내용");
+        assertThat(contentDto.getImagesURLs()).containsExactly("https://file.jpg", "https://file2.jpg");
+    }
+
+    @Test
+    void 이슈가_가지고있는_이미지가_없어도_빈_ContentDto로_반환() {
+        //given
+        Project project1 = createProject("프로젝트1", "project1");
+        em.persist(project1);
+
+        Epic epic = Epic.builder()
+            .title("이슈 제목")
+            .content("content 내용")
+            .number(1)
+            .status(IssueStatus.DO)
+            .assignee(null)
+            .project(project1)
+            .startDate(LocalDate.of(2024, 2, 19))
+            .endDate(LocalDate.of(2024, 2, 23))
+            .build();
+        em.persist(epic);
+
+        //when
+        ContentDto contentDto = epicFactory.createContentDto(epic);
+
+        //then
+        assertThat(contentDto.getText()).isEqualTo("content 내용");
+        assertThat(contentDto.getImagesURLs()).isEmpty();
+    }
+
 
     private Member createMember(String memberName) {
         return Member.builder()
