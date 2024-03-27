@@ -40,7 +40,7 @@ public class JwtUtil {
                 .build();
     }
 
-    private String generateAccessToken(String name, String role) {
+    public String generateAccessToken(String name, String role) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
@@ -52,7 +52,7 @@ public class JwtUtil {
                 .sign(Algorithm.HMAC512(secretKey)));
     }
 
-    private String generateRefreshToken(String name, String role) {
+    public String generateRefreshToken(String name, String role) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
