@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.member.domain.Member;
-import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.member.domain.MemberStatus;
+import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
@@ -54,9 +54,9 @@ class ProjectQueryServiceTest {
         // then
         assertThat(projects).hasSize(2);
         assertThat(projects).extracting("key")
-            .containsOnly("PK1", "PK2");
+                .containsOnly("PK1", "PK2");
         assertThat(projects).extracting("name")
-            .containsOnly("프로젝트1", "프로젝트2");
+                .containsOnly("프로젝트1", "프로젝트2");
     }
 
     @Test
@@ -67,29 +67,29 @@ class ProjectQueryServiceTest {
         // when
         // then
         assertThatThrownBy(() -> projectQueryService.getProjects(m1.getId()))
-            .isInstanceOf(GeneralException.class);
+                .isInstanceOf(GeneralException.class);
     }
 
     private Project createProject(String projectName, String projectKey) {
         return projectRepository.save(Project.builder()
-            .name(projectName)
-            .key(projectKey)
-            .build());
+                .name(projectName)
+                .key(projectKey)
+                .build());
     }
 
     private Member createMember(String name) {
         return memberRepository.save(Member.builder()
-            .name(name)
-            .status(MemberStatus.ACTIVE)
-            .build());
+                .name(name)
+                .status(MemberStatus.ACTIVE)
+                .build());
     }
 
     private MemberProject createMemberProject(Member member, Project project, MemberProjectRole role) {
         return memberProjectRepository.save(MemberProject.builder()
-            .member(member)
-            .project(project)
-            .role(role)
-            .build());
+                .member(member)
+                .project(project)
+                .role(role)
+                .build());
     }
 
 

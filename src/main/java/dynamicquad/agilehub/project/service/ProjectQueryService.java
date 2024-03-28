@@ -2,7 +2,7 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.member.domain.MemberRepository;
+import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
