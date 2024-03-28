@@ -57,7 +57,7 @@ public class PhotoS3Manager implements PhotoManager {
         File file = uploadFileInLocal(multipartFile, tempUploadPath);
 
         log.info("s3 upload start");
-        amazonS3.putObject(new PutObjectRequest(bucket + workingDirectory, fileName, file));
+        amazonS3.putObject(new PutObjectRequest(bucket, workingDirectory + "/" + fileName, file));
 
         file.delete();
 
@@ -122,8 +122,7 @@ public class PhotoS3Manager implements PhotoManager {
     public void delete(String originalImageUrl, String workingDirectory) {
         if (originalImageUrl.contains(rootURL + "/" + workingDirectory)) {
             String fileName = originalImageUrl.substring(originalImageUrl.length() + 1);
-            amazonS3.deleteObject(bucket + workingDirectory, fileName);
-            amazonS3.deleteObject(bucket, fileName);
+            amazonS3.deleteObject(bucket, workingDirectory + "/" + fileName);
         }
     }
 
