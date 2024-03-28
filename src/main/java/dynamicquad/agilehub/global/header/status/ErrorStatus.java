@@ -30,6 +30,7 @@ public enum ErrorStatus implements BaseStatus {
     FILE_EXTENSION_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_4002", "파일 확장자는 반드시 포함되어야 합니다."),
     FILE_NAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "FILE_4003", "파일 이름은 반드시 포함되어야 합니다."),
     FILE_EXTENSION_NOT_IMAGE(HttpStatus.BAD_REQUEST, "FILE_4004", "이미지 파일 확장자만 업로드 가능합니다."),
+    FILE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_4005", "파일 업로드 실패"),
 
     // ISSUE Error
     ISSUE_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "ISSUE_4001", "이슈 타입을 찾을 수 없습니다."),

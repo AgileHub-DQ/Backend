@@ -1,12 +1,15 @@
 package dynamicquad.agilehub.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -47,22 +50,28 @@ public class PhotoS3Manager implements PhotoManager {
     }
 
     private String uploadPhoto(MultipartFile multipartFile, String workingDirectory) {
-        String fileName = createFileName(multipartFile.getOriginalFilename());
-        //임시 디렉터리 생성
-        log.info("upload start");
-        File tempUploadDirectory = uploadDirectory(getLocalDirectoryPath(workingDirectory));
-        log.info("upload directory : {}", tempUploadDirectory);
-        File tempUploadPath = new File(tempUploadDirectory, fileName);
-        log.info("upload path : {}", tempUploadPath);
-        File file = uploadFileInLocal(multipartFile, tempUploadPath);
+        try {
+            String fileName = createFileName(multipartFile.getOriginalFilename());
+            File tempUploadDirectory = uploadDirectory(getLocalDirectoryPath(workingDirectory));
+            File tempUploadPath = new File(tempUploadDirectory, fileName);
+            File file = uploadFileInLocal(multipartFile, tempUploadPath);
 
-        log.info("s3 upload start");
-        amazonS3.putObject(new PutObjectRequest(bucket, workingDirectory + "/" + fileName, file));
+            String fileExtension = StringUtils.getFilenameExtension(fileName);
+            String contentType = getContentTypeByExtension(fileExtension);
 
-        file.delete();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(contentType);
 
-        return rootURL + "/" + workingDirectory + "/" + fileName;
+            amazonS3.putObject(
+                new PutObjectRequest(bucket, workingDirectory + "/" + fileName, new FileInputStream(file), metadata));
 
+            file.delete();
+
+            return rootURL + "/" + workingDirectory + "/" + fileName;
+        } catch (Exception e) {
+            log.error("파일 업로드 실패", e);
+            throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAIL);
+        }
     }
 
     private File uploadFileInLocal(MultipartFile multipartFile, File tempUploadPath) {
@@ -135,6 +144,25 @@ public class PhotoS3Manager implements PhotoManager {
         return files.stream()
             .map(file -> upload(file, workingDirectory))
             .toList();
+    }
+
+
+    private String getContentTypeByExtension(String extension) {
+
+        if (extension == null) {
+            throw new GeneralException(ErrorStatus.FILE_EXTENSION_NOT_EXIST);
+        }
+
+        Map<String, String> extensionToContentType = Map.of(
+            "jpeg", "image/jpeg",
+            "jpg", "image/jpeg",
+            "png", "image/png",
+            "webp", "image/webp",
+            "heic", "image/heic",
+            "heif", "image/heif"
+        );
+
+        return extensionToContentType.getOrDefault(extension.toLowerCase(), "application/octet-stream");
     }
 
 }
