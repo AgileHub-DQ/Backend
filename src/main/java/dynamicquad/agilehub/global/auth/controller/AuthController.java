@@ -33,6 +33,7 @@ public class AuthController {
                     jwtUtil.extractRole(refreshToken.getRefreshToken())
             );
             refreshToken.updateAccessToken(generatedAccessToken);
+            jwtRefreshTokenService.saveRefreshToken(refreshToken);
 
             return CommonResponse.of(SuccessStatus.CREATED, generatedAccessToken);
         }
