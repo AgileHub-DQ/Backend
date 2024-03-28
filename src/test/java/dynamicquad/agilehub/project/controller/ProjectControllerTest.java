@@ -4,8 +4,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,7 +54,7 @@ class ProjectControllerTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is3xxRedirection());
+            .andExpect(status().is2xxSuccessful());
 
     }
 
@@ -177,8 +177,8 @@ class ProjectControllerTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/api/projects/" + updateKey + "/boards"));
+            .andExpect(status().is2xxSuccessful())
+            .andExpect(header().string("Location", "/api/projects/" + updateKey + "/issues"));
 
 
     }

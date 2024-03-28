@@ -24,4 +24,4 @@ aws:
     bucket: agilehub
     directory: /images
     workingDirectory:
-      issue: /issue
+      issue: issue
