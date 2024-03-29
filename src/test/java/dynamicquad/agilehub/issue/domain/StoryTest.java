@@ -19,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class StoryTest {
 
@@ -71,6 +70,7 @@ class StoryTest {
     }
 
     @Test
+    @Transactional
     void 스토리생성후_상위에픽_조회() {
         // given
         Epic epic = Epic.builder()

@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class EpicRepositoryTest {
 
     @PersistenceContext
@@ -24,6 +23,7 @@ class EpicRepositoryTest {
     private EpicRepository epicRepository;
 
     @Test
+    @Transactional
     void 프로젝트에_소속된_에픽이슈들을_조회한다() {
         // Given
         Project project1 = createProject("프로젝트1", "project1");

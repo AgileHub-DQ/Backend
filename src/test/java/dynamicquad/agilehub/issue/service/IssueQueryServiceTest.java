@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class IssueQueryServiceTest {
 
     @PersistenceContext
@@ -29,6 +28,7 @@ class IssueQueryServiceTest {
     private IssueQueryService issueQueryService;
 
     @Test
+    @Transactional
     void 프로젝트에_속한_이슈들을_모두_조회() {
         // given
         Project project1 = createProject("프로젝트1", "project1");

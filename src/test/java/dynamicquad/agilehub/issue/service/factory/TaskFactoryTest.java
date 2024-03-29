@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class TaskFactoryTest {
 
     @PersistenceContext
@@ -32,6 +31,7 @@ class TaskFactoryTest {
     private TaskFactory taskFactory;
 
     @Test
+    @Transactional
     void 부모이슈가_에픽이거나_테스크일때_예외처리() {
         // given
         Project project = createProject("프로젝트1", "project1");
@@ -80,6 +80,7 @@ class TaskFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모이슈를_정상적으로_등록() {
         // given
         Project project = createProject("프로젝트1", "project1");

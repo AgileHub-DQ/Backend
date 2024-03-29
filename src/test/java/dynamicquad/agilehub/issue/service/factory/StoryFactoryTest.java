@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class StoryFactoryTest {
 
     @PersistenceContext
@@ -35,6 +34,7 @@ class StoryFactoryTest {
 
 
     @Test
+    @Transactional
     void 부모이슈가_스토리나_테스크일때_예외처리() {
         // given
         Project project = createProject("프로젝트1", "project1");
@@ -84,6 +84,7 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모에픽을_정상적으로_찾는다() {
         // given
         Project project = createProject("프로젝트1", "project1");
@@ -108,6 +109,7 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모이슈가_정상적으로_등록() {
         // given
         Project project = createProject("프로젝트1", "project1");
@@ -136,6 +138,7 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 하위_이슈들_정상적으로_가져오기() {
         // given
         Project project = createProject("프로젝트1", "project1");

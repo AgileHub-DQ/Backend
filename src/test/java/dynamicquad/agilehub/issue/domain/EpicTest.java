@@ -18,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class EpicTest {
 
@@ -70,6 +69,7 @@ class EpicTest {
     }
 
     @Test
+    @Transactional
     void 에픽_생성() {
         // given
 

@@ -9,16 +9,15 @@ import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCre
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class ProjectServiceTest {
 
     @Autowired
@@ -29,6 +28,7 @@ class ProjectServiceTest {
 
 
     @Test
+    @Transactional
     void 신규프로젝트를_등록한다_성공시_key_반환() {
         // given
         ProjectCreateRequest request = ProjectCreateRequest.builder()
@@ -41,6 +41,7 @@ class ProjectServiceTest {
     }
 
     @Test
+    @Transactional
     void 중복된_키를_가진_프로젝트를_등록하면_에러발생() {
         // given
         ProjectCreateRequest request = ProjectCreateRequest.builder()
@@ -56,6 +57,7 @@ class ProjectServiceTest {
 
 
     @Test
+    @Transactional
     void 기존키가_존재하지않은키일때_예외를_반환한다() {
         // given
         Project p1 = createProject("프로젝트1", "PK1");
@@ -72,6 +74,7 @@ class ProjectServiceTest {
     }
 
     @Test
+    @Transactional
     void 변경하려는키가_이미존재하는키면_예외를_반환한다() {
         // given
         Project p1 = createProject("프로젝트1", "PK1");
@@ -90,6 +93,7 @@ class ProjectServiceTest {
     }
 
     @Test
+    @Transactional
     void 변경하려는키가_원래기존키와같으면_예외를_반환한다() {
         // given
         Project p1 = createProject("프로젝트1", "PK1");
@@ -108,6 +112,7 @@ class ProjectServiceTest {
     }
 
     @Test
+    @Transactional
     void 변경된키가_정상적으로_프로젝트에_반영() {
         // given
         Project p1 = createProject("프로젝트1", "PK1");

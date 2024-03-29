@@ -8,7 +8,7 @@ spring:
       enabled: true
       path: /h2
   datasource:
-    url: jdbc:h2:~/agile-hub;MODE=MySQL;DB_CLOSE_DELAY=-1;
+    url: jdbc:h2:~/agile-hub;DB_CLOSE_DELAY=-1;
     username: sa
     password:
     driver-class-name: org.h2.Driver

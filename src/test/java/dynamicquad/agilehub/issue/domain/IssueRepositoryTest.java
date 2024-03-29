@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class IssueRepositoryTest {
 
     @PersistenceContext
@@ -28,6 +27,7 @@ class IssueRepositoryTest {
     private IssueRepository issueRepository;
 
     @Test
+    @Transactional
     void 특정_프로젝트키를_가진_이슈들의_총_개수를_구한다() {
         // given
         Project project1 = createProject("프로젝트1", "project1");
@@ -60,6 +60,7 @@ class IssueRepositoryTest {
 
 
     @Test
+    @Transactional
     void 특정_프로젝트키를_가진_이슈가_없을때_0을_반환한다() {
         // given
         Project project1 = createProject("프로젝트1", "project1");
@@ -70,6 +71,7 @@ class IssueRepositoryTest {
     }
 
     @Test
+    @Transactional
     void 스토리이슈의_타입을_조회하면_story_string을_반환한다() {
         // given
         Project project1 = createProject("프로젝트1", "project1");
@@ -87,6 +89,7 @@ class IssueRepositoryTest {
     }
 
     @Test
+    @Transactional
     void 없는_이슈를_타입조회하면_빈_Optional을_반환한다() {
         // given
         // when
@@ -96,6 +99,7 @@ class IssueRepositoryTest {
     }
 
     @Test
+    @Transactional
     void 프로젝트에_소속된_이슈들을_조회한다() {
         // given
         Project project1 = createProject("프로젝트1", "project1");
