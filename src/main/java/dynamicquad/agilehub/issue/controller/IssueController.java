@@ -2,8 +2,9 @@ package dynamicquad.agilehub.issue.controller;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.response.IssueHierarchyResponse;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,13 +47,25 @@ public class IssueController {
             .body(CommonResponse.of(SuccessStatus.CREATED, issueId));
     }
 
-    // 이슈 조회
     @GetMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "이슈 조회", description = "프로젝트의 이슈를 조회합니다.")
+    @Operation(summary = "이슈 조회", description = "프로젝트의 이슈를 조회합니다.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
+    )
     public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
         log.info("getProjectIssue key: {}, issueId: {}", key, issueId);
         IssueReadResponseDto issue = issueQueryService.getIssue(key, issueId);
 
         return CommonResponse.of(SuccessStatus.OK, issue);
+    }
+
+    @GetMapping(value = "/api/projects/{key}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "이슈 목록 조회", description = "프로젝트의 이슈 목록을 조회합니다.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "이슈 목록 조회 성공", content = @Content(schema = @Schema(implementation = IssueHierarchyResponse.class)))}
+    )
+    public CommonResponse<?> getProjectIssues(@PathVariable("key") String key) {
+        log.info("getProjectIssues key: {}", key);
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssues(key));
     }
 }
