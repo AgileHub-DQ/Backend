@@ -54,8 +54,7 @@ public class IssueRequest {
 
         @Schema(description = "담당자 ID", example = "1")
         private Long assigneeId;
-
-        //부모 이슈 아이디
+        
         @Schema(description = "부모 이슈 ID", example = "1")
         private Long parentId;
     }

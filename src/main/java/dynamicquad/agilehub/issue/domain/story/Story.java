@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Story extends Issue {
 
-    private int storyPoint;
+    private Integer storyPoint;
     private LocalDate startDate;
     private LocalDate endDate;
 
