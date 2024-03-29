@@ -60,7 +60,7 @@ public class IssueController {
     }
 
     @GetMapping(value = "/api/projects/{key}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "이슈 목록 조회", description = "프로젝트의 이슈 목록을 조회합니다.",
+    @Operation(summary = "이슈 전체 조회", description = "프로젝트의 이슈 목록을 조회합니다.",
         responses = {
             @ApiResponse(responseCode = "200", description = "이슈 목록 조회 성공", content = @Content(schema = @Schema(implementation = IssueHierarchyResponse.class)))}
     )
