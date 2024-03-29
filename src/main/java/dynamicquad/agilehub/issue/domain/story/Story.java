@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.issue.domain.story;
 
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.DiscriminatorValue;
