@@ -26,7 +26,7 @@ class EpicRepositoryTest {
     @Transactional
     void 프로젝트에_소속된_에픽이슈들을_조회한다() {
         // Given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "projec123t1");
         em.persist(project1);
 
         Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);

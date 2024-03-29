@@ -87,7 +87,7 @@ class StoryFactoryTest {
     @Transactional
     void 부모에픽을_정상적으로_찾는다() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "pro1231ject1");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")
@@ -112,7 +112,7 @@ class StoryFactoryTest {
     @Transactional
     void 부모이슈가_정상적으로_등록() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project12451");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")
@@ -141,7 +141,7 @@ class StoryFactoryTest {
     @Transactional
     void 하위_이슈들_정상적으로_가져오기() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project12411");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")

@@ -27,11 +27,12 @@ class IssueQueryServiceTest {
     @Autowired
     private IssueQueryService issueQueryService;
 
+
     @Test
     @Transactional
     void 프로젝트에_속한_이슈들을_모두_조회() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project12311");
         em.persist(project1);
         Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
         em.persist(epic1P1);
@@ -42,7 +43,7 @@ class IssueQueryServiceTest {
         Story story2P1 = createStory("스토리2", "스토리2 내용", project1, epic2P1);
         em.persist(story2P1);
         // when
-        List<IssueHierarchyResponse> IssueHierarchyResponses = issueQueryService.getIssues("project1");
+        List<IssueHierarchyResponse> IssueHierarchyResponses = issueQueryService.getIssues("project12311");
         // then
         assertThat(IssueHierarchyResponses).hasSize(2);
     }

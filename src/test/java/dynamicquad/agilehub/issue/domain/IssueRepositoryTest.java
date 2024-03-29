@@ -63,7 +63,7 @@ class IssueRepositoryTest {
     @Transactional
     void 특정_프로젝트키를_가진_이슈가_없을때_0을_반환한다() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project1141");
         em.persist(project1);
         // when
         // then
@@ -74,7 +74,7 @@ class IssueRepositoryTest {
     @Transactional
     void 스토리이슈의_타입을_조회하면_story_string을_반환한다() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project11214");
         em.persist(project1);
 
         Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
@@ -102,7 +102,7 @@ class IssueRepositoryTest {
     @Transactional
     void 프로젝트에_소속된_이슈들을_조회한다() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project1231");
         em.persist(project1);
 
         Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);

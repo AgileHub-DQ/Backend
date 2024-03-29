@@ -34,7 +34,7 @@ class TaskFactoryTest {
     @Transactional
     void 부모이슈가_에픽이거나_테스크일때_예외처리() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project124151");
         em.persist(project);
 
         Epic epic = Epic.builder()
@@ -83,7 +83,7 @@ class TaskFactoryTest {
     @Transactional
     void 부모이슈를_정상적으로_등록() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "proje123ct1");
         em.persist(project);
 
         Story story = Story.builder()
