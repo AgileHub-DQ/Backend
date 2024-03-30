@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class EpicFactoryTest {
 
     @PersistenceContext
@@ -37,8 +36,9 @@ class EpicFactoryTest {
 
 
     @Test
+    @Transactional
     void 이미지없는_에픽이슈를_정상적으로_생성() {
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project1231231");
         em.persist(project1);
         Project project2 = createProject("프로젝트2", "project2");
         em.persist(project2);
@@ -93,9 +93,10 @@ class EpicFactoryTest {
     }
 
     @Test
+    @Transactional
     void 이미지없는_에픽이슈에_넣은_assinee가_서비스에_존재하지않을때_예외처리() {
         //given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project12312353561");
         em.persist(project1);
         Project project2 = createProject("프로젝트2", "project2");
         em.persist(project2);
@@ -119,9 +120,10 @@ class EpicFactoryTest {
     }
 
     @Test
+    @Transactional
     void 이미지없는_에픽이슈에_넣은_assignee가_프로젝트에_속하지않을때_예외처리() {
         //given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project11124");
         em.persist(project1);
         Project project2 = createProject("프로젝트2", "project2");
         em.persist(project2);
@@ -156,9 +158,10 @@ class EpicFactoryTest {
 
 
     @Test
+    @Transactional
     void 이슈가_가지고있는_이미지들_ContentDto로_반환() {
         //given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project152626");
         em.persist(project1);
 
         Epic epic = Epic.builder()
@@ -194,9 +197,10 @@ class EpicFactoryTest {
     }
 
     @Test
+    @Transactional
     void 이슈가_가지고있는_이미지가_없어도_빈_ContentDto로_반환() {
         //given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project1561");
         em.persist(project1);
 
         Epic epic = Epic.builder()

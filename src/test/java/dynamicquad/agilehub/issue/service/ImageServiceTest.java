@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import dynamicquad.agilehub.global.util.PhotoS3Manager;
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class ImageServiceTest {
 
     @PersistenceContext
@@ -37,6 +36,7 @@ class ImageServiceTest {
     private PhotoS3Manager photoS3Manager;
 
     @Test
+    @Transactional
     void 이슈에_등록한_이미지두개를_정상적으로_저장() {
         //given
         Project project1 = createProject("프로젝트1", "project1");

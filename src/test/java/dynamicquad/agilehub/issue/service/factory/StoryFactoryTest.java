@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class StoryFactoryTest {
 
     @PersistenceContext
@@ -35,6 +34,7 @@ class StoryFactoryTest {
 
 
     @Test
+    @Transactional
     void 부모이슈가_스토리나_테스크일때_예외처리() {
         // given
         Project project = createProject("프로젝트1", "project1");
@@ -84,9 +84,10 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모에픽을_정상적으로_찾는다() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "pro1231ject1");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")
@@ -108,9 +109,10 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모이슈가_정상적으로_등록() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project12451");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")
@@ -136,9 +138,10 @@ class StoryFactoryTest {
     }
 
     @Test
+    @Transactional
     void 하위_이슈들_정상적으로_가져오기() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project12411");
         em.persist(project);
         Epic epic = Epic.builder()
             .title("에픽 제목")

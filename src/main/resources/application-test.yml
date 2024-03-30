@@ -8,10 +8,16 @@ spring:
       enabled: true
       path: /h2
   datasource:
-    url: jdbc:h2:~/agile-hub;MODE=MySQL
+    url: jdbc:h2:~/agile-hub;DB_CLOSE_DELAY=-1;
     username: sa
     password:
     driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 100
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 30000
   jpa:
     hibernate:
       ddl-auto: create

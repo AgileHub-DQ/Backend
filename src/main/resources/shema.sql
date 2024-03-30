@@ -69,7 +69,7 @@ create table sprint (
                         primary key (sprint_id)
 ) engine=InnoDB;
 create table story (
-                       story_point integer not null,
+                       story_point integer,
                        end_date timestamp(6),
                        epic_id bigint,
                        issue_id bigint not null,

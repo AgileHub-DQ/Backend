@@ -13,16 +13,15 @@ import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class ProjectQueryServiceTest {
 
     @Autowired
@@ -38,6 +37,7 @@ class ProjectQueryServiceTest {
     private MemberProjectRepository memberProjectRepository;
 
     @Test
+    @Transactional
     void 멤버의_프로젝트_목록을_조회한다() {
         // given
         Project p1 = createProject("프로젝트1", "PK1");
@@ -60,6 +60,7 @@ class ProjectQueryServiceTest {
     }
 
     @Test
+    @Transactional
     void 멤버가_속한_프로젝트가_없다면_에러발생() {
         // given
         Member m1 = createMember("홍길동");

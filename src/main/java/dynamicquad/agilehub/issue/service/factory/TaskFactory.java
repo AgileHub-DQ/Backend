@@ -2,12 +2,12 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.IssueResponse.AssigneeDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.ContentDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.IssueDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.story.Story;

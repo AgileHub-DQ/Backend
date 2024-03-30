@@ -2,11 +2,13 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class IssueRepositoryTest {
 
     @PersistenceContext
@@ -26,6 +27,7 @@ class IssueRepositoryTest {
     private IssueRepository issueRepository;
 
     @Test
+    @Transactional
     void 특정_프로젝트키를_가진_이슈들의_총_개수를_구한다() {
         // given
         Project project1 = createProject("프로젝트1", "project1");
@@ -58,9 +60,10 @@ class IssueRepositoryTest {
 
 
     @Test
+    @Transactional
     void 특정_프로젝트키를_가진_이슈가_없을때_0을_반환한다() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project1141");
         em.persist(project1);
         // when
         // then
@@ -68,9 +71,10 @@ class IssueRepositoryTest {
     }
 
     @Test
+    @Transactional
     void 스토리이슈의_타입을_조회하면_story_string을_반환한다() {
         // given
-        Project project1 = createProject("프로젝트1", "project1");
+        Project project1 = createProject("프로젝트1", "project11214");
         em.persist(project1);
 
         Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
@@ -85,12 +89,39 @@ class IssueRepositoryTest {
     }
 
     @Test
+    @Transactional
     void 없는_이슈를_타입조회하면_빈_Optional을_반환한다() {
         // given
         // when
         Optional<String> issueType = issueRepository.findIssueTypeById(1L);
         // then
         assertThat(issueType).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void 프로젝트에_소속된_이슈들을_조회한다() {
+        // given
+        Project project1 = createProject("프로젝트1", "project1231");
+        em.persist(project1);
+
+        Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
+        em.persist(epic1P1);
+
+        Epic epic2P1 = createEpic("에픽2", "에픽2 내용", project1);
+        em.persist(epic2P1);
+
+        Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
+        em.persist(story1P1);
+
+        // when
+        List<Issue> byProject = issueRepository.findByProject(project1);
+
+        // then
+        assertThat(byProject).hasSize(3);
+        assertThat(byProject.get(0).getTitle()).isEqualTo("에픽1");
+        assertThat(byProject.get(1).getTitle()).isEqualTo("에픽2");
+        assertThat(byProject.get(2).getTitle()).isEqualTo("스토리1");
     }
 
     private Project createProject(String projectName, String projectKey) {

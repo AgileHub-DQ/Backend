@@ -1,14 +1,15 @@
 package dynamicquad.agilehub.issue.service;
 
-import static dynamicquad.agilehub.issue.controller.IssueResponse.IssueReadResponseDto;
+import static dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.IssueResponse.AssigneeDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.ContentDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.IssueDto;
-import dynamicquad.agilehub.issue.controller.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.controller.response.IssueHierarchyResponse;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
@@ -28,6 +29,8 @@ public class IssueQueryService {
     private final IssueFactoryProvider issueFactoryProvider;
     private final ProjectRepository projectRepository;
     private final IssueRepository issueRepository;
+    private final IssueHierarchyBuilder issueHierarchyBuilder;
+
 
     public IssueReadResponseDto getIssue(String key, Long issueId) {
         Project project = findProject(key);
@@ -48,6 +51,12 @@ public class IssueQueryService {
             .parentIssue(parentIssueDto)
             .childIssues(childIssueDtos)
             .build();
+    }
+
+    public List<IssueHierarchyResponse> getIssues(String key) {
+        Project project = findProject(key);
+
+        return issueHierarchyBuilder.buildAllIssuesHierarchy(project);
     }
 
     private AssigneeDto createAssigneeDto(Issue issue) {

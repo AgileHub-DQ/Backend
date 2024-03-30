@@ -7,8 +7,8 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
-@Transactional
 class TaskFactoryTest {
 
     @PersistenceContext
@@ -32,9 +31,10 @@ class TaskFactoryTest {
     private TaskFactory taskFactory;
 
     @Test
+    @Transactional
     void 부모이슈가_에픽이거나_테스크일때_예외처리() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "project124151");
         em.persist(project);
 
         Epic epic = Epic.builder()
@@ -80,9 +80,10 @@ class TaskFactoryTest {
     }
 
     @Test
+    @Transactional
     void 부모이슈를_정상적으로_등록() {
         // given
-        Project project = createProject("프로젝트1", "project1");
+        Project project = createProject("프로젝트1", "proje123ct1");
         em.persist(project);
 
         Story story = Story.builder()

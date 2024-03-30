@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberStatus;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -17,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class EpicTest {
 
@@ -69,6 +69,7 @@ class EpicTest {
     }
 
     @Test
+    @Transactional
     void 에픽_생성() {
         // given
 

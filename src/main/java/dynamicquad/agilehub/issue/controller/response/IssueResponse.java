@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.issue.controller;
+package dynamicquad.agilehub.issue.controller.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
