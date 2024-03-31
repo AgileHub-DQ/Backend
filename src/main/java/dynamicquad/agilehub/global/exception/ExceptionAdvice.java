@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -68,12 +69,22 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         return handleExceptionInternalGeneral(generalException, errorReasonHttpStatus, null, request);
     }
 
+    @ExceptionHandler(InvalidPropertyException.class)
+    protected ResponseEntity<CommonResponse<String>> handleInvalidPropertyException(InvalidPropertyException e) {
+
+        String errorMessage = "Invalid property access: " + e.getMessage();
+
+        return new ResponseEntity<>(CommonResponse.onFailure(HttpStatus.BAD_REQUEST.toString(), errorMessage, null),
+            HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler
     public ResponseEntity<Object> handleOthers(Exception e, WebRequest request) {
         log.error("handleOthers", e);
         return handleExceptionInternalOthers(e, ErrorStatus.INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY,
             ErrorStatus.INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
     }
+
 
     private ResponseEntity<Object> handleExceptionInternalConstraint(Exception e, ErrorStatus errorStatus,
                                                                      HttpHeaders headers, WebRequest request) {
