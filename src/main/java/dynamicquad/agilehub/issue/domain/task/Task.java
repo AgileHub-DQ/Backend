@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.domain.task;
 
 
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.story.Story;
@@ -33,7 +34,8 @@ public class Task extends Issue {
         this.story = story;
     }
 
-    public void updateTask(Story story) {
-        this.story = story;
+    public void updateTask(IssueEditRequest request, Member assignee, Story upStory) {
+        super.updateIssue(request, assignee);
+        this.story = upStory;
     }
 }

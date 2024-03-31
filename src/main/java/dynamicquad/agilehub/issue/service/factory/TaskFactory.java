@@ -60,7 +60,12 @@ public class TaskFactory implements IssueFactory {
 
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
-        return null;
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Task task = getTask(issue);
+        Story upStory = retrieveStoryFromParentIssue(request.getParentId());
+        task.updateTask(request, assignee, upStory);
+        return task.getId();
     }
 
     @Override
