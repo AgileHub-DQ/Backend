@@ -33,12 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class EpicFactory implements IssueFactory {
 
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
     private final IssueRepository issueRepository;
     private final StoryRepository storyRepository;
-
     private final ImageService imageService;
+    
+    private final MemberRepository memberRepository;
+    private final MemberProjectRepository memberProjectRepository;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -72,6 +72,12 @@ public class EpicFactory implements IssueFactory {
         return epic.getId();
     }
 
+    @Transactional
+    @Override
+    public Long updateIssue(Issue issue, Project project, IssueCreateRequest request) {
+        return null;
+    }
+
     @Override
     public ContentDto createContentDto(Issue issue) {
 
@@ -92,8 +98,8 @@ public class EpicFactory implements IssueFactory {
             .title(epic.getTitle())
             .type(EPIC)
             .status(String.valueOf(epic.getStatus()))
-            .startDate(Optional.ofNullable(epic.getStartDate()).map(LocalDate::toString).orElse("시작 날짜 미정"))
-            .endDate(Optional.ofNullable(epic.getEndDate()).map(LocalDate::toString).orElse("종료 날짜 미정"))
+            .startDate(Optional.ofNullable(epic.getStartDate()).map(LocalDate::toString).orElse(""))
+            .endDate(Optional.ofNullable(epic.getEndDate()).map(LocalDate::toString).orElse(""))
             .content(contentDto)
             .assignee(assigneeDto)
             .build();
@@ -145,6 +151,22 @@ public class EpicFactory implements IssueFactory {
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
         return epic;
+    }
+
+
+    public Member findMember(Long assigneeId, Long projectId) {
+
+        if (assigneeId == null) {
+            return null;
+        }
+
+        Member member = memberRepository.findById(assigneeId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
+        memberProjectRepository.findByMemberIdAndProjectId(member.getId(), projectId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
+
+        return member;
     }
 
 

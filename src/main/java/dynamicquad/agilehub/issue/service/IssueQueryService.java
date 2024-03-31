@@ -15,6 +15,7 @@ import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.project.service.ProjectValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,14 @@ public class IssueQueryService {
 
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueRepository issueRepository;
-    private final IssueHierarchyBuilder issueHierarchyBuilder;
     private final IssueValidator issueValidator;
+    private final IssueHierarchyBuilder issueHierarchyBuilder;
+    private final ProjectValidator projectValidator;
 
 
     public IssueReadResponseDto getIssue(String key, Long issueId) {
-        Project project = issueValidator.findProject(key);
-        Issue issue = findIssue(issueId);
+        Project project = projectValidator.findProject(key);
+        Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(project, issue);
 
         IssueType issueType = getIssueType(issueId);
@@ -53,7 +55,7 @@ public class IssueQueryService {
     }
 
     public List<IssueHierarchyResponse> getIssues(String key) {
-        Project project = issueValidator.findProject(key);
+        Project project = projectValidator.findProject(key);
 
         return issueHierarchyBuilder.buildAllIssuesHierarchy(project);
     }
@@ -74,11 +76,6 @@ public class IssueQueryService {
         String type = issueRepository.findIssueTypeById(issueId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND));
         return IssueType.valueOf(type);
-    }
-
-    private Issue findIssue(Long issueId) {
-        return issueRepository.findById(issueId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_NOT_FOUND));
     }
 
 

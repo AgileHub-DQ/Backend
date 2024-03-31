@@ -35,12 +35,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class StoryFactory implements IssueFactory {
 
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
+
     private final IssueRepository issueRepository;
     private final TaskRepository taskRepository;
-
     private final ImageService imageService;
+
+    private final MemberProjectRepository memberProjectRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -74,6 +75,13 @@ public class StoryFactory implements IssueFactory {
 
         return story.getId();
     }
+
+
+    @Override
+    public Long updateIssue(Issue issue, Project project, IssueCreateRequest request) {
+        return null;
+    }
+
 
     @Override
     public ContentDto createContentDto(Issue issue) {

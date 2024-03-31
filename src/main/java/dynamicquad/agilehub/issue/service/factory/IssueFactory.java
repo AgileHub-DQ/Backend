@@ -19,4 +19,6 @@ public interface IssueFactory {
     SubIssueDto createParentIssueDto(Issue issue);
 
     List<SubIssueDto> createChildIssueDtos(Issue issue);
+
+    Long updateIssue(Issue issue, Project project, IssueCreateRequest request);
 }

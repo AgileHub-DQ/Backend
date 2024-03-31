@@ -58,6 +58,11 @@ public class TaskFactory implements IssueFactory {
     }
 
     @Override
+    public Long updateIssue(Issue issue, Project project, IssueCreateRequest request) {
+        return null;
+    }
+
+    @Override
     public ContentDto createContentDto(Issue issue) {
         return ContentDto.builder()
             .text(issue.getContent())
@@ -112,6 +117,7 @@ public class TaskFactory implements IssueFactory {
     public List<SubIssueDto> createChildIssueDtos(Issue issue) {
         return List.of();
     }
+
 
     private Task getTask(Issue issue) {
         if (!(issue instanceof Task task)) {
