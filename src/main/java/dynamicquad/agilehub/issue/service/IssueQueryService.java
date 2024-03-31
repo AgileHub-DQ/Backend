@@ -15,7 +15,6 @@ import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.project.domain.Project;
-import dynamicquad.agilehub.project.domain.ProjectRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,15 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueQueryService {
 
     private final IssueFactoryProvider issueFactoryProvider;
-    private final ProjectRepository projectRepository;
     private final IssueRepository issueRepository;
     private final IssueHierarchyBuilder issueHierarchyBuilder;
+    private final IssueValidator issueValidator;
 
 
     public IssueReadResponseDto getIssue(String key, Long issueId) {
-        Project project = findProject(key);
+        Project project = issueValidator.findProject(key);
         Issue issue = findIssue(issueId);
-        validateIssueInProject(project, issue);
+        issueValidator.validateIssueInProject(project, issue);
 
         IssueType issueType = getIssueType(issueId);
         IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueType);
@@ -54,7 +53,7 @@ public class IssueQueryService {
     }
 
     public List<IssueHierarchyResponse> getIssues(String key) {
-        Project project = findProject(key);
+        Project project = issueValidator.findProject(key);
 
         return issueHierarchyBuilder.buildAllIssuesHierarchy(project);
     }
@@ -77,20 +76,9 @@ public class IssueQueryService {
         return IssueType.valueOf(type);
     }
 
-    private void validateIssueInProject(Project project, Issue issue) {
-        if (!issue.getProject().getId().equals(project.getId())) {
-            throw new GeneralException(ErrorStatus.ISSUE_NOT_IN_PROJECT);
-        }
-    }
-
     private Issue findIssue(Long issueId) {
         return issueRepository.findById(issueId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_NOT_FOUND));
-    }
-
-    private Project findProject(String key) {
-        return projectRepository.findByKey(key)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
 

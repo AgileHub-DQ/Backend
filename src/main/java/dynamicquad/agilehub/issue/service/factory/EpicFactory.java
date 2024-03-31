@@ -147,20 +147,5 @@ public class EpicFactory implements IssueFactory {
         return epic;
     }
 
-    private Member findMember(Long assigneeId, Long projectId) {
-
-        if (assigneeId == null) {
-            return null;
-        }
-
-        Member member = memberRepository.findById(assigneeId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-
-        memberProjectRepository.findByMemberIdAndProjectId(member.getId(), projectId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
-
-        return member;
-    }
-
 
 }

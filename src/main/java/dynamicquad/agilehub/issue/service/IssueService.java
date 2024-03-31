@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class IssueService {
 
-    private final ProjectRepository projectRepository;
+    private final IssueValidator issueValidator;
     private final IssueFactoryProvider issueFactoryProvider;
 
     @Transactional
     public Long createIssue(String key, IssueCreateRequest request) {
-        Project project = findProject(key);
+        Project project = issueValidator.findProject(key);
 
         return issueFactoryProvider.getIssueFactory(request.getType())
             .createIssue(request, project);
