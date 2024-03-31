@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.issue.domain;
 
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
@@ -81,11 +82,10 @@ public abstract class Issue {
 
     }
 
-    public void updateIssue(String title, String content, int number, IssueStatus status, Member assignee) {
-        this.title = title;
-        this.content = content;
-        this.number = number;
-        this.status = status;
+    protected void updateIssue(IssueEditRequest request, Member assignee) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.status = request.getStatus();
         this.assignee = assignee;
     }
 

@@ -104,6 +104,8 @@ class ImageServiceTest {
         imageService.cleanupMismatchedImages(epic, files, "/issue");
 
         //then
+        em.flush();
+        em.clear();
         assertThat(em.find(Image.class, image2.getId())).isNull();
         assertThat(em.find(Image.class, image1.getId())).isNotNull();
     }

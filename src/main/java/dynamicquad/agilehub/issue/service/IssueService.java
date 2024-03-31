@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.service;
 
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.project.domain.Project;
@@ -28,10 +29,11 @@ public class IssueService {
     }
 
     @Transactional
-    public void updateIssue(String key, Long issueId, IssueCreateRequest request) {
+    public void updateIssue(String key, Long issueId, IssueEditRequest request) {
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(project, issue);
+        issueValidator.validateIssueType(issue, request.getType());
 
         issueFactoryProvider.getIssueFactory(request.getType())
             .updateIssue(issue, project, request);

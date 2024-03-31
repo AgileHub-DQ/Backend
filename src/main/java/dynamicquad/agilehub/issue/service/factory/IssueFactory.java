@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
@@ -20,5 +21,5 @@ public interface IssueFactory {
 
     List<SubIssueDto> createChildIssueDtos(Issue issue);
 
-    Long updateIssue(Issue issue, Project project, IssueCreateRequest request);
+    Long updateIssue(Issue issue, Project project, IssueEditRequest request);
 }

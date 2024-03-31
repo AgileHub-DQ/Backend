@@ -14,7 +14,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByIssue(Epic epic);
 
     @Transactional
-    @Modifying(clearAutomatically = true)
+    @Modifying
     @Query("delete from Image i where i.path in :paths")
     void deletePaths(@Param("paths") List<String> paths);
 }

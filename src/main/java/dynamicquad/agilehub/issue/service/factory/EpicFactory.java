@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.service.factory;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
@@ -10,6 +11,7 @@ import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
+import dynamicquad.agilehub.issue.domain.epic.EpicRepository;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
@@ -34,9 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class EpicFactory implements IssueFactory {
 
     private final IssueRepository issueRepository;
+    private final EpicRepository epicRepository;
     private final StoryRepository storyRepository;
     private final ImageService imageService;
-    
+
     private final MemberRepository memberRepository;
     private final MemberProjectRepository memberProjectRepository;
 
@@ -74,8 +77,22 @@ public class EpicFactory implements IssueFactory {
 
     @Transactional
     @Override
-    public Long updateIssue(Issue issue, Project project, IssueCreateRequest request) {
-        return null;
+    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Epic epic = getEpic(issue);
+        log.info("updateIssue EPIC 업데이트");
+        epic.updateEpic(request, assignee);
+
+        imageService.cleanupMismatchedImages(epic, request.getImageUrls(), WORKING_DIRECTORY);
+
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            log.info("uploading images");
+            imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
+        }
+
+        return epic.getId();
     }
 
     @Override
@@ -150,6 +167,7 @@ public class EpicFactory implements IssueFactory {
             log.error("issue is not instance of Epic = {}", issue.getClass());
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
+
         return epic;
     }
 

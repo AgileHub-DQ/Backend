@@ -151,4 +151,12 @@ public class PhotoS3Manager implements PhotoManager {
     }
 
 
+    public boolean deletePhotos(List<String> deleteImagePath, String workingDirectory) {
+        if (deleteImagePath.isEmpty()) {
+            return true;
+        }
+
+        deleteImagePath.forEach(imagePath -> delete(imagePath, workingDirectory));
+        return true;
+    }
 }
