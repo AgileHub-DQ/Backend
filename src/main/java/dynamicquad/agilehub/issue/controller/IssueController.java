@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +81,16 @@ public class IssueController {
                                               @PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
 
         issueService.updateIssue(key, issueId, request);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "이슈 삭제", description = "프로젝트의 이슈를 삭제합니다.")
+    @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
+    public ResponseEntity<?> deleteProjectIssue(@PathVariable("key") String key,
+                                                @PathVariable("issueId") Long issueId) {
+        issueService.deleteIssue(key, issueId);
 
         return ResponseEntity.noContent().build();
     }

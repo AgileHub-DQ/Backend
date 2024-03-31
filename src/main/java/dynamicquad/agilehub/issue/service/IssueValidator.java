@@ -26,7 +26,7 @@ public class IssueValidator {
             .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_NOT_FOUND));
     }
 
-    public void validateIssueType(Issue issue, IssueType type) {
+    public void validateEqualsIssueType(Issue issue, IssueType type) {
 
         IssueType issueType = getIssueType(issue.getId());
 
@@ -35,7 +35,7 @@ public class IssueValidator {
         }
     }
 
-    private IssueType getIssueType(Long issueId) {
+    public IssueType getIssueType(Long issueId) {
         String type = issueRepository.findIssueTypeById(issueId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND));
         return IssueType.valueOf(type);

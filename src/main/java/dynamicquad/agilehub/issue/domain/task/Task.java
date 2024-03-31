@@ -32,6 +32,9 @@ public class Task extends Issue {
                  Story story) {
         super(title, content, number, status, assignee, project);
         this.story = story;
+        if (story != null) {
+            story.getTasks().add(this);
+        }
     }
 
     public void updateTask(IssueEditRequest request, Member assignee, Story upStory) {

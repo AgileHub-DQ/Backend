@@ -11,7 +11,6 @@ import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.epic.EpicRepository;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
@@ -36,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class EpicFactory implements IssueFactory {
 
     private final IssueRepository issueRepository;
-    private final EpicRepository epicRepository;
     private final StoryRepository storyRepository;
     private final ImageService imageService;
 
