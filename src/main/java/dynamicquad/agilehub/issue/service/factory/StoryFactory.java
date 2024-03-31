@@ -80,7 +80,21 @@ public class StoryFactory implements IssueFactory {
 
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
-        return null;
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Story story = getStory(issue);
+        Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
+
+        story.updateStory(request, assignee, upEpic);
+
+        imageService.cleanupMismatchedImages(story, request.getImageUrls(), WORKING_DIRECTORY);
+
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            log.info("uploading images");
+            imageService.saveImages(story, request.getFiles(), WORKING_DIRECTORY);
+        }
+
+        return story.getId();
     }
 
 

@@ -100,7 +100,7 @@ public class IssueRequest {
         @Schema(description = "새 담당자 ID", example = "1")
         private Long assigneeId;
 
-        @Schema(description = "부모 이슈 ID. 에픽은 없으니 빈칸으로 두세요", example = "1")
+        @Schema(description = "부모 이슈 ID. 에픽은 없으니 빈칸으로 두세요. 예를들어 스토리의 부모이슈인 에픽을 교체하면 스토리안에 있던 테스크들도 같이 이동됩니다", example = "1")
         private Long parentId;
     }
 

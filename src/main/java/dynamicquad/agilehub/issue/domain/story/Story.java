@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.issue.domain.story;
 
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
@@ -40,10 +41,10 @@ public class Story extends Issue {
         this.epic = epic;
     }
 
-    public void updateStory(int storyPoint, LocalDate startDate, LocalDate endDate, Epic epic) {
-        this.storyPoint = storyPoint;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public void updateStory(IssueEditRequest request, Member assignee, Epic epic) {
+        super.updateIssue(request, assignee);
+        this.startDate = request.getStartDate();
+        this.endDate = request.getEndDate();
         this.epic = epic;
     }
 

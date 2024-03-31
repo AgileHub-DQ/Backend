@@ -2,7 +2,6 @@ package dynamicquad.agilehub.issue.service;
 
 import dynamicquad.agilehub.global.util.PhotoS3Manager;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.issue.domain.image.ImageRepository;
 import java.util.List;
@@ -34,8 +33,8 @@ public class ImageService {
         imageRepository.saveAll(images);
     }
 
-    public void cleanupMismatchedImages(Epic epic, List<String> imageUrls, String workingDirectory) {
-        List<Image> images = imageRepository.findByIssue(epic);
+    public void cleanupMismatchedImages(Issue issue, List<String> imageUrls, String workingDirectory) {
+        List<Image> images = imageRepository.findByIssue(issue);
         List<String> deleteImagePath = images.stream()
             .map(Image::getPath)
             .filter(path -> !imageUrls.contains(path))
