@@ -44,4 +44,12 @@ public class Epic extends Issue {
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
     }
+
+    public void addStory(Story story) {
+        this.stories.add(story);
+    }
+
+    public void removeStory(Story story) {
+        this.stories.remove(story);
+    }
 }

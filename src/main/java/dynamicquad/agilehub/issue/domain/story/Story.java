@@ -48,16 +48,29 @@ public class Story extends Issue {
         this.endDate = endDate;
         this.epic = epic;
         if (epic != null) {
-            epic.getStories().add(this);
+            epic.addStory(this);
         }
     }
 
-    public void updateStory(IssueEditRequest request, Member assignee, Epic epic) {
+    public void updateStory(IssueEditRequest request, Member assignee, Epic upEpic) {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
-        this.epic = epic;
+        if (this.epic != null) {
+            this.epic.removeStory(this);
+        }
+        this.epic = upEpic;
+        if (epic != null) {
+            epic.addStory(this);
+        }
     }
 
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+    }
 
 }
