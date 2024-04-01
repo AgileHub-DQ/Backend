@@ -56,4 +56,19 @@ public class CommentResponse {
                 .build();
         }
     }
+
+    @Builder
+    @Getter
+    @EqualsAndHashCode
+    public static class CommentUpdateResponse {
+        private Long id;
+        private String content;
+        
+        public static CommentUpdateResponse fromEntity(Comment comment) {
+            return CommentUpdateResponse.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .build();
+        }
+    }
 }

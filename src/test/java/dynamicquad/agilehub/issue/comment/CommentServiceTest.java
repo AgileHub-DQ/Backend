@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.issue.comment.domain.Comment;
 import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
 import dynamicquad.agilehub.issue.comment.service.CommentService;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -51,6 +52,36 @@ class CommentServiceTest {
         assertThat(commentCreateResponse).extracting("writerId").isEqualTo(member.getId());
         System.out.println("작성한 시간: " + commentCreateResponse.getCreatedAt());
 
+    }
+
+    @Test
+    @Transactional
+    void 특정이슈의_코멘트를_수정하면_반영된다() {
+        //given
+        Project project1 = createProject("프로젝트1", "project12311");
+        em.persist(project1);
+        Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
+        em.persist(epic1P1);
+
+        Member member = Member.builder()
+            .name("member1")
+            .build();
+        em.persist(member);
+
+        Comment comment = Comment.builder()
+            .content("코멘트 내용")
+            .writer(member)
+            .issue(epic1P1)
+            .build();
+
+        em.persist(comment);
+
+        //when
+        commentService.updateComment(project1.getKey(), epic1P1.getId(), comment.getId(), "수정된 코멘트 내용", member.getId());
+
+        //then
+        Comment findComment = em.find(Comment.class, comment.getId());
+        assertThat(findComment.getContent()).isEqualTo("수정된 코멘트 내용");
     }
 
     private Project createProject(String projectName, String projectKey) {

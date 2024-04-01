@@ -5,6 +5,7 @@ import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.comment.domain.Comment;
 import dynamicquad.agilehub.issue.comment.domain.CommentRepository;
 import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
+import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdateResponse;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.domain.Member;
@@ -50,7 +51,7 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String key, Long issueId, Long commentId) {
+    public void deleteComment(String key, Long issueId, Long commentId, Long memberId) {
         //TODO: 코멘트 삭제 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
@@ -60,5 +61,20 @@ public class CommentService {
             .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public CommentUpdateResponse updateComment(String key, Long issueId, Long commentId, String content,
+                                               Long memberId) {
+        //TODO: 코멘트 수정 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
+        Project project = projectValidator.findProject(key);
+        Issue issue = issueValidator.findIssue(issueId);
+        issueValidator.validateIssueInProject(project, issue);
+
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        comment.updateComment(content);
+        return CommentUpdateResponse.fromEntity(comment);
     }
 }
