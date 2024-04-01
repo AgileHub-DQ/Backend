@@ -70,12 +70,11 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidPropertyException.class)
-    protected ResponseEntity<CommonResponse<String>> handleInvalidPropertyException(InvalidPropertyException e) {
+    protected ResponseEntity<?> handleInvalidPropertyException(InvalidPropertyException e,
+                                                               WebRequest request) {
 
-        String errorMessage = "Invalid property access: " + e.getMessage();
-
-        return new ResponseEntity<>(CommonResponse.onFailure(HttpStatus.BAD_REQUEST.toString(), errorMessage, null),
-            HttpStatus.BAD_REQUEST);
+        ErrorStatus errorStatus = ErrorStatus.BAD_REQUEST;
+        return handleExceptionInternalConstraint(e, errorStatus, HttpHeaders.EMPTY, request);
     }
 
     @ExceptionHandler
