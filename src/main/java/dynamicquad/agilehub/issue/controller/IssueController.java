@@ -1,5 +1,7 @@
 package dynamicquad.agilehub.issue.controller;
 
+import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
+
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
@@ -19,10 +21,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "이슈", description = "이슈를 생성하고 조회합니다.")
@@ -67,5 +71,27 @@ public class IssueController {
     public CommonResponse<?> getProjectIssues(@PathVariable("key") String key) {
         log.info("getProjectIssues key: {}", key);
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssues(key));
+    }
+
+    @PutMapping(value = "/api/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "이슈 수정", description = "프로젝트의 이슈를 수정합니다.",
+        requestBody = @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
+    @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
+    public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
+                                              @PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
+
+        issueService.updateIssue(key, issueId, request);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "이슈 삭제", description = "프로젝트의 이슈를 삭제합니다.")
+    @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
+    public ResponseEntity<?> deleteProjectIssue(@PathVariable("key") String key,
+                                                @PathVariable("issueId") Long issueId) {
+        issueService.deleteIssue(key, issueId);
+
+        return ResponseEntity.noContent().build();
     }
 }

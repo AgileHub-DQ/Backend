@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.service.factory;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
@@ -35,12 +36,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class StoryFactory implements IssueFactory {
 
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
+
     private final IssueRepository issueRepository;
     private final TaskRepository taskRepository;
-
     private final ImageService imageService;
+
+    private final MemberProjectRepository memberProjectRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -74,6 +76,27 @@ public class StoryFactory implements IssueFactory {
 
         return story.getId();
     }
+
+
+    @Override
+    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Story story = getStory(issue);
+        Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
+
+        story.updateStory(request, assignee, upEpic);
+
+        imageService.cleanupMismatchedImages(story, request.getImageUrls(), WORKING_DIRECTORY);
+
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            log.info("uploading images");
+            imageService.saveImages(story, request.getFiles(), WORKING_DIRECTORY);
+        }
+
+        return story.getId();
+    }
+
 
     @Override
     public ContentDto createContentDto(Issue issue) {

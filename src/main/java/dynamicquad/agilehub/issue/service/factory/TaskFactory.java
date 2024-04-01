@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.service.factory;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
@@ -54,6 +55,16 @@ public class TaskFactory implements IssueFactory {
 
         issueRepository.save(task);
 
+        return task.getId();
+    }
+
+    @Override
+    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Task task = getTask(issue);
+        Story upStory = retrieveStoryFromParentIssue(request.getParentId());
+        task.updateTask(request, assignee, upStory);
         return task.getId();
     }
 
@@ -112,6 +123,7 @@ public class TaskFactory implements IssueFactory {
     public List<SubIssueDto> createChildIssueDtos(Issue issue) {
         return List.of();
     }
+
 
     private Task getTask(Issue issue) {
         if (!(issue instanceof Task task)) {

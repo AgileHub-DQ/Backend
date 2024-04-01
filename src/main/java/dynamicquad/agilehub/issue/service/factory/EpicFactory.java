@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.service.factory;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
@@ -33,12 +34,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class EpicFactory implements IssueFactory {
 
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
     private final IssueRepository issueRepository;
     private final StoryRepository storyRepository;
-
     private final ImageService imageService;
+
+    private final MemberRepository memberRepository;
+    private final MemberProjectRepository memberProjectRepository;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -72,6 +73,26 @@ public class EpicFactory implements IssueFactory {
         return epic.getId();
     }
 
+    @Transactional
+    @Override
+    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+
+        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Epic epic = getEpic(issue);
+        log.info("updateIssue EPIC 업데이트");
+        epic.updateEpic(request, assignee);
+
+        imageService.cleanupMismatchedImages(epic, request.getImageUrls(), WORKING_DIRECTORY);
+
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            log.info("uploading images");
+            imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
+        }
+
+        return epic.getId();
+    }
+
     @Override
     public ContentDto createContentDto(Issue issue) {
 
@@ -92,8 +113,8 @@ public class EpicFactory implements IssueFactory {
             .title(epic.getTitle())
             .type(EPIC)
             .status(String.valueOf(epic.getStatus()))
-            .startDate(Optional.ofNullable(epic.getStartDate()).map(LocalDate::toString).orElse("시작 날짜 미정"))
-            .endDate(Optional.ofNullable(epic.getEndDate()).map(LocalDate::toString).orElse("종료 날짜 미정"))
+            .startDate(Optional.ofNullable(epic.getStartDate()).map(LocalDate::toString).orElse(""))
+            .endDate(Optional.ofNullable(epic.getEndDate()).map(LocalDate::toString).orElse(""))
             .content(contentDto)
             .assignee(assigneeDto)
             .build();
@@ -144,10 +165,12 @@ public class EpicFactory implements IssueFactory {
             log.error("issue is not instance of Epic = {}", issue.getClass());
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
+
         return epic;
     }
 
-    private Member findMember(Long assigneeId, Long projectId) {
+
+    public Member findMember(Long assigneeId, Long projectId) {
 
         if (assigneeId == null) {
             return null;

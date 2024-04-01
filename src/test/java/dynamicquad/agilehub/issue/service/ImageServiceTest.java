@@ -72,6 +72,44 @@ class ImageServiceTest {
 
     }
 
+
+    @Test
+    @Transactional
+    void 기존에_저장했던_이미지_제거() {
+        //given
+        Image image1 = Image.builder()
+            .path("https://file1.jpg")
+            .build();
+        em.persist(image1);
+
+        Image image2 = Image.builder()
+            .path("https://file2.jpg")
+            .build();
+        em.persist(image2);
+
+        Epic epic = Epic.builder()
+            .title("이슈1")
+            .content("이슈1 내용")
+            .status(IssueStatus.DO)
+            .build();
+        em.persist(epic);
+
+        image1.setIssue(epic);
+        image2.setIssue(epic);
+
+        List<String> files = List.of(image1.getPath());
+        when(photoS3Manager.deletePhotos(files, "/issue")).thenReturn(true);
+
+        //when
+        imageService.cleanupMismatchedImages(epic, files, "/issue");
+
+        //then
+        em.flush();
+        em.clear();
+        assertThat(em.find(Image.class, image2.getId())).isNull();
+        assertThat(em.find(Image.class, image1.getId())).isNotNull();
+    }
+
     private Project createProject(String projectName, String projectKey) {
         return Project.builder()
             .name(projectName)

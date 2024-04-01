@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -221,6 +222,67 @@ class EpicFactoryTest {
         //then
         assertThat(contentDto.getText()).isEqualTo("content 내용");
         assertThat(contentDto.getImagesURLs()).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void 이슈의_담당자가_변경되었을때_정상적으로_반영() {
+        //given
+        Project project1 = createProject("프로젝트1", "project1561");
+        em.persist(project1);
+
+        Member member1 = createMember("멤버1");
+        em.persist(member1);
+
+        Member member2 = createMember("멤버2");
+        em.persist(member2);
+
+        MemberProject memberProject1 = MemberProject.builder()
+            .member(member1)
+            .project(project1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+
+        em.persist(memberProject1);
+
+        MemberProject memberProject2 = MemberProject.builder()
+            .member(member2)
+            .project(project1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject2);
+
+        Epic epic = Epic.builder()
+            .title("이슈 제목")
+            .content("content 내용")
+            .number(1)
+            .status(IssueStatus.DO)
+            .assignee(member1)
+            .project(project1)
+            .startDate(LocalDate.of(2024, 2, 19))
+            .endDate(LocalDate.of(2024, 2, 23))
+            .build();
+        em.persist(epic);
+
+        IssueEditRequest request = IssueEditRequest.builder()
+            .title("이슈 제목")
+            .status(IssueStatus.DO)
+            .content("content 내용")
+            .files(null)
+            .startDate(LocalDate.of(2024, 2, 19))
+            .endDate(LocalDate.of(2024, 2, 23))
+            .assigneeId(member2.getId())
+            .build();
+
+        //when
+        Long issueId = epicFactory.updateIssue(epic, project1, request);
+
+        Epic updatedEpic = em.createQuery("select e from Epic e where e.id = :issueId", Epic.class)
+            .setParameter("issueId", issueId)
+            .getSingleResult();
+
+        //then
+        assertThat(updatedEpic.getAssignee().getId()).isEqualTo(member2.getId());
     }
 
 

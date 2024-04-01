@@ -15,7 +15,7 @@ import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.project.domain.Project;
-import dynamicquad.agilehub.project.domain.ProjectRepository;
+import dynamicquad.agilehub.project.service.ProjectValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,15 +27,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueQueryService {
 
     private final IssueFactoryProvider issueFactoryProvider;
-    private final ProjectRepository projectRepository;
     private final IssueRepository issueRepository;
+    private final IssueValidator issueValidator;
     private final IssueHierarchyBuilder issueHierarchyBuilder;
+    private final ProjectValidator projectValidator;
 
 
     public IssueReadResponseDto getIssue(String key, Long issueId) {
-        Project project = findProject(key);
-        Issue issue = findIssue(issueId);
-        validateIssueInProject(project, issue);
+        Project project = projectValidator.findProject(key);
+        Issue issue = issueValidator.findIssue(issueId);
+        issueValidator.validateIssueInProject(project, issue);
 
         IssueType issueType = getIssueType(issueId);
         IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueType);
@@ -54,7 +55,7 @@ public class IssueQueryService {
     }
 
     public List<IssueHierarchyResponse> getIssues(String key) {
-        Project project = findProject(key);
+        Project project = projectValidator.findProject(key);
 
         return issueHierarchyBuilder.buildAllIssuesHierarchy(project);
     }
@@ -75,22 +76,6 @@ public class IssueQueryService {
         String type = issueRepository.findIssueTypeById(issueId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND));
         return IssueType.valueOf(type);
-    }
-
-    private void validateIssueInProject(Project project, Issue issue) {
-        if (!issue.getProject().getId().equals(project.getId())) {
-            throw new GeneralException(ErrorStatus.ISSUE_NOT_IN_PROJECT);
-        }
-    }
-
-    private Issue findIssue(Long issueId) {
-        return issueRepository.findById(issueId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.ISSUE_NOT_FOUND));
-    }
-
-    private Project findProject(String key) {
-        return projectRepository.findByKey(key)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
 

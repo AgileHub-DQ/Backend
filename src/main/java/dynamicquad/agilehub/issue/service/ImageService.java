@@ -33,4 +33,14 @@ public class ImageService {
         imageRepository.saveAll(images);
     }
 
+    public void cleanupMismatchedImages(Issue issue, List<String> imageUrls, String workingDirectory) {
+        List<Image> images = imageRepository.findByIssue(issue);
+        List<String> deleteImagePath = images.stream()
+            .map(Image::getPath)
+            .filter(path -> !imageUrls.contains(path))
+            .toList();
+
+        photoS3Manager.deletePhotos(deleteImagePath, workingDirectory);
+        imageRepository.deletePaths(deleteImagePath);
+    }
 }
