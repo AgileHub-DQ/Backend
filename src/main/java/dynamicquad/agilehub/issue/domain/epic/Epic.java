@@ -37,19 +37,11 @@ public class Epic extends Issue {
         this.startDate = startDate;
         this.endDate = endDate;
     }
-
-
+    
     public void updateEpic(IssueEditRequest request, Member assignee) {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
     }
 
-    public void addStory(Story story) {
-        this.stories.add(story);
-    }
-
-    public void removeStory(Story story) {
-        this.stories.remove(story);
-    }
 }

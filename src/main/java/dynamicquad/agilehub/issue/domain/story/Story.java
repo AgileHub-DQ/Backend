@@ -48,7 +48,7 @@ public class Story extends Issue {
         this.endDate = endDate;
         this.epic = epic;
         if (epic != null) {
-            epic.addStory(this);
+            epic.getStories().add(this);
         }
     }
 
@@ -56,21 +56,13 @@ public class Story extends Issue {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
+
         if (this.epic != null) {
-            this.epic.removeStory(this);
+            this.epic.getStories().remove(this);
         }
+
         this.epic = upEpic;
-        if (epic != null) {
-            epic.addStory(this);
-        }
-    }
-
-    public void addTask(Task task) {
-        this.tasks.add(task);
-    }
-
-    public void removeTask(Task task) {
-        this.tasks.remove(task);
+        upEpic.getStories().add(this);
     }
 
 }
