@@ -71,4 +71,8 @@ public class Sprint {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    public void setStatus(SprintStatus status) {
+        this.status = status;
+    }
 }

@@ -11,6 +11,7 @@ import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintRepository;
+import dynamicquad.agilehub.sprint.domain.SprintStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,5 +62,16 @@ public class SprintService {
         issueValidator.validateIssueInProject(projectId, issueId);
 
         issue.setSprint(null);
+    }
+
+    @Transactional
+    public void changeSprintStatus(String key, Long sprintId, SprintStatus status) {
+        Long projectId = projectValidator.findProjectId(key);
+        sprintValidator.validateSprintInProject(projectId, sprintId);
+
+        Sprint sprint = sprintValidator.findSprint(sprintId);
+        if (status != null) {
+            sprint.setStatus(status);
+        }
     }
 }
