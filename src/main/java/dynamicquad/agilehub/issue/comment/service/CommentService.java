@@ -34,9 +34,7 @@ public class CommentService {
     @Transactional
     public CommentCreateResponse createComment(String key, Long issueId, Long memberId, String content) {
 
-        Project project = projectValidator.findProject(key);
-        Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        Issue issue = validateIssueInProject(key, issueId);
 
         Member writer = memberRepository.findById(memberId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
@@ -53,9 +51,7 @@ public class CommentService {
     @Transactional
     public void deleteComment(String key, Long issueId, Long commentId, Long memberId) {
         //TODO: 코멘트 삭제 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
-        Project project = projectValidator.findProject(key);
-        Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        validateIssueInProject(key, issueId);
 
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
@@ -67,9 +63,7 @@ public class CommentService {
     public CommentUpdateResponse updateComment(String key, Long issueId, Long commentId, String content,
                                                Long memberId) {
         //TODO: 코멘트 수정 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
-        Project project = projectValidator.findProject(key);
-        Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        validateIssueInProject(key, issueId);
 
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
@@ -77,4 +71,13 @@ public class CommentService {
         comment.updateComment(content);
         return CommentUpdateResponse.fromEntity(comment);
     }
+
+    private Issue validateIssueInProject(String key, Long issueId) {
+        Project project = projectValidator.findProject(key);
+        Issue issue = issueValidator.findIssue(issueId);
+        issueValidator.validateIssueInProject(project, issue);
+
+        return issue;
+    }
+
 }
