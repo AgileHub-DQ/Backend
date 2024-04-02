@@ -33,32 +33,34 @@ public class JwtUtil {
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
 
-    public GeneratedToken generateToken(String name, String role) {
+    public GeneratedToken generateToken(String name, String role, String distinctCode) {
         return GeneratedToken.builder()
-                .accessToken(generateAccessToken(name, role))
-                .refreshToken(generateRefreshToken(name, role))
+                .accessToken(generateAccessToken(name, role, distinctCode))
+                .refreshToken(generateRefreshToken(name, role, distinctCode))
                 .build();
     }
 
-    public String generateAccessToken(String name, String role) {
+    public String generateAccessToken(String name, String role, String distinctCode) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("AccessToken")
                 .withClaim("name", name)
                 .withClaim("role", role)
+                .withClaim("distinctCode", distinctCode)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + accessTokenValidationSeconds * 1000))
                 .sign(Algorithm.HMAC512(secretKey)));
     }
 
-    public String generateRefreshToken(String name, String role) {
+    public String generateRefreshToken(String name, String role, , String distinctCode) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("RefreshToken")
                 .withClaim("name", name)
                 .withClaim("role", role)
+                .withClaim("distinctCode", distinctCode)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenValidationSeconds * 1000))
                 .sign(Algorithm.HMAC512(secretKey)));
@@ -101,6 +103,14 @@ public class JwtUtil {
                 .build()
                 .verify(token.replace(PREFIX, BLANK))
                 .getClaim("role")
+                .asString();
+    }
+
+    public String extractDistinctCode(String token) {
+        return JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(token.replace(PREFIX, BLANK))
+                .getClaim("distinctCode")
                 .asString();
     }
 
