@@ -22,8 +22,8 @@ public class SprintResponse {
                 .sprintId(sprint.getId())
                 .title(sprint.getTitle())
                 .description(sprint.getTargetDescription())
-                .startDate(sprint.getStartDate().toString())
-                .endDate(sprint.getEndDate().toString())
+                .startDate(sprint.getStartDate() == null ? "" : sprint.getStartDate().toString())
+                .endDate(sprint.getEndDate() == null ? "" : sprint.getEndDate().toString())
                 .build();
         }
     }

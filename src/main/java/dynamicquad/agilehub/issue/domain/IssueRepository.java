@@ -18,4 +18,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     Optional<String> findIssueTypeById(@Param("id") Long id);
 
     List<Issue> findByProject(Project project);
+
+    boolean existsByProjectIdAndId(Long projectId, Long issueId);
 }

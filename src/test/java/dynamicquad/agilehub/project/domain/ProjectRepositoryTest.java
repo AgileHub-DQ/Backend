@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.project.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,23 @@ class ProjectRepositoryTest {
         assertThatThrownBy(() -> projectRepository.save(project2))
             .isInstanceOf(DataIntegrityViolationException.class);
 
+
+    }
+
+    @Test
+    @Transactional
+    void 키로_특정_프로젝트Id를_가져온다() {
+        // given
+        Project project = Project.builder()
+            .name("프로젝트1")
+            .key("project21")
+            .build();
+        projectRepository.save(project);
+        // when
+        Long projectId = projectRepository.findIdByKey("project21")
+            .orElseThrow();
+        // then
+        assertThat(projectId).isEqualTo(project.getId());
     }
 
 }

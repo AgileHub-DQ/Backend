@@ -34,9 +34,9 @@ public class IssueQueryService {
 
 
     public IssueReadResponseDto getIssue(String key, Long issueId) {
-        Project project = projectValidator.findProject(key);
+        Long projectId = projectValidator.findProjectId(key);
         Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        issueValidator.validateIssueInProject(projectId, issueId);
 
         IssueType issueType = getIssueType(issueId);
         IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueType);
