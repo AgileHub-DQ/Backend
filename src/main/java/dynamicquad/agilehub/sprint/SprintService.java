@@ -52,4 +52,14 @@ public class SprintService {
 
         issue.setSprint(sprint);
     }
+
+    @Transactional
+    public void removeIssueFromSprint(String key, Long sprintId, Long issueId) {
+        Long projectId = projectValidator.findProjectId(key);
+        sprintValidator.validateSprintInProject(projectId, sprintId);
+        Issue issue = issueValidator.findIssue(issueId);
+        issueValidator.validateIssueInProject(projectId, issueId);
+
+        issue.setSprint(null);
+    }
 }

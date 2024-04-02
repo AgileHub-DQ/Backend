@@ -14,6 +14,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,17 @@ public class SprintController {
                                                  @PathVariable("sprintId") Long sprintId) {
 
         sprintService.assignIssueToSprint(key, sprintId, request.getIssueId());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "스프린트 내 이슈 제거", description = "스프린트에 할당된 이슈를 제거합니다")
+    @DeleteMapping(value = "/api/projects/{key}/sprints/{sprintId}/issue")
+    public ResponseEntity<?> removeIssueFromSprint(@Valid @RequestBody SprintAssignIssueRequest request,
+                                                   @PathVariable("key") String key,
+                                                   @PathVariable("sprintId") Long sprintId) {
+
+        sprintService.removeIssueFromSprint(key, sprintId, request.getIssueId());
 
         return ResponseEntity.noContent().build();
     }
