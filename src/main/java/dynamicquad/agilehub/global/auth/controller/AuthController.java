@@ -31,7 +31,8 @@ public class AuthController {
             String generatedAccessToken = jwtUtil.generateAccessToken(
                     jwtUtil.extractName(refreshToken.getRefreshToken()),
                     jwtUtil.extractRole(refreshToken.getRefreshToken()),
-                    jwtUtil.extractDistinctCode(refreshToken.getRefreshToken())
+                    jwtUtil.extractProvider(refreshToken.getRefreshToken()),
+                    jwtUtil.extractDistinctId(refreshToken.getRefreshToken())
             );
             refreshToken.updateAccessToken(generatedAccessToken);
             jwtRefreshTokenService.saveRefreshToken(refreshToken);
