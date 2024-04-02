@@ -33,34 +33,36 @@ public class JwtUtil {
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
 
-    public GeneratedToken generateToken(String name, String role, String distinctCode) {
+    public GeneratedToken generateToken(String name, String role, String provider, String distinctId) {
         return GeneratedToken.builder()
-                .accessToken(generateAccessToken(name, role, distinctCode))
-                .refreshToken(generateRefreshToken(name, role, distinctCode))
+                .accessToken(generateAccessToken(name, role, provider, distinctId))
+                .refreshToken(generateRefreshToken(name, role, provider, distinctId))
                 .build();
     }
 
-    public String generateAccessToken(String name, String role, String distinctCode) {
+    public String generateAccessToken(String name, String role, String provider, String distinctId) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("AccessToken")
                 .withClaim("name", name)
                 .withClaim("role", role)
-                .withClaim("distinctCode", distinctCode)
+                .withClaim("provider", provider)
+                .withClaim("distinctId", distinctId)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + accessTokenValidationSeconds * 1000))
                 .sign(Algorithm.HMAC512(secretKey)));
     }
 
-    public String generateRefreshToken(String name, String role, , String distinctCode) {
+    public String generateRefreshToken(String name, String role, String provider, String distinctId) {
         Date now = new Date();
         return PREFIX.concat(JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("RefreshToken")
                 .withClaim("name", name)
                 .withClaim("role", role)
-                .withClaim("distinctCode", distinctCode)
+                .withClaim("provider", provider)
+                .withClaim("distinctId", distinctId)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenValidationSeconds * 1000))
                 .sign(Algorithm.HMAC512(secretKey)));
@@ -106,11 +108,19 @@ public class JwtUtil {
                 .asString();
     }
 
-    public String extractDistinctCode(String token) {
+    public String extractProvider(String token) {
         return JWT.require(Algorithm.HMAC512(secretKey))
                 .build()
                 .verify(token.replace(PREFIX, BLANK))
-                .getClaim("distinctCode")
+                .getClaim("provider")
+                .asString();
+    }
+
+    public String extractDistinctId(String token) {
+        return JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(token.replace(PREFIX, BLANK))
+                .getClaim("distinctId")
                 .asString();
     }
 

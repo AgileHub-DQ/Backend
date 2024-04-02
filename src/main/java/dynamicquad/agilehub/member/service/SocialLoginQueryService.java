@@ -1,7 +1,6 @@
 package dynamicquad.agilehub.member.service;
 
 import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
-import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.SocialLogin;
 import dynamicquad.agilehub.member.repository.SocialLoginRepository;
 import java.util.Optional;
@@ -16,8 +15,8 @@ public class SocialLoginQueryService {
 
     private final SocialLoginRepository socialLoginRepository;
 
-    public Optional<SocialLogin> findByProviderAndDistinctCode(String providerId, String distinctCode) {
-        return socialLoginRepository.findByProviderAndDistinctId(OAuth2Attribute.of(providerId), distinctCode);
+    public Optional<SocialLogin> findByProviderAndDistinctId(String provider, String distinctId) {
+        return socialLoginRepository.findByProviderAndDistinctId(OAuth2Attribute.of(provider), distinctId);
     }
 
 }
