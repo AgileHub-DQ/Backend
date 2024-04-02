@@ -1,11 +1,13 @@
 package dynamicquad.agilehub.sprint.controller;
 
+import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintAssignIssueRequest;
 import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.sprint.SprintService;
 import dynamicquad.agilehub.sprint.controller.SprintResponse.SprintCreateResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -25,6 +27,7 @@ public class SprintController {
 
     private final SprintService sprintService;
 
+    @Operation(summary = "스프린트 생성", description = "프로젝트에 스프린트를 생성합니다.")
     @PostMapping(value = "/api/projects/{key}/sprints")
     public ResponseEntity<?> createProjectSprint(@Valid @RequestBody SprintCreateRequest request,
                                                  @PathVariable("key") String key) {
@@ -34,4 +37,16 @@ public class SprintController {
         return ResponseEntity.created(URI.create("/api/projects/" + key + "/sprints/" + resp.getSprintId()))
             .body(CommonResponse.of(SuccessStatus.CREATED, resp));
     }
+
+    @Operation(summary = "스프린트 내 이슈 할당", description = "이슈를 스프린트에 할당합니다")
+    @PostMapping(value = "/api/projects/{key}/sprints/{sprintId}/issue")
+    public ResponseEntity<?> assignIssueToSprint(@Valid @RequestBody SprintAssignIssueRequest request,
+                                                 @PathVariable("key") String key,
+                                                 @PathVariable("sprintId") Long sprintId) {
+
+        sprintService.assignIssueToSprint(key, sprintId, request.getIssueId());
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

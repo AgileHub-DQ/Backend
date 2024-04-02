@@ -54,4 +54,12 @@ public class SprintRequest {
                 .build();
         }
     }
+
+    @NoArgsConstructor
+    @Getter
+    @EqualsAndHashCode
+    public static class SprintAssignIssueRequest {
+        @NotNull(message = "이슈 ID는 필수입니다. 에픽 ID는 스프린트에 할당할 수 없습니다.")
+        Long issueId;
+    }
 }
