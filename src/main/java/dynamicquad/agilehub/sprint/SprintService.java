@@ -4,6 +4,7 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectValidator;
@@ -26,6 +27,7 @@ public class SprintService {
     private final SprintValidator sprintValidator;
 
     private final SprintRepository sprintRepository;
+    private final IssueRepository issueRepository;
 
     @Transactional
     public SprintCreateResponse createSprint(String key, SprintCreateRequest request) {
@@ -73,5 +75,14 @@ public class SprintService {
         if (status != null) {
             sprint.setStatus(status);
         }
+    }
+
+    @Transactional
+    public void deleteSprint(String key, Long sprintId) {
+        Long projectId = projectValidator.findProjectId(key);
+        sprintValidator.validateSprintInProject(projectId, sprintId);
+
+        issueRepository.updateIssueSprintNull(sprintId);
+        sprintRepository.deleteById(sprintId);
     }
 }

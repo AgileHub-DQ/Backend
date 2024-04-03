@@ -83,4 +83,13 @@ public class SprintController {
 
         return ResponseEntity.ok(CommonResponse.of(SuccessStatus.OK, sprintQueryService.getSprints(key)));
     }
+
+    @Operation(summary = "스프린트 삭제", description = "스프린트를 삭제합니다")
+    @DeleteMapping(value = "/api/projects/{key}/sprints/{sprintId}")
+    public ResponseEntity<?> deleteSprint(@PathVariable("key") String key,
+                                          @PathVariable("sprintId") Long sprintId) {
+
+        sprintService.deleteSprint(key, sprintId);
+        return ResponseEntity.noContent().build();
+    }
 }
