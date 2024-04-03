@@ -7,9 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dynamicquad.agilehub.sprint.SprintQueryService;
 import dynamicquad.agilehub.sprint.SprintService;
 import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
-import dynamicquad.agilehub.sprint.controller.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ class SprintControllerTest {
 
     @MockBean
     private SprintService sprintService;
+
+    @MockBean
+    private SprintQueryService sprintQueryService;
 
     @Test
     void 정상적인_스프린트_생성을_하면_해당_스프린트를_가진_URL을_반환한다() throws Exception {

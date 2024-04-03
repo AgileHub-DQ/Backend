@@ -8,7 +8,7 @@ import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
-import dynamicquad.agilehub.sprint.controller.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintRepository;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;

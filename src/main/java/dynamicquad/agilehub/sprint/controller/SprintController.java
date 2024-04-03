@@ -6,8 +6,9 @@ import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateR
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
+import dynamicquad.agilehub.sprint.SprintQueryService;
 import dynamicquad.agilehub.sprint.SprintService;
-import dynamicquad.agilehub.sprint.controller.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SprintController {
 
     private final SprintService sprintService;
+    private final SprintQueryService sprintQueryService;
 
     @Operation(summary = "스프린트 생성", description = "프로젝트에 스프린트를 생성합니다.")
     @PostMapping(value = "/api/projects/{key}/sprints")
@@ -74,4 +77,10 @@ public class SprintController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "스프린트들 조회", description = "프로젝트의 스프린트들을 조회합니다")
+    @GetMapping(value = "/api/projects/{key}/sprints")
+    public ResponseEntity<?> getSprints(@PathVariable("key") String key) {
+
+        return ResponseEntity.ok(CommonResponse.of(SuccessStatus.OK, sprintQueryService.getSprints(key)));
+    }
 }

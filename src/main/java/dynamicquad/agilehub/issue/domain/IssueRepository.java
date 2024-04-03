@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     List<Issue> findByProject(Project project);
 
     boolean existsByProjectIdAndId(Long projectId, Long issueId);
+
+
+    List<Issue> findBySprint(Sprint sprint);
 }

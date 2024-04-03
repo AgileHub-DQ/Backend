@@ -45,5 +45,36 @@ class SprintRepositoryTest {
         assertTrue(exists);
     }
 
+    @Test
+    @Transactional
+    void 프로젝트에_속한_모든_스프린트들을_반환() {
+        // given
+        Project project = Project.builder()
+            .name("프로젝트1")
+            .key("project21")
+            .build();
+        em.persist(project);
+
+        Sprint sprint1 = Sprint.builder()
+            .targetDescription("목표 설명1")
+            .build();
+        em.persist(sprint1);
+
+        Sprint sprint2 = Sprint.builder()
+            .targetDescription("목표 설명2")
+            .build();
+        em.persist(sprint2);
+
+        sprint1.setProject(project);
+        sprint2.setProject(project);
+
+        // when
+        var sprints = sprintRepository.findAllByProjectId(project.getId());
+
+        // then
+        assertTrue(sprints.contains(sprint1));
+        assertTrue(sprints.contains(sprint2));
+    }
+
 
 }
