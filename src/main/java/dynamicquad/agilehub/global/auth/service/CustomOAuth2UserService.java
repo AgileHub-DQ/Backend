@@ -32,7 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        OAuth2UserInfo userInfo = OAuth2Attribute.getUserInfo(registrationId, oAuth2User.getAttributes());
+        OAuth2UserInfo userInfo = OAuth2Attribute.generateUserInfo(registrationId, oAuth2User.getAttributes());
         Optional<SocialLogin> findSocialLogin = socialLoginQueryService.findByProviderAndDistinctId(
                 registrationId, userInfo.getId());
 
@@ -41,13 +41,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             member = findSocialLogin.get().getMember();
             member.update(userInfo.getNickname(), userInfo.getProfileImage());
         } else {
-            member = saveMember(userInfo, registrationId);
+            member = saveMember(userInfo);
         }
 
         return new SecurityMember(member, userInfo);
     }
 
-    private Member saveMember(OAuth2UserInfo userInfo, String registrationId) {
+    private Member saveMember(OAuth2UserInfo userInfo) {
         MemberRequestDto.CreateMember memberDto = MemberRequestDto.CreateMember.builder()
                 .name(userInfo.getNickname())
                 .profileImageUrl(userInfo.getProfileImage())
@@ -56,7 +56,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         MemberRequestDto.CreateSocialLogin socialLoginDto = MemberRequestDto.CreateSocialLogin.builder()
                 .distinctId(userInfo.getId())
-                .provider(OAuth2Attribute.of(registrationId))
+                .provider(OAuth2Attribute.of(userInfo.getProvider()))
                 .build();
         socialLoginService.save(MemberConverter.toSocialLogin(savedMember, socialLoginDto));
 
