@@ -24,7 +24,7 @@ public enum OAuth2Attribute {
     private final String registrationId;
     private final Function<Map<String, Object>, OAuth2UserInfo> of;
 
-    public static OAuth2UserInfo getUserInfo(String providerId, Map<String, Object> attributes) {
+    public static OAuth2UserInfo generateUserInfo(String providerId, Map<String, Object> attributes) {
         return Arrays.stream(values())
                 .filter(provider -> provider.registrationId.equals(providerId))
                 .findFirst()
