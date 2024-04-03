@@ -62,6 +62,7 @@ create table project (
 create table sprint (
                         end_date timestamp,
                         start_date timestamp,
+                        project_id bigint,
                         sprint_id bigint not null auto_increment,
                         target_description varchar(255),
                         title varchar(255),
@@ -130,6 +131,12 @@ alter table member_project
     add constraint FKl2brpp0how3olc7qjtqyrb207
         foreign key (project_id)
             references project (project_id);
+
+alter table sprint
+    add constraint FKerwve0blrvfhqm1coxo69f0xr
+        foreign key (project_id)
+            references project (project_id);
+
 alter table story
     add constraint FKko1b0e8un4fsbgefy1yxb2gop
         foreign key (epic_id)
