@@ -15,6 +15,7 @@ public enum OAuth2Attribute {
 
         return new OAuth2UserInfo(
                 attributes,
+                "kakao",
                 attributes.get("id").toString(),
                 profile.get("nickname").toString(),
                 profile.get("profile_image_url").toString()
