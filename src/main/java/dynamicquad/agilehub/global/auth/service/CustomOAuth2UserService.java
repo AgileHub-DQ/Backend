@@ -37,6 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 registrationId, userInfo.getId());
 
         Member member;
+        // member가 존재하면 update, 존재하지 않으면 save
         if (findSocialLogin.isPresent()) {
             member = findSocialLogin.get().getMember();
             member.update(userInfo.getNickname(), userInfo.getProfileImage());
