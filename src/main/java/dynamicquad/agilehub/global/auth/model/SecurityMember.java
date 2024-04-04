@@ -29,6 +29,10 @@ public class SecurityMember implements OAuth2User {
         return userInfo.getNickname();
     }
 
+    public String getProvider() {
+        return userInfo.getProvider();
+    }
+
     public String getId() {
         return userInfo.getId();
     }
