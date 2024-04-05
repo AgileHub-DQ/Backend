@@ -26,7 +26,7 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     List<Issue> findBySprint(Sprint sprint);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Issue i set i.sprint = null where i.sprint.id = :sprintId")
     void updateIssueSprintNull(Long sprintId);
 }

@@ -26,7 +26,7 @@ public class CommentQueryService {
     public List<CommentReadResponse> getComments(String key, Long issueId) {
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        issueValidator.validateIssueInProject(project.getId(), issueId);
 
         List<Comment> issues = commentRepository.findByIssueOrderByCreatedAtAsc(issue);
 
