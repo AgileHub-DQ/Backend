@@ -35,7 +35,7 @@ public class IssueService {
     public void updateIssue(String key, Long issueId, IssueEditRequest request) {
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        issueValidator.validateIssueInProject(project.getId(), issueId);
         issueValidator.validateEqualsIssueType(issue, request.getType());
 
         issueFactoryProvider.getIssueFactory(request.getType())

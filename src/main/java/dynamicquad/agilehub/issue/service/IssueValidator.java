@@ -5,7 +5,6 @@ import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
-import dynamicquad.agilehub.project.domain.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,8 @@ public class IssueValidator {
 
     private final IssueRepository issueRepository;
 
-    public void validateIssueInProject(Project project, Issue issue) {
-        if (!issue.getProject().getId().equals(project.getId())) {
+    public void validateIssueInProject(Long projectId, Long issueId) {
+        if (!issueRepository.existsByProjectIdAndId(projectId, issueId)) {
             throw new GeneralException(ErrorStatus.ISSUE_NOT_IN_PROJECT);
         }
     }

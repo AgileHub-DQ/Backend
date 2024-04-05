@@ -1,14 +1,18 @@
 package dynamicquad.agilehub.sprint.domain;
 
+import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -35,12 +39,16 @@ public class Sprint {
 
     private String targetDescription;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime endDate;
+    private LocalDate endDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Builder
-    private Sprint(String title, String targetDescription, LocalDateTime startDate, LocalDateTime endDate,
+    private Sprint(String title, String targetDescription, LocalDate startDate, LocalDate endDate,
                    SprintStatus status) {
         this.title = title;
         this.targetDescription = targetDescription;
@@ -50,8 +58,8 @@ public class Sprint {
     }
 
 
-    public Sprint updateSprint(String title, String targetDescription, SprintStatus status, LocalDateTime startDate,
-                               LocalDateTime endDate) {
+    public Sprint updateSprint(String title, String targetDescription, SprintStatus status, LocalDate startDate,
+                               LocalDate endDate) {
         this.title = title;
         this.targetDescription = targetDescription;
         this.status = status;
@@ -60,4 +68,11 @@ public class Sprint {
         return this;
     }
 
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public void setStatus(SprintStatus status) {
+        this.status = status;
+    }
 }

@@ -41,8 +41,14 @@ public enum ErrorStatus implements BaseStatus {
     ISSUE_NOT_IN_PROJECT(HttpStatus.BAD_REQUEST, "ISSUE_4006", "이슈가 프로젝트에 속하지 않습니다."),
     ISSUE_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "ISSUE_4007", "기존 이슈 타입과 일치하지 않습니다."),
 
+    // Sprint Error
+    SPRINT_NOT_FOUND(HttpStatus.NOT_FOUND, "SPRINT_4001", "스프린트를 찾을 수 없습니다."),
+    SPRINT_NOT_IN_PROJECT(HttpStatus.BAD_REQUEST, "SPRINT_4002", "스프린트가 프로젝트에 속하지 않습니다."),
+    INVALID_ISSUE_TYPE(HttpStatus.BAD_REQUEST, "SPRINT_4003", "이슈 타입이 EPIC은 스프린트에 할당할 수 없습니다."),
+
     // COMMENT Error
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_4001", "댓글을 찾을 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

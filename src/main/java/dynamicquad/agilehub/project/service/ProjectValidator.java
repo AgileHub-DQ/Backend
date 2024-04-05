@@ -19,4 +19,10 @@ public class ProjectValidator {
     }
 
 
+    public Long findProjectId(String originKey) {
+        return projectRepository.findIdByKey(originKey)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+    }
+
+
 }

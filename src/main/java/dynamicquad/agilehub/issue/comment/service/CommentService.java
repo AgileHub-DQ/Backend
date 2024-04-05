@@ -75,7 +75,7 @@ public class CommentService {
     private Issue validateIssueInProject(String key, Long issueId) {
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project, issue);
+        issueValidator.validateIssueInProject(project.getId(), issueId);
 
         return issue;
     }
