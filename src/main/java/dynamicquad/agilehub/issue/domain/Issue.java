@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.issue.domain;
 
+import dynamicquad.agilehub.issue.comment.domain.Comment;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.member.domain.Member;
@@ -67,6 +68,9 @@ public abstract class Issue {
 
     @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "issue", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public void setSprint(Sprint newSprint) {
         this.sprint = newSprint;
