@@ -8,6 +8,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintReadResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
+import dynamicquad.agilehub.sprint.service.SprintQueryService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;

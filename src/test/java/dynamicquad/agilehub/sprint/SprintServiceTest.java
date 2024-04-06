@@ -3,10 +3,11 @@ package dynamicquad.agilehub.sprint;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dynamicquad.agilehub.project.domain.Project;
-import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
+import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
+import dynamicquad.agilehub.sprint.service.SprintService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
