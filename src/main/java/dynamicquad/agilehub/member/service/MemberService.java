@@ -8,8 +8,10 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto;
 import dynamicquad.agilehub.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class MemberService {
 
