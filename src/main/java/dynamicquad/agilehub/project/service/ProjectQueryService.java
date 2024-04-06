@@ -22,10 +22,10 @@ public class ProjectQueryService {
     private final MemberRepository memberRepository;
 
     public List<ProjectResponse> getProjects(Long memberId) {
-        // TODO: 멤버 존재 여부 확인 로직 따로 멤버 클래스로 분리하기
+        // TODO: 멤버 존재 여부 확인 로직 따로 멤버 클래스로 분리하기 - [ ]
         validateMemberExist(memberId);
         List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
-        
+
         return projects.stream().map(ProjectResponse::fromEntity).toList();
     }
 
