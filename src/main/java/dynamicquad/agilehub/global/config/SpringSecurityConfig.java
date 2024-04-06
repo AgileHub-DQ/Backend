@@ -1,6 +1,8 @@
 package dynamicquad.agilehub.global.config;
 
 import dynamicquad.agilehub.global.auth.service.CustomOAuth2UserService;
+import dynamicquad.agilehub.global.filter.JwtAuthFilter;
+import dynamicquad.agilehub.global.filter.JwtExceptionFilter;
 import dynamicquad.agilehub.global.filter.OAuth2SuccessHandler;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
@@ -20,6 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 public class SpringSecurityConfig {
 
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final JwtAuthFilter jwtAuthFilter;
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -39,16 +43,24 @@ public class SpringSecurityConfig {
                     return config;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+
+                // requestMatchers 설정
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/**").permitAll())
+
+                // oauth2 설정
                 .oauth2Login(customizer -> {
                             customizer.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
                             customizer.successHandler(oAuth2SuccessHandler);
-                            customizer.authorizationEndpoint(auth -> auth.authorizationRequestRepository(null));
                         }
-                );
+                )
+
+                // jwt 설정
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), jwtAuthFilter.getClass());
 
         return http.build();
     }
