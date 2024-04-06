@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.global.filter;
 
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
+import dynamicquad.agilehub.global.auth.util.CookieUtil;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
 import dynamicquad.agilehub.global.exception.JwtException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
@@ -23,6 +24,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
+
     private final MemberQueryService memberQueryService;
 
     /*

@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.global.config;
 
+import dynamicquad.agilehub.global.auth.repository.CookieAuthorizationRequestRepository;
 import dynamicquad.agilehub.global.auth.service.CustomOAuth2UserService;
 import dynamicquad.agilehub.global.filter.JwtAuthFilter;
 import dynamicquad.agilehub.global.filter.JwtExceptionFilter;
@@ -27,6 +28,8 @@ public class SpringSecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
         // csrf disable 처리 : 추후 설정 변경 필요
@@ -53,6 +56,8 @@ public class SpringSecurityConfig {
 
                 // oauth2 설정
                 .oauth2Login(customizer -> {
+                            customizer.authorizationEndpoint(authorization -> authorization.authorizationRequestRepository(
+                                    cookieAuthorizationRequestRepository));
                             customizer.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
                             customizer.successHandler(oAuth2SuccessHandler);
                         }
