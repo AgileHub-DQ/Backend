@@ -18,7 +18,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
-import dynamicquad.agilehub.member.domain.MemberRepository;
+import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import java.time.LocalDate;
