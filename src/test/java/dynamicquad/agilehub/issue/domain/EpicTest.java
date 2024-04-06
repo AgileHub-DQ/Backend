@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberStatus;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -9,7 +10,7 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class EpicTest {
 
@@ -69,6 +69,7 @@ class EpicTest {
     }
 
     @Test
+    @Transactional
     void 에픽_생성() {
         // given
 
@@ -77,8 +78,8 @@ class EpicTest {
             .content("에픽1 내용")
             .number(1)
             .status(IssueStatus.DO)
-            .startDate(LocalDateTime.of(2024, 1, 1, 0, 0))
-            .endDate(LocalDateTime.of(2024, 1, 1, 0, 1))
+            .startDate(LocalDate.of(2024, 1, 1))
+            .endDate(LocalDate.of(2024, 1, 10))
             .assignee(member1)
             .project(project)
             .build();

@@ -18,8 +18,11 @@ springdoc:
     disabled: true
   use-fqn: true
 
+
 aws:
   s3:
     rootURL: https://image.agilehub.store
     bucket: agilehub
     directory: /images
+    workingDirectory:
+      issue: issue

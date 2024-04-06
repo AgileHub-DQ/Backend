@@ -1,6 +1,7 @@
-package dynamicquad.agilehub.issue.domain;
+package dynamicquad.agilehub.issue.comment.domain;
 
 import dynamicquad.agilehub.global.domain.BaseEntity;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,19 +38,21 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "issue_id")
     private Issue issue;
 
-    //댓글 작성자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member writer;
 
     @Builder
-    private Comment(String content, Issue issue) {
+    private Comment(String content, Issue issue, Member writer) {
         this.content = content;
+        this.writer = writer;
         this.issue = issue;
+        if (issue != null) {
+            issue.getComments().add(this);
+        }
     }
 
-    public Comment updateComment(String content) {
+    public void updateComment(String content) {
         this.content = content;
-        return this;
     }
 }

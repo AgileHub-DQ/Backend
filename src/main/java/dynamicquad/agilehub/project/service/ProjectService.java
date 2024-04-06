@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectService {
 
+    private final ProjectValidator projectValidator;
     private final ProjectRepository projectRepository;
 
     @Transactional
@@ -32,14 +33,14 @@ public class ProjectService {
     @Transactional
     public String updateProject(String originKey, ProjectUpdateRequest request) {
 
-        Project project = projectRepository.findByKey(originKey)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+        Project project = projectValidator.findProject(originKey);
 
         validateKeyUniqueness(request.getKey());
 
         return project.updateProject(request).getKey();
 
     }
+
 
     private void validateKeyUniqueness(String key) {
         if (projectRepository.existsByKey(key)) {

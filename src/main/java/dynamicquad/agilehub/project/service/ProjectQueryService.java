@@ -25,7 +25,6 @@ public class ProjectQueryService {
 
         validateMemberExist(memberId);
 
-        //member로 project 조회
         List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
 
         if (projects.isEmpty()) {

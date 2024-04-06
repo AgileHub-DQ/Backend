@@ -14,6 +14,14 @@ create table epic (
                       start_date timestamp(6),
                       primary key (issue_id)
 ) engine=InnoDB;
+create table image (
+                       created_at timestamp(6) not null,
+                       image_id bigint not null auto_increment,
+                       issue_id bigint,
+                       updated_at timestamp(6) not null,
+                       path varchar(255),
+                       primary key (image_id)
+) engine=InnoDB;
 create table issue (
                        number integer not null,
                        issue_id bigint not null auto_increment,
@@ -54,6 +62,7 @@ create table project (
 create table sprint (
                         end_date timestamp,
                         start_date timestamp,
+                        project_id bigint,
                         sprint_id bigint not null auto_increment,
                         target_description varchar(255),
                         title varchar(255),
@@ -61,7 +70,7 @@ create table sprint (
                         primary key (sprint_id)
 ) engine=InnoDB;
 create table story (
-                       story_point integer not null,
+                       story_point integer,
                        end_date timestamp(6),
                        epic_id bigint,
                        issue_id bigint not null,
@@ -93,6 +102,11 @@ alter table epic
         foreign key (issue_id)
             references issue (issue_id);
 
+alter table image
+    add constraint FKg2eq37avh8iq48etswm7oc193
+        foreign key (issue_id)
+            references issue (issue_id);
+
 alter table issue
     add constraint FKgj9b27brkevgyi6mit3uq92lp
         foreign key (member_id)
@@ -117,6 +131,12 @@ alter table member_project
     add constraint FKl2brpp0how3olc7qjtqyrb207
         foreign key (project_id)
             references project (project_id);
+
+alter table sprint
+    add constraint FKerwve0blrvfhqm1coxo69f0xr
+        foreign key (project_id)
+            references project (project_id);
+
 alter table story
     add constraint FKko1b0e8un4fsbgefy1yxb2gop
         foreign key (epic_id)
