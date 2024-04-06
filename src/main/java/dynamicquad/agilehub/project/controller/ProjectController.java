@@ -44,9 +44,8 @@ public class ProjectController {
     })
     @PostMapping("/api/projects")
     public ResponseEntity<?> createProject(@RequestBody @Valid ProjectCreateRequest request) {
-        log.info("createProject");
-        String key = projectService.createProject(request);
 
+        String key = projectService.createProject(request);
         return ResponseEntity.created(URI.create("/api/projects/" + key + "/issues"))
             .body(CommonResponse.of(SuccessStatus.CREATED, key));
     }
@@ -60,10 +59,10 @@ public class ProjectController {
     })
     @GetMapping("/api/projects")
     public CommonResponse<?> getProjects() {
-        log.info("getProjects");
+        //TODO: 테스트용 memberId
+        //TODO: 실제 사용시 로그인한 유저의 memberId를 가져와야함 [ ]
         final Long memberId = 1L;
         List<ProjectResponse> projects = projectQueryService.getProjects(memberId);
-
         return CommonResponse.onSuccess(projects);
     }
 
@@ -75,9 +74,8 @@ public class ProjectController {
     })
     @PutMapping("/api/projects/{key}")
     public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key) {
-        log.info("updateProject");
-        String updateKey = projectService.updateProject(key, request);
 
+        String updateKey = projectService.updateProject(key, request);
         return ResponseEntity.created(URI.create("/api/projects/" + updateKey + "/issues"))
             .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
     }
