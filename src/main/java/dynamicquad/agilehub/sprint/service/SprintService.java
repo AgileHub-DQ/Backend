@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint;
+package dynamicquad.agilehub.sprint.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
@@ -8,7 +8,7 @@ import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectValidator;
-import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
+import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintRepository;
@@ -32,6 +32,7 @@ public class SprintService {
     @Transactional
     public SprintCreateResponse createSprint(String key, SprintCreateRequest request) {
         Project project = projectValidator.findProject(key);
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
 
         Sprint sprint = request.toEntity();
         sprint.setProject(project);
@@ -42,7 +43,7 @@ public class SprintService {
 
     @Transactional
     public void assignIssueToSprint(String key, Long sprintId, Long issueId) {
-
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         if (issueValidator.getIssueType(issueId).equals(IssueType.EPIC)) {
             throw new GeneralException(ErrorStatus.INVALID_ISSUE_TYPE);
         }
@@ -58,6 +59,7 @@ public class SprintService {
 
     @Transactional
     public void removeIssueFromSprint(String key, Long sprintId, Long issueId) {
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         Long projectId = projectValidator.findProjectId(key);
         sprintValidator.validateSprintInProject(projectId, sprintId);
         Issue issue = issueValidator.findIssue(issueId);
@@ -68,6 +70,7 @@ public class SprintService {
 
     @Transactional
     public void changeSprintStatus(String key, Long sprintId, SprintStatus status) {
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         Long projectId = projectValidator.findProjectId(key);
         sprintValidator.validateSprintInProject(projectId, sprintId);
 
@@ -79,6 +82,7 @@ public class SprintService {
 
     @Transactional
     public void deleteSprint(String key, Long sprintId) {
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         Long projectId = projectValidator.findProjectId(key);
         sprintValidator.validateSprintInProject(projectId, sprintId);
 

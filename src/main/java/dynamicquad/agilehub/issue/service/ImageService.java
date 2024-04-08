@@ -19,9 +19,7 @@ public class ImageService {
     private final PhotoS3Manager photoS3Manager;
 
     public void saveImages(Issue issue, List<MultipartFile> files, String workingDirectory) {
-        log.info("save images");
         List<String> imagePath = photoS3Manager.uploadPhotos(files, workingDirectory);
-        log.info("save images = {} ", imagePath);
         if (imagePath.isEmpty()) {
             return;
         }

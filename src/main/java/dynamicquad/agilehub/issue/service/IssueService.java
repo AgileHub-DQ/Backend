@@ -24,15 +24,15 @@ public class IssueService {
 
     @Transactional
     public Long createIssue(String key, IssueCreateRequest request) {
+        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         Project project = projectValidator.findProject(key);
-
         return issueFactoryProvider.getIssueFactory(request.getType())
             .createIssue(request, project);
-
     }
 
     @Transactional
     public void updateIssue(String key, Long issueId, IssueEditRequest request) {
+        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
         Project project = projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(project.getId(), issueId);
@@ -45,9 +45,9 @@ public class IssueService {
 
     @Transactional
     public void deleteIssue(String key, Long issueId) {
-        Project project = projectValidator.findProject(key);
+        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        projectValidator.findProject(key);
         Issue issue = issueValidator.findIssue(issueId);
-
         issueRepository.delete(issue);
     }
 }

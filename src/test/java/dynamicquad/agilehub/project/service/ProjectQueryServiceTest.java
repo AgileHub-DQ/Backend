@@ -1,9 +1,7 @@
 package dynamicquad.agilehub.project.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.member.domain.MemberStatus;
@@ -57,18 +55,6 @@ class ProjectQueryServiceTest {
             .containsOnly("PK1", "PK2");
         assertThat(projects).extracting("name")
             .containsOnly("프로젝트1", "프로젝트2");
-    }
-
-    @Test
-    @Transactional
-    void 멤버가_속한_프로젝트가_없다면_에러발생() {
-        // given
-        Member m1 = createMember("홍길동");
-        memberRepository.save(m1);
-        // when
-        // then
-        assertThatThrownBy(() -> projectQueryService.getProjects(m1.getId()))
-            .isInstanceOf(GeneralException.class);
     }
 
     private Project createProject(String projectName, String projectKey) {

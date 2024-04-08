@@ -1,14 +1,14 @@
 package dynamicquad.agilehub.sprint.controller;
 
-import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintAssignIssueRequest;
-import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintChangeStatusRequest;
-import static dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
+import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintAssignIssueRequest;
+import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintChangeStatusRequest;
+import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.sprint.SprintQueryService;
-import dynamicquad.agilehub.sprint.SprintService;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.service.SprintQueryService;
+import dynamicquad.agilehub.sprint.service.SprintService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
