@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +30,11 @@ public class SpringSecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico");
+    }
 
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
@@ -52,7 +58,8 @@ public class SpringSecurityConfig {
 
                 // requestMatchers 설정
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/**").permitAll())
+                        .anyRequest().authenticated()
+                )
 
                 // oauth2 설정
                 .oauth2Login(customizer -> {
