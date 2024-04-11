@@ -7,7 +7,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
 public class RedisConfig {
@@ -29,16 +29,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-        /*
-         * setKeySerializer, setValueSerializer 설정
-         * redis-cli 을 통해 직접 데이터를 조회 시 알아볼 수 없는 형태로 출력되는 것을 방지
-         */
+    public RedisTemplate<String, String> redisTemplate() {
+        StringRedisTemplate redisTemplate = new StringRedisTemplate();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-
         return redisTemplate;
     }
 
