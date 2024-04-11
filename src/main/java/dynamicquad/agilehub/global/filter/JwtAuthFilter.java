@@ -1,7 +1,6 @@
 package dynamicquad.agilehub.global.filter;
 
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
-import dynamicquad.agilehub.global.auth.util.CookieUtil;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
 import dynamicquad.agilehub.global.exception.JwtException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +21,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
 
     private final MemberQueryService memberQueryService;
 
@@ -37,7 +37,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtUtil.extractAccessToken(request)
                 .filter(jwtUtil::verifyToken)
-                .orElseThrow(() -> new JwtException(ErrorStatus.INVALID_ACCESS_TOKEN.getMessage()));
+                .orElseThrow(() -> {
+                    log.info("요청 URL: {}", request.getRequestURI());
+                    return new JwtException(ErrorStatus.INVALID_ACCESS_TOKEN.getMessage());
+                });
 
         saveAuthentication(token);
         filterChain.doFilter(request, response);
@@ -59,6 +62,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().contains("/api/auth/token/refresh");
+        return request.getRequestURI().contains("/oauth2/auth") || request.getRequestURI().contains("/oauth2/code");
     }
 }

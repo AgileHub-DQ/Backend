@@ -1,6 +1,5 @@
 package dynamicquad.agilehub.global.config;
 
-import dynamicquad.agilehub.global.auth.repository.CookieAuthorizationRequestRepository;
 import dynamicquad.agilehub.global.auth.service.CustomOAuth2UserService;
 import dynamicquad.agilehub.global.filter.JwtAuthFilter;
 import dynamicquad.agilehub.global.filter.JwtExceptionFilter;
@@ -28,8 +27,6 @@ public class SpringSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
 
     private final CustomOAuth2UserService customOAuth2UserService;
-
-    private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -63,8 +60,6 @@ public class SpringSecurityConfig {
 
                 // oauth2 설정
                 .oauth2Login(customizer -> {
-                            customizer.authorizationEndpoint(authorization -> authorization.authorizationRequestRepository(
-                                    cookieAuthorizationRequestRepository));
                             customizer.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
                             customizer.successHandler(oAuth2SuccessHandler);
                         }
