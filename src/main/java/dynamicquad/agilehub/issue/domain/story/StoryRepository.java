@@ -16,4 +16,5 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     @Query("SELECT s FROM Story s WHERE s.epic.id IN :epicIds")
     List<Story> findStoriesByEpicIds(@Param("epicIds") List<Long> epicIds);
 
+    List<Story> findStoriesByEpicId(Long epicId);
 }
