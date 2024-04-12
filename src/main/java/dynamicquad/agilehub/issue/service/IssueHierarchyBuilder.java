@@ -11,10 +11,12 @@ import dynamicquad.agilehub.project.domain.Project;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class IssueHierarchyBuilder {
 
     private final EpicRepository epicRepository;
@@ -58,6 +60,7 @@ public class IssueHierarchyBuilder {
             }
             responses.add(epicDto);
         }
+        log.warn("EPIC이 root일때 마지막 라인 {}", responses.size());
     }
 
     private void generateCompleteStoryRootStructure(Project project, List<IssueHierarchyResponse> responses) {
