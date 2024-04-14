@@ -4,7 +4,6 @@ import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -54,13 +53,17 @@ public class EpicResponse {
         }
     }
 
-    @Data
-    public static class EpicStatisticDto {
-        private Long epicId;
-        private Long statusDone;
-        private Long statusProgress;
-        private Long statusDo;
-        private Long storiesCount;
-    }
 
+    public interface EpicStatisticDto {
+        Long getEpicId();
+
+        Long getStoriesCount();
+
+        Long getStatusDo();
+
+        Long getStatusProgress();
+
+        Long getStatusDone();
+
+    }
 }

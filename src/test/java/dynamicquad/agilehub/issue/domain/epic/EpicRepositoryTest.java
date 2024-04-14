@@ -67,7 +67,6 @@ class EpicRepositoryTest {
         em.clear();
         // When
         List<EpicStatisticDto> epicStatics = epicRepository.getEpicStatics(project1.getId());
-        System.out.println("epicStatics = " + epicStatics);
         // Then
         assertThat(epicStatics).hasSize(2);
         assertThat(epicStatics.get(0).getStoriesCount()).isEqualTo(2);
