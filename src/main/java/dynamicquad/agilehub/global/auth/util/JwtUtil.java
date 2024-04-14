@@ -61,7 +61,7 @@ public class JwtUtil {
                 .withClaim("provider", provider)
                 .withClaim("distinctId", distinctId)
                 .withIssuedAt(now)
-                .withExpiresAt(new Date(now.getTime() + getRefreshTokenValidationSeconds() * 1000))
+                .withExpiresAt(new Date(now.getTime() + refreshTokenValidationSeconds * 1000))
                 .sign(Algorithm.HMAC512(secretKey)));
     }
 
