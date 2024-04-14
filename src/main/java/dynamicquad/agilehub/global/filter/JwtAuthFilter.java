@@ -1,9 +1,10 @@
 package dynamicquad.agilehub.global.filter;
 
+import dynamicquad.agilehub.global.auth.model.JwtRefreshToken;
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
+import dynamicquad.agilehub.global.auth.service.RefreshTokenRedisService;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
 import dynamicquad.agilehub.global.exception.JwtException;
-import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.service.MemberQueryService;
 import jakarta.servlet.FilterChain;
@@ -11,12 +12,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
@@ -27,6 +30,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     private final MemberQueryService memberQueryService;
+    private final RefreshTokenRedisService redisService;
 
     /*
      * access token 유효 -> authentication 저장
@@ -35,15 +39,42 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = jwtUtil.extractAccessToken(request)
-                .filter(jwtUtil::verifyToken)
-                .orElseThrow(() -> {
-                    log.info("요청 URL: {}", request.getRequestURI());
-                    return new JwtException(ErrorStatus.INVALID_ACCESS_TOKEN.getMessage());
-                });
+        Optional<String> token = jwtUtil.extractAccessToken(request);
 
-        saveAuthentication(token);
+        if (token.isEmpty()) {
+            throw new JwtException("Access Token is empty");
+        }
+
+        String accessToken = token.get();
+        if (jwtUtil.verifyToken(accessToken)) {
+            saveAuthentication(accessToken);
+        } else {
+            String reissuedAccessToken = reissueAccessToken(accessToken);
+            if (StringUtils.hasText(reissuedAccessToken)) {
+                saveAuthentication(reissuedAccessToken);
+                response.setHeader(jwtUtil.getAccessHeader(), reissuedAccessToken);
+            } else {
+                throw new JwtException("Access Token is expired");
+            }
+        }
         filterChain.doFilter(request, response);
+    }
+
+    private String reissueAccessToken(String accessToken) {
+        if (StringUtils.hasText(accessToken)) {
+            JwtRefreshToken jwtRefreshToken = redisService.findByAccessToken(accessToken);
+            String refreshToken = jwtRefreshToken.getRefreshToken();
+
+            if (jwtUtil.verifyToken(refreshToken)) {
+                String name = jwtUtil.extractName(accessToken);
+                String role = jwtUtil.extractRole(accessToken);
+                String provider = jwtUtil.extractProvider(accessToken);
+                String distinctId = jwtUtil.extractDistinctId(accessToken);
+
+                return jwtUtil.generateAccessToken(name, role, provider, distinctId);
+            }
+        }
+        return null;
     }
 
     private void saveAuthentication(String accessToken) {
