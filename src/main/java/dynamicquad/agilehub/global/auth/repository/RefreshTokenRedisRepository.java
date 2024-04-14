@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface RefreshTokenRedisRepository extends CrudRepository<JwtRefreshToken, String> {
 
-    Optional<JwtRefreshToken> findByRefreshToken(String refreshToken);
+    Optional<JwtRefreshToken> findByAccessToken(String accessToken);
 }
