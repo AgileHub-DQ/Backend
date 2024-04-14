@@ -57,10 +57,10 @@ public class EpicResponse {
     @Data
     public static class EpicStatisticDto {
         private Long epicId;
-        private Long completedStoryCount;
-        private Long inProgressStoryCount;
-        private Long toDoStoryCount;
-        private Long totalStoryCount;
+        private Long statusDone;
+        private Long statusProgress;
+        private Long statusDo;
+        private Long storiesCount;
     }
 
 }

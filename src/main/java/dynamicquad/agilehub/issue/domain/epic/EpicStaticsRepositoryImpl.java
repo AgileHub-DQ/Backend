@@ -29,21 +29,31 @@ public class EpicStaticsRepositoryImpl implements EpicStaticsRepository {
         QEpic epic = QEpic.epic;
 
         return queryFactory
-            .select(Projections.bean(EpicStatisticDto.class,
-                story.epic.id.as("epicId"),
-                story.id.count().as("totalStoryCount"),
-                new CaseBuilder().when(issue.status.eq(IssueStatus.DO)).then(1L).otherwise(0L).sum()
-                    .as("toDoStoryCount"),
-                new CaseBuilder().when(issue.status.eq(IssueStatus.PROGRESS)).then(1L).otherwise(0L).sum()
-                    .as("inProgressStoryCount"),
-                new CaseBuilder().when(issue.status.eq(IssueStatus.DONE)).then(1L).otherwise(0L).sum()
-                    .as("completedStoryCount")))
-            .from(story)
+            .select(
+                Projections.fields(EpicStatisticDto.class,
+                    epic.id.as("epicId"),
+                    story.id.count().as("storiesCount"),
+                    new CaseBuilder()
+                        .when(issue.status.eq(IssueStatus.DO))
+                        .then(1L)
+                        .otherwise(0L)
+                        .sum().as("statusDo"),
+                    new CaseBuilder()
+                        .when(issue.status.eq(IssueStatus.PROGRESS))
+                        .then(1L)
+                        .otherwise(0L)
+                        .sum().as("statusProgress"),
+                    new CaseBuilder()
+                        .when(issue.status.eq(IssueStatus.DONE))
+                        .then(1L)
+                        .otherwise(0L)
+                        .sum().as("statusDone")
+                ))
+            .from(epic)
+            .leftJoin(story).on(epic.id.eq(story.epic.id))
             .leftJoin(issue).on(story.id.eq(issue.id))
-            .leftJoin(epic).on(epic.id.eq(story.epic.id))
-            .where(issue.project.id.eq(projectId))
-            .groupBy(story.epic.id)
-            .orderBy(story.epic.id.asc())
+            .where(epic.project.id.eq(projectId))
+            .groupBy(epic.id)
             .fetch();
     }
 }

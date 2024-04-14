@@ -70,10 +70,10 @@ class EpicRepositoryTest {
         System.out.println("epicStatics = " + epicStatics);
         // Then
         assertThat(epicStatics).hasSize(2);
-        assertThat(epicStatics.get(0).getTotalStoryCount()).isEqualTo(2);
-        assertThat(epicStatics.get(0).getToDoStoryCount()).isEqualTo(1);
-        assertThat(epicStatics.get(0).getInProgressStoryCount()).isEqualTo(1);
-        assertThat(epicStatics.get(0).getCompletedStoryCount()).isEqualTo(0);
+        assertThat(epicStatics.get(0).getStoriesCount()).isEqualTo(2);
+        assertThat(epicStatics.get(0).getStatusDo()).isEqualTo(1);
+        assertThat(epicStatics.get(0).getStatusProgress()).isEqualTo(1);
+        assertThat(epicStatics.get(0).getStatusDone()).isEqualTo(0);
 
     }
 
