@@ -56,7 +56,7 @@ public class SpringSecurityConfig {
 
                 // requestMatchers 설정
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
