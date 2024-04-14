@@ -30,9 +30,6 @@ public class JwtUtil {
     @Value("${jwt.access.header}")
     private String accessHeader;
 
-    @Value("${jwt.refresh.header}")
-    private String refreshHeader;
-
     public GeneratedToken generateToken(String name, String role, String provider, String distinctId) {
         return GeneratedToken.builder()
                 .accessToken(generateAccessToken(name, role, provider, distinctId))
@@ -82,12 +79,6 @@ public class JwtUtil {
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(refreshToken -> refreshToken.startsWith(PREFIX))
-                .map(refreshToken -> refreshToken.replace(PREFIX, BLANK));
-    }
-
-    public Optional<String> extractRefreshToken(HttpServletRequest request) {
-        return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith(PREFIX))
                 .map(refreshToken -> refreshToken.replace(PREFIX, BLANK));
     }
