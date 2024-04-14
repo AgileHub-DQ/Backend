@@ -33,7 +33,8 @@ public class SpringSecurityConfig {
         return web -> web.ignoring().requestMatchers("/error", "/favicon.ico");
     }
 
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         // csrf disable 처리 : 추후 설정 변경 필요
         http
@@ -55,18 +56,18 @@ public class SpringSecurityConfig {
 
                 // requestMatchers 설정
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
                 // oauth2 설정
-                .oauth2Login(customizer -> {
-                            customizer.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
-                            customizer.successHandler(oAuth2SuccessHandler);
-                        }
+                .oauth2Login(customizer -> customizer
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
                 )
 
                 // jwt 설정
-                .addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), jwtAuthFilter.getClass());
 
         return http.build();
