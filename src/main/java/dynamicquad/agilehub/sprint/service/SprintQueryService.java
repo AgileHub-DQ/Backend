@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint;
+package dynamicquad.agilehub.sprint.service;
 
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.Issue;

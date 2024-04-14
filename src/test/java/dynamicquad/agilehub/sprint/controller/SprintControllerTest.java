@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dynamicquad.agilehub.sprint.SprintQueryService;
-import dynamicquad.agilehub.sprint.SprintService;
-import dynamicquad.agilehub.sprint.controller.SprintRequest.SprintCreateRequest;
+import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.service.SprintQueryService;
+import dynamicquad.agilehub.sprint.service.SprintService;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -44,7 +44,7 @@ public class CommentController {
                                            @PathVariable("issueId") Long issueId) {
 
         //TODO: 현재, 가짜 멤버 객체 1L로 설정한 상태이므로 추후에 제거하고 실제 멤버 객체를 받아오도록 수정 필요
-        //가짜 멤버 객체
+        //TODO: 가짜 멤버 객체
         Long memberId = 1L;
 
         CommentCreateResponse resp = commentService.createComment(key, issueId, memberId, request.getContent());
@@ -86,7 +86,6 @@ public class CommentController {
 
         CommentUpdateResponse resp = commentService.updateComment(key, issueId, commentId,
             request.getContent(), memberId);
-        
         return CommonResponse.of(SuccessStatus.OK, resp);
     }
 }

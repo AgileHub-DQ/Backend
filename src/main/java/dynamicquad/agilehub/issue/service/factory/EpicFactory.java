@@ -19,7 +19,6 @@ import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +43,18 @@ public class EpicFactory implements IssueFactory {
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
     private String EPIC = "EPIC";
+    private String STORY = "STORY";
 
     @Transactional
     @Override
     public Long createIssue(IssueCreateRequest request, Project project) {
-
+        // TODO: 이슈가 삭제되면 이슈 번호가 중복될 수 있음 1번,2번,3번 이슈 생성뒤 2번 삭제하면 4번 이슈 생성시 3번이 되어 중복 [ ]
+        // TODO: 이슈 번호 생성 로직을 따로 만들기 - number 최대로 큰 숫자 + 1로 로직 변경 [ ]
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
+        // TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
         Member assignee = findMember(request.getAssigneeId(), project.getId());
 
+        // TODO: EPIC toEntity 메서드에 이 로직 넣기 [ ]
         Epic epic = Epic.builder()
             .title(request.getTitle())
             .content(request.getContent())
@@ -64,32 +67,26 @@ public class EpicFactory implements IssueFactory {
             .build();
 
         issueRepository.save(epic);
-
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
             log.info("uploading images");
             imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
         }
-
         return epic.getId();
     }
 
     @Transactional
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
-
+        // TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
         Member assignee = findMember(request.getAssigneeId(), project.getId());
 
         Epic epic = getEpic(issue);
-        log.info("updateIssue EPIC 업데이트");
         epic.updateEpic(request, assignee);
-
         imageService.cleanupMismatchedImages(epic, request.getImageUrls(), WORKING_DIRECTORY);
-
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
             log.info("uploading images");
             imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
         }
-
         return epic.getId();
     }
 
@@ -104,17 +101,16 @@ public class EpicFactory implements IssueFactory {
 
     @Override
     public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
-
         Epic epic = getEpic(issue);
-
+        //TODO: IssueDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
         return IssueDto.builder()
             .issueId(epic.getId())
             .key(epic.getProject().getKey() + "-" + epic.getNumber())
             .title(epic.getTitle())
             .type(EPIC)
             .status(String.valueOf(epic.getStatus()))
-            .startDate(Optional.ofNullable(epic.getStartDate()).map(LocalDate::toString).orElse(""))
-            .endDate(Optional.ofNullable(epic.getEndDate()).map(LocalDate::toString).orElse(""))
+            .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
+            .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
             .content(contentDto)
             .assignee(assigneeDto)
             .build();
@@ -127,11 +123,8 @@ public class EpicFactory implements IssueFactory {
 
     @Override
     public List<SubIssueDto> createChildIssueDtos(Issue issue) {
-        log.info("createChildIssueDtos EPIC 하위이슈인 STORY 모두 가져오기");
         Epic epic = getEpic(issue);
-
         List<Story> stories = storyRepository.findByEpicId(epic.getId());
-
         if (stories.isEmpty()) {
             return List.of();
         }
@@ -144,6 +137,7 @@ public class EpicFactory implements IssueFactory {
     private SubIssueDto getStoryToSubIssueDto(Story story) {
 
         AssigneeDto assigneeDto = Optional.ofNullable(story.getAssignee())
+            //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
             .map(assignee -> AssigneeDto.builder()
                 .id(assignee.getId())
                 .name(assignee.getName())
@@ -153,8 +147,8 @@ public class EpicFactory implements IssueFactory {
         return SubIssueDto.builder()
             .issueId(story.getId())
             .key(story.getProject().getKey() + "-" + story.getNumber())
-            .status(story.getStatus().toString())
-            .type("STORY")
+            .status(String.valueOf(story.getStatus()))
+            .type(STORY)
             .title(story.getTitle())
             .assignee(assigneeDto)
             .build();
@@ -165,23 +159,18 @@ public class EpicFactory implements IssueFactory {
             log.error("issue is not instance of Epic = {}", issue.getClass());
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
-
         return epic;
     }
 
-
+    //TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
     public Member findMember(Long assigneeId, Long projectId) {
-
         if (assigneeId == null) {
             return null;
         }
-
         Member member = memberRepository.findById(assigneeId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-
         memberProjectRepository.findByMemberIdAndProjectId(member.getId(), projectId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
-
         return member;
     }
 

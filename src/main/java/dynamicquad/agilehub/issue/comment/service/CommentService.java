@@ -30,12 +30,12 @@ public class CommentService {
     private final IssueValidator issueValidator;
 
 
-    // TODO: 코멘트를 작성한 멤버의 아이디를 인자로 받고 memberRepository에서 해당 멤버를 찾아온다음 Comment에 등록함. 체크 필요 [ ]
     @Transactional
     public CommentCreateResponse createComment(String key, Long issueId, Long memberId, String content) {
 
         Issue issue = validateIssueInProject(key, issueId);
-
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        // TODO: 코멘트를 작성한 멤버의 아이디를 인자로 받고 memberRepository에서 해당 멤버를 찾아온다음 Comment에 등록함. 체크 필요 [ ]
         Member writer = memberRepository.findById(memberId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -50,7 +50,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(String key, Long issueId, Long commentId, Long memberId) {
-        //TODO: 코멘트 삭제 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
+        // TODO: 코멘트 삭제 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
         validateIssueInProject(key, issueId);
 
         Comment comment = commentRepository.findById(commentId)

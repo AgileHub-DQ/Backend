@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint;
+package dynamicquad.agilehub.sprint.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;

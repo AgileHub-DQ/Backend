@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint.controller;
+package dynamicquad.agilehub.sprint.controller.request;
 
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;

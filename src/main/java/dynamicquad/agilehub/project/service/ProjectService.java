@@ -22,23 +22,18 @@ public class ProjectService {
 
     @Transactional
     public String createProject(ProjectCreateRequest request) {
-
         validateKeyUniqueness(request.getKey());
-
-        //유저 확인후 유저 - 프로젝트 매핑하는 로직 필요
-
+        //TODO: 프로젝트 생성 후 유저 - 멤버_프로젝트 - 프로젝트 매핑하는 로직 필요. role은 Admin으로 [ ]
         return projectRepository.save(request.toEntity()).getKey();
     }
 
     @Transactional
     public String updateProject(String originKey, ProjectUpdateRequest request) {
-
         Project project = projectValidator.findProject(originKey);
-
+        //TODO: 해당 멤버가 프로젝트에 속해있는지 확인하는 로직 필요. [ ]
+        //TODO: 프로젝트 수정 권한이 있는지 확인하는 로직 필요. [ ] -> 프로젝트 생성자(ADMIN)만 수정 가능
         validateKeyUniqueness(request.getKey());
-
         return project.updateProject(request).getKey();
-
     }
 
 

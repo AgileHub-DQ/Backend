@@ -38,60 +38,60 @@ public class IssueController {
     private final IssueService issueService;
     private final IssueQueryService issueQueryService;
 
-    @PostMapping(value = "/api/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "이슈 생성", description = "프로젝트의 이슈를 생성합니다.",
         requestBody = @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueCreateRequest.class))))
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
+    @PostMapping(value = "/api/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
                                                 @PathVariable("key") String key) {
-        log.info("createProjectIssue key: {}", key);
         Long issueId = issueService.createIssue(key, request);
 
         return ResponseEntity.created(URI.create("/api/projects/" + key + "/issues/" + issueId))
             .body(CommonResponse.of(SuccessStatus.CREATED, issueId));
     }
 
-    @GetMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
+
     @Operation(summary = "이슈 조회", description = "프로젝트의 이슈를 조회합니다.",
         responses = {
             @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
     )
+    @GetMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
-        log.info("getProjectIssue key: {}, issueId: {}", key, issueId);
-        IssueReadResponseDto issue = issueQueryService.getIssue(key, issueId);
 
-        return CommonResponse.of(SuccessStatus.OK, issue);
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId));
     }
 
-    @GetMapping(value = "/api/projects/{key}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
+
     @Operation(summary = "이슈 전체 조회", description = "프로젝트의 이슈 목록을 조회합니다.",
         responses = {
             @ApiResponse(responseCode = "200", description = "이슈 목록 조회 성공", content = @Content(schema = @Schema(implementation = IssueHierarchyResponse.class)))}
     )
+    @GetMapping(value = "/api/projects/{key}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectIssues(@PathVariable("key") String key) {
-        log.info("getProjectIssues key: {}", key);
+
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssues(key));
     }
 
-    @PutMapping(value = "/api/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
     @Operation(summary = "이슈 수정", description = "프로젝트의 이슈를 수정합니다.",
         requestBody = @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
+    @PutMapping(value = "/api/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
                                               @PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
 
         issueService.updateIssue(key, issueId, request);
-
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
+
     @Operation(summary = "이슈 삭제", description = "프로젝트의 이슈를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
+    @DeleteMapping(value = "/api/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteProjectIssue(@PathVariable("key") String key,
                                                 @PathVariable("issueId") Long issueId) {
-        issueService.deleteIssue(key, issueId);
 
+        issueService.deleteIssue(key, issueId);
         return ResponseEntity.noContent().build();
     }
 }
