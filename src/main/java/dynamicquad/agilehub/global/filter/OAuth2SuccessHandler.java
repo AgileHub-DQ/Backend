@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.global.filter;
 
 import dynamicquad.agilehub.global.auth.model.GeneratedToken;
+import dynamicquad.agilehub.global.auth.model.JwtRefreshToken;
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
 import dynamicquad.agilehub.global.auth.service.RefreshTokenRedisService;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
@@ -54,7 +55,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         GeneratedToken token = jwtUtil.generateToken(name, role, provider, distinctId);
 
-        redisService.save(token.getRefreshToken(), token.getAccessToken());
+        redisService.save(new JwtRefreshToken(token.getAccessToken(), token.getRefreshToken()));
 
         return token;
     }
