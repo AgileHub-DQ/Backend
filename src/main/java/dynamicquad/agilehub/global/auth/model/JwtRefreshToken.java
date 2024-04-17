@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.index.Indexed;
  * JwtRefreshToken 갱신 : 14일
  */
 @Getter
-@RedisHash(value = "jwt_token", timeToLive = 60 * 60 * 24 * 14)
+@RedisHash(value = "jwt_token")
 public class JwtRefreshToken implements Serializable {
 
     @Id
@@ -26,7 +26,7 @@ public class JwtRefreshToken implements Serializable {
     private Long expiration;
 
     public JwtRefreshToken(String accessToken, String refreshToken) {
-        new JwtRefreshToken(accessToken, refreshToken, (long) (60 * 60));
+        new JwtRefreshToken(accessToken, refreshToken, (long) (60 * 60 * 24 * 14));
     }
 
     public JwtRefreshToken(String accessToken, String refreshToken, Long expiration) {
