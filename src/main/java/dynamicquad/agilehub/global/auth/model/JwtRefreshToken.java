@@ -35,4 +35,8 @@ public class JwtRefreshToken implements Serializable {
         this.expiration = expiration;
     }
 
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
 }

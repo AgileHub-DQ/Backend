@@ -54,7 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 saveAuthentication(reissuedAccessToken);
                 response.setHeader(jwtUtil.getAccessHeader(), reissuedAccessToken);
             } else {
-                throw new JwtException("Access Token is expired");
+                throw new JwtException("Refresh Token is expired");
             }
         }
         filterChain.doFilter(request, response);
@@ -71,7 +71,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String provider = jwtUtil.extractProvider(accessToken);
                 String distinctId = jwtUtil.extractDistinctId(accessToken);
 
-                return jwtUtil.generateAccessToken(name, role, provider, distinctId);
+                String reissuedAccessToken = jwtUtil.generateAccessToken(name, role, provider, distinctId);
+                jwtRefreshToken.updateAccessToken(reissuedAccessToken);
+                redisService.save(jwtRefreshToken);
+
+                return reissuedAccessToken;
             }
         }
         return null;

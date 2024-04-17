@@ -20,7 +20,7 @@ public class RefreshTokenRedisService {
                 .orElseThrow(() -> new JwtException("Refresh Token is not exist"));
     }
 
-    public void save(String refreshToken, String accessToken) {
-        repository.save(new JwtRefreshToken(refreshToken, accessToken));
+    public void save(JwtRefreshToken jwtRefreshToken) {
+        repository.save(jwtRefreshToken);
     }
 }
