@@ -79,8 +79,8 @@ public class JwtUtil {
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
-                .filter(refreshToken -> refreshToken.startsWith(PREFIX))
-                .map(refreshToken -> refreshToken.replace(PREFIX, BLANK));
+                .filter(accessToken -> accessToken.startsWith(PREFIX))
+                .map(accessToken -> accessToken.replace(PREFIX, BLANK));
     }
 
     public String extractName(String token) {
