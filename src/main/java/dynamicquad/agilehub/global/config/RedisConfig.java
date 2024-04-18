@@ -34,7 +34,6 @@ public class RedisConfig {
     public RedisTemplate<String, String> redisTemplate() {
         StringRedisTemplate redisTemplate = new StringRedisTemplate();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setEnableTransactionSupport(true);
         return redisTemplate;
     }
 
