@@ -51,11 +51,11 @@ public class IssueBulkRepository {
     }
 
     @Transactional
-    public void saveStoryAll(List<Story> issues, Long projectId, Long sprintId, Long memberId) {
+    public void saveStoryAll(List<Issue> issues, Long projectId, Long sprintId, Long memberId) {
         String sql = "INSERT INTO issue (content, issue_type, number, project_id, status, title, member_id) "
             + "VALUES (?,?,?,?, ?,?,?)";
         jdbcTemplate.batchUpdate(sql, issues, issues.size(),
-            (PreparedStatement ps, Story issue) -> {
+            (PreparedStatement ps, Issue issue) -> {
                 ps.setString(1, issue.getContent());
                 ps.setString(2, "STORY");
                 ps.setString(3, String.valueOf(issue.getNumber()));
@@ -83,11 +83,11 @@ public class IssueBulkRepository {
     }
 
     @Transactional
-    public void saveTaskAll(List<Task> issues, Long projectId, Long sprintId, Long memberId) {
+    public void saveTaskAll(List<Issue> issues, Long projectId, Long sprintId, Long memberId) {
         String sql = "INSERT INTO issue (content, issue_type, number, project_id, status, title, member_id) "
             + "VALUES (?,?,?,?,?,?,?)";
         jdbcTemplate.batchUpdate(sql, issues, issues.size(),
-            (PreparedStatement ps, Task issue) -> {
+            (PreparedStatement ps, Issue issue) -> {
                 ps.setString(1, issue.getContent());
                 ps.setString(2, "TASK");
                 ps.setString(3, String.valueOf(issue.getNumber()));

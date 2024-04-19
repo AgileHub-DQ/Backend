@@ -10,7 +10,7 @@ spring:
     password: test
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -21,7 +21,7 @@ spring:
     open-in-view: false
   sql:
     init:
-      mode: always
+      mode: never
 logging:
   level:
     org.hibernate.SQL: debug

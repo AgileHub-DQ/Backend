@@ -14,6 +14,7 @@ import dynamicquad.agilehub.member.domain.MemberStatus;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
+import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +34,31 @@ public class DummyDataLoader {
     private final IssueBulkRepository issueBulkRepository;
 
 
-    //@PostConstruct
+    @PostConstruct
     void bulkInsert() {
 
         // project 벌크 실행
         long startTime = System.currentTimeMillis();
+
+        projectBulk();
+        memberBulk();
+        memberProjectBulk();
+        epicBulk();
+        epicIssueBulk();
+        storyBulk();
+        storyIssueBulk();
+        taskBulk();
+        taskIssueBulk();
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("--------------------");
+        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
+        System.out.println("--------------------");
+
+    }
+
+
+    private void projectBulk() {
         List<Project> projects = new ArrayList<>();
         for (long i = 0; i < 10_000L; i++) {
             projects.add(Project.builder()
@@ -47,8 +68,9 @@ public class DummyDataLoader {
         }
 
         projectBulkRepository.saveAll(projects);
+    }
 
-        // member 벌크 실행
+    private void memberBulk() {
         List<Member> members = new ArrayList<>();
         for (long i = 0; i < 10_000L; i++) {
             members.add(Member.builder()
@@ -57,7 +79,9 @@ public class DummyDataLoader {
                 .build());
         }
         memberBulkRepository.saveAll(members);
+    }
 
+    private void memberProjectBulk() {
         // memberProject 벌크 실행
         List<MemberProject> memberProjects = new ArrayList<>();
         for (long i = 0; i < 10_000L; i++) {
@@ -66,8 +90,9 @@ public class DummyDataLoader {
                 .build());
         }
         memberProjectBulkRepository.saveAll(memberProjects);
+    }
 
-        // epic 벌크 실행
+    private void epicBulk() {
         List<Issue> epics = new ArrayList<>();
         for (long i = 0; i < 100; i++) {
             epics.add(Epic.builder()
@@ -80,43 +105,24 @@ public class DummyDataLoader {
                 .build());
         }
         issueBulkRepository.saveEpicAll(epics, 1L, 1L, 1L);
-
-        // epic-issue 매핑 벌크 실행
-        epics = new ArrayList<>();
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
-
     }
-    
 
-    //@PostConstruct
-    void epicIssueMappingBulk() {
-        //먼저 생성된 이슈시작지점 아이디부터 확인하기
-        long startTime = System.currentTimeMillis();
-        List<Epic> epics = new ArrayList<>();
-        for (long i = 0; i < 1_000_000; i++) {
-            epics.add(Epic.builder()
+    private void epicIssueBulk() {
+        // epic-issue 매핑 벌크 실행
+        List<Epic> epicIssueMappings = new ArrayList<>();
+        for (long i = 0; i < 100; i++) {
+            epicIssueMappings.add(Epic.builder()
                 .startDate(LocalDate.of(2021, 1, 1))
                 .endDate(LocalDate.of(2021, 10, 23))
                 .build());
         }
-        issueBulkRepository.saveIssueEpicAll(epics);
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
-
+        issueBulkRepository.saveIssueEpicAll(epicIssueMappings);
     }
 
-    //@PostConstruct
-    void issueStoryBulk() {
-        long startTime = System.currentTimeMillis();
 
-        List<Story> stories = new ArrayList<>();
-        for (long i = 0; i < 3_000_000L; i++) {
+    private void storyBulk() {
+        List<Issue> stories = new ArrayList<>();
+        for (long i = 0; i < 100 * 200; i++) {
             stories.add(Story.builder()
                 .title("스토리" + i)
                 .content("스토리 내용" + i)
@@ -127,40 +133,25 @@ public class DummyDataLoader {
                 .build());
         }
         issueBulkRepository.saveStoryAll(stories, 1L, 1L, 1L);
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
-
     }
 
-    //@PostConstruct
-    void storyIssueMappingBulk() {
-        //먼저 생성된 이슈시작지점 아이디부터 확인하기
-        long startTime = System.currentTimeMillis();
+    private void storyIssueBulk() {
+        // story-issue 매핑 벌크 실행
+        for (long i = 0; i < 100; i++) {
+            List<Story> storiesMappingIssue = new ArrayList<>();
+            for (long j = 0; j < 200; j++) {
+                storiesMappingIssue.add(Story.builder()
+                    .startDate(LocalDate.of(2021, 1, 1))
+                    .endDate(LocalDate.of(2021, 10, 23))
+                    .build());
+            }
 
-        List<Story> stories = new ArrayList<>();
-        for (long i = 0; i < 3_000_000L; i++) {
-
-            stories.add(Story.builder()
-                .startDate(LocalDate.of(2021, 1, 1))
-                .endDate(LocalDate.of(2021, 10, 23))
-                .build());
+            issueBulkRepository.saveIssueStoryAll(storiesMappingIssue, i + 1, 101L + i * 200L);
         }
-        issueBulkRepository.saveIssueStoryAll(stories, 10L, 1_000_001L);
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
-
     }
 
-    //@PostConstruct
-    void issueTaskBulk() {
-        long startTime = System.currentTimeMillis();
-        List<Task> tasks = new ArrayList<>();
+    private void taskBulk() {
+        List<Issue> tasks = new ArrayList<>();
         for (long i = 0; i < 100 * 200 * 200; i++) {
             tasks.add(Task.builder()
                 .title("태스크" + i)
@@ -170,29 +161,21 @@ public class DummyDataLoader {
                 .build());
         }
         issueBulkRepository.saveTaskAll(tasks, 1L, 1L, 1L);
-
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
     }
 
-    //@PostConstruct
-    void taskIssueMappingBulk() {
-        //먼저 생성된 이슈시작지점 아이디부터 확인하기
-        //long startTime = System.currentTimeMillis();
-        List<Task> tasks = new ArrayList<>();
+    private void taskIssueBulk() {
+        // task-issue 매핑 벌크 실행
         for (long i = 0; i < 100 * 200; i++) {
-            tasks.add(Task.builder()
-                .build());
-        }
-        issueBulkRepository.saveIssueTaskAll(tasks, 1_100_000L, 4_000_001L);
+            List<Task> tasksMappingIssue = new ArrayList<>();
+            for (long j = 0; j < 200; j++) {
+                tasksMappingIssue.add(Task.builder()
+                    .build());
+            }
 
-        //long endTime = System.currentTimeMillis();
-/*        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");*/
+            issueBulkRepository.saveIssueTaskAll(tasksMappingIssue, 101L + i, 20101L + i * 200L);
+        }
 
     }
+
 
 }
