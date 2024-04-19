@@ -1,11 +1,10 @@
-# local profile
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: dummy
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/agilehub
+    url: jdbc:mysql://localhost:3307/agilehub?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999
     username: root
     password: test
   jpa:
@@ -21,7 +20,7 @@ spring:
     open-in-view: false
   sql:
     init:
-      mode: always
+      mode: never
 logging:
   level:
     org.hibernate.SQL: debug
