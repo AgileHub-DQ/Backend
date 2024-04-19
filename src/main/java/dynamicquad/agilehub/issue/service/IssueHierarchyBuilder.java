@@ -60,7 +60,6 @@ public class IssueHierarchyBuilder {
             }
             responses.add(epicDto);
         }
-        log.warn("EPIC이 root일때 마지막 라인 {}", responses.size());
     }
 
     private void generateCompleteStoryRootStructure(Project project, List<IssueHierarchyResponse> responses) {
