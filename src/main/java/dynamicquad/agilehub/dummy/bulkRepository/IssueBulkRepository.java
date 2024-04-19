@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.dummy.bulkRepository;
 
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
@@ -19,11 +20,11 @@ public class IssueBulkRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
-    public void saveEpicAll(List<Epic> issues, Long projectId, Long sprintId, Long memberId) {
+    public void saveEpicAll(List<Issue> issues, Long projectId, Long sprintId, Long memberId) {
         String sql = "INSERT INTO issue (content, issue_type, number, project_id,status, title, member_id) "
             + "VALUES (?,?,?,?,?,?,?)";
         jdbcTemplate.batchUpdate(sql, issues, issues.size(),
-            (PreparedStatement ps, Epic issue) -> {
+            (PreparedStatement ps, Issue issue) -> {
                 ps.setString(1, issue.getContent());
                 ps.setString(2, "EPIC");
                 ps.setString(3, String.valueOf(issue.getNumber()));

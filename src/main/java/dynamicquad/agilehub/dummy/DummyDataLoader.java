@@ -4,6 +4,7 @@ import dynamicquad.agilehub.dummy.bulkRepository.IssueBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.MemberBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.MemberProjectBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.ProjectBulkRepository;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
@@ -23,10 +24,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Profile("local")
+@Profile("dummy")
 @Slf4j
 public class DummyDataLoader {
-    private static final int COUNT = 10_000;
     private final ProjectBulkRepository projectBulkRepository;
     private final MemberBulkRepository memberBulkRepository;
     private final MemberProjectBulkRepository memberProjectBulkRepository;
@@ -36,10 +36,10 @@ public class DummyDataLoader {
     //@PostConstruct
     void bulkInsert() {
 
-        // TODO: project 벌크 실행
+        // project 벌크 실행
         long startTime = System.currentTimeMillis();
         List<Project> projects = new ArrayList<>();
-        for (long i = 0; i < COUNT; i++) {
+        for (long i = 0; i < 10_000L; i++) {
             projects.add(Project.builder()
                 .name("프로젝트" + i)
                 .key("KEY" + i)
@@ -47,57 +47,29 @@ public class DummyDataLoader {
         }
 
         projectBulkRepository.saveAll(projects);
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
 
-    }
-
-    //@PostConstruct
-    void memberBulk() {
-        // TODO: member 벌크 실행
-        long startTime = System.currentTimeMillis();
+        // member 벌크 실행
         List<Member> members = new ArrayList<>();
-        for (long i = 0; i < COUNT; i++) {
+        for (long i = 0; i < 10_000L; i++) {
             members.add(Member.builder()
                 .name("멤버" + i)
                 .status(MemberStatus.ACTIVE)
                 .build());
         }
         memberBulkRepository.saveAll(members);
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
 
-    }
-
-
-    //@PostConstruct
-    void memberProjectBulk() {
-        // TODO: memberProject 벌크 실행
-        long startTime = System.currentTimeMillis();
+        // memberProject 벌크 실행
         List<MemberProject> memberProjects = new ArrayList<>();
-        for (long i = 0; i < COUNT; i++) {
+        for (long i = 0; i < 10_000L; i++) {
             memberProjects.add(MemberProject.builder()
                 .role(MemberProjectRole.ADMIN)
                 .build());
         }
         memberProjectBulkRepository.saveAll(memberProjects);
-        long endTime = System.currentTimeMillis();
-        System.out.println("--------------------");
-        System.out.println("수행시간 : " + (endTime - startTime) + "ms");
-        System.out.println("--------------------");
 
-    }
-
-    //@PostConstruct
-    void issueEpicBulk() {
-        // TODO: issue 벌크 실행
-        long startTime = System.currentTimeMillis();
-        List<Epic> epics = new ArrayList<>();
-        for (long i = 0; i < 1_000_000; i++) {
+        // epic 벌크 실행
+        List<Issue> epics = new ArrayList<>();
+        for (long i = 0; i < 100; i++) {
             epics.add(Epic.builder()
                 .title("에픽" + i)
                 .content("에픽 내용" + i)
@@ -108,11 +80,17 @@ public class DummyDataLoader {
                 .build());
         }
         issueBulkRepository.saveEpicAll(epics, 1L, 1L, 1L);
+
+        // epic-issue 매핑 벌크 실행
+        epics = new ArrayList<>();
+
         long endTime = System.currentTimeMillis();
         System.out.println("--------------------");
         System.out.println("수행시간 : " + (endTime - startTime) + "ms");
         System.out.println("--------------------");
+
     }
+    
 
     //@PostConstruct
     void epicIssueMappingBulk() {
