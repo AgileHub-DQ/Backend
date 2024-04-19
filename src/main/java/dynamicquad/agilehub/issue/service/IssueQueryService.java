@@ -24,6 +24,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
+import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import java.util.List;
@@ -132,7 +133,18 @@ public class IssueQueryService {
 
     private List<EpicResponse> getEpicResponses(List<Epic> epicsByProject, Project project) {
         return epicsByProject.stream()
-            .map(epic -> EpicResponse.fromEntity(epic, project.getKey()))
+            .map(epic -> {
+                Member assignee = epic.getAssignee();
+                if (assignee == null) {
+                    return EpicResponse.fromEntity(epic, project.getKey(), new AssigneeDto());
+                }
+                AssigneeDto assigneeDto = AssigneeDto.builder()
+                    .id(assignee.getId())
+                    .name(assignee.getName())
+                    .build();
+                return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
+
+            })
             .toList();
     }
 

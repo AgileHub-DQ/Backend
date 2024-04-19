@@ -21,7 +21,7 @@ public class EpicResponse {
     private AssigneeDto assignee;
     //TODO: 태그 추가 필요
 
-    public static EpicResponse fromEntity(Epic epic, String projectKey) {
+    public static EpicResponse fromEntity(Epic epic, String projectKey, AssigneeDto assigneeDto) {
         return EpicResponse.builder()
             .id(epic.getId())
             .title(epic.getTitle())
@@ -30,13 +30,7 @@ public class EpicResponse {
             .type(IssueType.EPIC.toString())
             .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
             .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
-            .assignee(
-                epic.getAssignee() == null ? new AssigneeDto() :
-                    AssigneeDto.builder()
-                        .id(epic.getAssignee().getId())
-                        .name(epic.getAssignee().getName())
-                        .build()
-            )
+            .assignee(assigneeDto)
             .build();
     }
 
