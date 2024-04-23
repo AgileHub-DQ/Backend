@@ -5,11 +5,7 @@ import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEd
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
-import dynamicquad.agilehub.issue.controller.response.EpicResponse;
-import dynamicquad.agilehub.issue.controller.response.IssueHierarchyResponse;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
-import dynamicquad.agilehub.issue.controller.response.StoryResponse;
-import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,7 +50,7 @@ public class IssueController {
     }
 
 
-    @Operation(summary = "이슈 조회", description = "프로젝트의 이슈를 조회합니다.",
+    @Operation(summary = "이슈 상세 조회", description = "프로젝트의 이슈를 조회합니다.",
         responses = {
             @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
     )
@@ -62,17 +58,6 @@ public class IssueController {
     public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId));
-    }
-
-
-    @Operation(summary = "이슈 전체 조회(deprecated)", description = "프로젝트의 이슈 목록을 조회합니다.(deprecated)",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "이슈 목록 조회 성공", content = @Content(schema = @Schema(implementation = IssueHierarchyResponse.class)))}
-    )
-    @GetMapping(value = "/api/projects/{key}/issues", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getProjectIssues(@PathVariable("key") String key) {
-
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssues(key));
     }
 
 

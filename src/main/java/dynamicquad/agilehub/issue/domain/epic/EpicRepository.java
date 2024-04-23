@@ -13,7 +13,6 @@ public interface EpicRepository extends JpaRepository<Epic, Long>, EpicStaticsRe
 
     List<Epic> findByProject(Project project);
 
-    // TODO: 곧 삭제될 예정
     @Query("SELECT e FROM Epic e WHERE e.project = :project")
     List<Epic> findEpicsByProject(@Param("project") Project project);
 
