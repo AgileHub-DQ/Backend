@@ -24,21 +24,21 @@ public class ProjectIssuesController {
 
     private final IssueQueryService issueQueryService;
 
-    @Operation(summary = "프로젝트에 할당된 에픽 조회(백로그페이지 용도)", description = "프로젝트에 할당된 에픽들과 에픽에 속한 스토리들에 대한 통계정보를 조회하는 API",
+    @Operation(summary = "프로젝트에 할당된 에픽과 통계 정보 조회", description = "프로젝트에 할당된 에픽들과 에픽에 속한 스토리들에 대한 통계정보를 조회하는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "에픽과 통계정보 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponse.class)))}
     )
-    @GetMapping(value = "/api/v2/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getProjectEpics(@PathVariable("key") String key) {
+    @GetMapping(value = "/api/projects/{key}/epics/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse<?> getProjectEpicsWithStats(@PathVariable("key") String key) {
 
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpicsWithStatics(key));
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpicsWithStats(key));
     }
 
     @Operation(summary = "에픽에 속하는 스토리들 조회", description = "에픽 아이디를 부모이슈로 요청해서 스토리들만 가져오는 API",
         responses = {
             @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = StoryResponse.class)))}
     )
-    @GetMapping(value = "/api/v2/projects/{key}/epics/{epicId}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/projects/{key}/epics/{epicId}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getEpicStories(@PathVariable("key") String key, @PathVariable("epicId") Long epicId) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStoriesByEpic(key, epicId));
@@ -48,7 +48,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = TaskResponse.class)))}
     )
-    @GetMapping(value = "/api/v2/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/api/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getStoryTasks(@PathVariable("key") String key, @PathVariable("storyId") Long storyId) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getTasksByStory(key, storyId));

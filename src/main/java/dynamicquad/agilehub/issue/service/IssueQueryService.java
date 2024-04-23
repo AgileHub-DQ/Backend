@@ -68,7 +68,7 @@ public class IssueQueryService {
     }
 
 
-    public List<EpicWithStatisticResponse> getEpicsWithStatics(String key) {
+    public List<EpicWithStatisticResponse> getEpicsWithStats(String key) {
         Project project = projectValidator.findProject(key);
         // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
 
