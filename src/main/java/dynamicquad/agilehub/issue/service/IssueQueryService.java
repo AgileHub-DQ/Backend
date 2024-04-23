@@ -8,7 +8,6 @@ import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicWithStatisticResponse;
-import dynamicquad.agilehub.issue.controller.response.IssueHierarchyResponse;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
@@ -39,7 +38,6 @@ public class IssueQueryService {
 
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
-    private final IssueHierarchyBuilder issueHierarchyBuilder;
     private final ProjectValidator projectValidator;
 
     private final EpicRepository epicRepository;
@@ -69,11 +67,6 @@ public class IssueQueryService {
             .build();
     }
 
-    // TODO: 곧 삭제될 예정 [ ]
-    public List<IssueHierarchyResponse> getIssues(String key) {
-        Project project = projectValidator.findProject(key);
-        return issueHierarchyBuilder.buildAllIssuesHierarchy(project);
-    }
 
     public List<EpicWithStatisticResponse> getEpicsWithStatics(String key) {
         Project project = projectValidator.findProject(key);

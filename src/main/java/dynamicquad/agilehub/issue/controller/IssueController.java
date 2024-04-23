@@ -83,34 +83,4 @@ public class IssueController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "프로젝트에 할당된 에픽 조회", description = "프로젝트에 할당된 에픽들을 조회합니다.",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponse.class)))}
-    )
-    @GetMapping(value = "/api/v2/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getProjectEpics(@PathVariable("key") String key) {
-
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpicsWithStatics(key));
-    }
-
-    @Operation(summary = "에픽에 속하는 스토리들 조회", description = "에픽 아이디를 부모이슈로 요청해서 스토리들만 가져오는 API",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = StoryResponse.class)))}
-    )
-    @GetMapping(value = "/api/v2/projects/{key}/epics/{epicId}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getEpicStories(@PathVariable("key") String key, @PathVariable("epicId") Long epicId) {
-
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStoriesByEpic(key, epicId));
-    }
-
-    @Operation(summary = "스토리에 속하는 테스크들 조회", description = "스토리 아이디를 부모이슈로 요청해서 테스크들만 가져오는 API",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = TaskResponse.class)))}
-    )
-    @GetMapping(value = "/api/v2/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getStoryTasks(@PathVariable("key") String key, @PathVariable("storyId") Long storyId) {
-
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getTasksByStory(key, storyId));
-    }
-
 }
