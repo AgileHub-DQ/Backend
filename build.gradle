@@ -53,8 +53,16 @@ dependencies {
     // aws s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.676'
 
+
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    
+    // QueryDSL
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
 
 }
 
