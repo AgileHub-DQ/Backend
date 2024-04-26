@@ -1,8 +1,9 @@
-package dynamicquad.agilehub.project.controller;
+package dynamicquad.agilehub.issue.controller;
 
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse;
+import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
 import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
@@ -54,5 +55,25 @@ public class ProjectIssuesController {
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getTasksByStory(key, storyId));
     }
 
+
+    @Operation(summary = "프로젝트에 할당된 에픽 간단한 조회", description = "프로젝트에 할당된 에픽들을 간단하게 조회하는 API",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+    )
+    @GetMapping(value = "/api/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse<?> getProjectEpics(@PathVariable("key") String key) {
+
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpics(key));
+    }
+
+    @Operation(summary = "프로젝트에 할당된 스토리 간단한 조회", description = "프로젝트에 할당된 스토리들을 간단하게 조회하는 API",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+    )
+    @GetMapping(value = "/api/projects/{key}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse<?> getProjectStories(@PathVariable("key") String key) {
+
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStories(key));
+    }
 
 }
