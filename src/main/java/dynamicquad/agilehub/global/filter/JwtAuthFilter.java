@@ -38,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         Optional<String> token = jwtUtil.extractAccessToken(request);
 
         if (token.isEmpty()) {
@@ -97,6 +97,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().contains("/oauth2");
+        log.warn("request.getRequestURI() : {}", request.getRequestURI());
+        //return request.getRequestURI().contains("/oauth2");
+        String path = request.getRequestURI();
+        return path.contains("/oauth2") || path.contains("/api/api-docs") || path.contains("/api/v3/api-docs")
+            || path.startsWith("/api/swagger-ui");
     }
 }
