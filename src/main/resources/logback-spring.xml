@@ -16,6 +16,14 @@
         </root>
     </springProfile>
 
+    <!--dummy-->
+    <springProfile name="dummy">
+        <include resource="console-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
     <!--test-->
     <springProfile name="test">
         <include resource="console-appender.xml"/>

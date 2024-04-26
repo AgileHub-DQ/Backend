@@ -47,7 +47,10 @@ public enum ErrorStatus implements BaseStatus {
     INVALID_ISSUE_TYPE(HttpStatus.BAD_REQUEST, "SPRINT_4003", "이슈 타입이 EPIC은 스프린트에 할당할 수 없습니다."),
 
     // COMMENT Error
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_4001", "댓글을 찾을 수 없습니다.");
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_4001", "댓글을 찾을 수 없습니다."),
+
+    // Statics Error
+    EPIC_STATISTIC_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "STATICS_500", "에픽 통계를 찾을 수 없습니다.");
 
 
     private final HttpStatus httpStatus;
