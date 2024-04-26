@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 @Getter
-public class SecurityMember implements  OAuth2User,UserDetails {
+public class SecurityMember implements OAuth2User, UserDetails {
 
     private final Member member;
     private OAuth2UserInfo userInfo;
@@ -27,7 +27,7 @@ public class SecurityMember implements  OAuth2User,UserDetails {
 
     @Override
     public String getName() {
-        return userInfo.getNickname();
+        return member.getName();
     }
 
     public String getProvider() {
@@ -55,7 +55,7 @@ public class SecurityMember implements  OAuth2User,UserDetails {
 
     @Override
     public String getUsername() {
-        return userInfo.getNickname();
+        return member.getName();
     }
 
     @Override

@@ -16,9 +16,11 @@ public class MemberQueryService {
     private final SocialLoginQueryService socialLoginQueryService;
 
     public Member findBySocialProviderAndDistinctId(String provider, String distinctId) {
-        return socialLoginQueryService.findByProviderAndDistinctId(provider, distinctId)
+        Member member = socialLoginQueryService.findByProviderAndDistinctId(provider, distinctId)
                 .map(SocialLogin::getMember)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        member.getName();
+        return member;
     }
 
 }
