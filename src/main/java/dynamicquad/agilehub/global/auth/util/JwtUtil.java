@@ -39,7 +39,7 @@ public class JwtUtil {
 
     public String generateAccessToken(String name, String role, String provider, String distinctId) {
         Date now = new Date();
-        return PREFIX.concat(JWT.create()
+        return JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("AccessToken")
                 .withClaim("name", name)
@@ -48,12 +48,12 @@ public class JwtUtil {
                 .withClaim("distinctId", distinctId)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + accessTokenValidationSeconds * 1000))
-                .sign(Algorithm.HMAC512(secretKey)));
+                .sign(Algorithm.HMAC512(secretKey));
     }
 
     public String generateRefreshToken(String name, String role, String provider, String distinctId) {
         Date now = new Date();
-        return PREFIX.concat(JWT.create()
+        return JWT.create()
                 .withIssuer("AgileHub")
                 .withSubject("RefreshToken")
                 .withClaim("name", name)
@@ -62,7 +62,7 @@ public class JwtUtil {
                 .withClaim("distinctId", distinctId)
                 .withIssuedAt(now)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenValidationSeconds * 1000))
-                .sign(Algorithm.HMAC512(secretKey)));
+                .sign(Algorithm.HMAC512(secretKey));
     }
 
     public boolean verifyToken(String token) {
