@@ -32,7 +32,8 @@ public class SpringSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico");
+        return web -> web.ignoring()
+                .requestMatchers("/error", "/favicon.ico");
     }
 
     @Bean
@@ -40,37 +41,37 @@ public class SpringSecurityConfig {
 
         // csrf disable 처리 : 추후 설정 변경 필요
         http
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("*")); // 추후에 서버 도메인으로 변경 필요
-                config.setAllowedMethods(Collections.singletonList("*"));
-                config.setAllowedHeaders(Collections.singletonList("*"));
-                config.setAllowCredentials(true);
-                config.setExposedHeaders(List.of("Authorization"));
-                config.setMaxAge(3600L);
-                return config;
-            }))
-            .csrf(AbstractHttpConfigurer::disable)
-            .formLogin(AbstractHttpConfigurer::disable)
-            .httpBasic(AbstractHttpConfigurer::disable)
-            .logout(AbstractHttpConfigurer::disable)
-            // requestMatchers 설정
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/oauth2/**", "/api/api-docs", "/api/v3/api-docs", "/api/swagger-ui/**")
-                .permitAll()
-                .anyRequest().authenticated()
-            )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(Collections.singletonList("*")); // 추후에 서버 도메인으로 변경 필요
+                    config.setAllowedMethods(Collections.singletonList("*"));
+                    config.setAllowedHeaders(Collections.singletonList("*"));
+                    config.setAllowCredentials(true);
+                    config.setExposedHeaders(List.of("Authorization"));
+                    config.setMaxAge(3600L);
+                    return config;
+                }))
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                // requestMatchers 설정
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/oauth2/**", "/auth/success/**", "*/api-docs/**", "/api/swagger-ui/**")
+                        .permitAll()
+                        .anyRequest().authenticated()
+                )
 
-            // oauth2 설정
-            .oauth2Login(customizer -> customizer
-                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
-                .successHandler(oAuth2SuccessHandler)
-            )
+                // oauth2 설정
+                .oauth2Login(customizer -> customizer
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
+                )
 
-            // jwt 설정
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtExceptionFilter(), jwtAuthFilter.getClass());
+                // jwt 설정
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), jwtAuthFilter.getClass());
 
         return http.build();
     }
