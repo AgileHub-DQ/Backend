@@ -11,6 +11,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      REDIS_HOST: localhost
 
     steps:
       - name: 레포지토리를 가져옵니다
