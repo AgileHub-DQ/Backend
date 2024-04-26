@@ -12,6 +12,7 @@ import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
+import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
 import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.domain.Issue;
@@ -72,7 +73,7 @@ public class IssueQueryService {
         Project project = projectValidator.findProject(key);
         // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
 
-        List<Epic> epicsByProject = epicRepository.findEpicsByProject(project);
+        List<Epic> epicsByProject = epicRepository.findByProject(project);
         List<EpicResponse> epicResponses = getEpicResponses(epicsByProject, project);
         List<EpicStatisticDto> epicStatics = epicRepository.getEpicStatics(project.getId());
 
@@ -92,10 +93,31 @@ public class IssueQueryService {
     public List<TaskResponse> getTasksByStory(String key, Long storyId) {
         Project project = projectValidator.findProject(key);
         // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        List<Task> tasksByStory = taskRepository.findTasksByStoryId(storyId);
+        List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
 
         return tasksByStory.stream()
             .map(task -> TaskResponse.fromEntity(task, project.getKey(), storyId))
+            .toList();
+    }
+
+    public List<SimpleIssueResponse> getEpics(String key) {
+        Project project = projectValidator.findProject(key);
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        List<Epic> epicsByProject = epicRepository.findByProject(project);
+
+        return epicsByProject.stream()
+            .map(epic -> SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC))
+            .toList();
+    }
+
+
+    public List<SimpleIssueResponse> getStories(String key) {
+        Project project = projectValidator.findProject(key);
+        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        List<Story> storiesByProject = storyRepository.findByProject(project);
+
+        return storiesByProject.stream()
+            .map(story -> SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY))
             .toList();
     }
 
@@ -140,5 +162,6 @@ public class IssueQueryService {
             })
             .toList();
     }
+
 
 }
