@@ -24,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     private static final String REDIRECT_URL = "/auth/success";
-    private static final String clientDomain = "https://www.agilehub.store";
+    private static final String CLIENT_DOMAIN = "https://www.agilehub.store";
 
     private final RefreshTokenRedisService redisService;
 
@@ -42,7 +42,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             .queryParam("accessToken", generatedToken.getAccessToken())
             .build().toUriString();
 
-        response.sendRedirect(clientDomain + redirectUrl);
+        response.sendRedirect(CLIENT_DOMAIN + redirectUrl);
     }
 
     private GeneratedToken generateMemberToken(Authentication authentication) {
