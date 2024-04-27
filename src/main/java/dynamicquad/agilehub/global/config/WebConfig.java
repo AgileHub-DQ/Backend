@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.global.config;
 
-import dynamicquad.agilehub.global.controller.MemberArgumentResolver;
+import dynamicquad.agilehub.global.auth.util.MemberArgumentResolver;
 import dynamicquad.agilehub.global.util.StringToIssueStatusConverter;
 import dynamicquad.agilehub.global.util.StringToIssueTypeConverter;
 import java.util.List;

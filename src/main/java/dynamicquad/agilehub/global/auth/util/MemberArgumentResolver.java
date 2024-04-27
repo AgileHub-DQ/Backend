@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.controller;
+package dynamicquad.agilehub.global.auth.util;
 
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
 import dynamicquad.agilehub.member.Auth;
@@ -25,7 +25,5 @@ public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
 
         SecurityMember principal = (SecurityMember) authentication.getPrincipal();
         return principal.getMember();
-
-
     }
 }
