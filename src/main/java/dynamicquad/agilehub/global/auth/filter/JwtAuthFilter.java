@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.filter;
+package dynamicquad.agilehub.global.auth.filter;
 
 import dynamicquad.agilehub.global.auth.model.JwtRefreshToken;
 import dynamicquad.agilehub.global.auth.model.SecurityMember;

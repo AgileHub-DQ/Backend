@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.filter;
+package dynamicquad.agilehub.global.auth.filter;
 
 import dynamicquad.agilehub.global.auth.model.GeneratedToken;
 import dynamicquad.agilehub.global.auth.model.JwtRefreshToken;
@@ -7,7 +7,6 @@ import dynamicquad.agilehub.global.auth.service.RefreshTokenRedisService;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;

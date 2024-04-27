@@ -1,9 +1,9 @@
 package dynamicquad.agilehub.global.config;
 
+import dynamicquad.agilehub.global.auth.filter.JwtAuthFilter;
+import dynamicquad.agilehub.global.auth.filter.JwtExceptionFilter;
+import dynamicquad.agilehub.global.auth.filter.OAuth2SuccessHandler;
 import dynamicquad.agilehub.global.auth.service.CustomOAuth2UserService;
-import dynamicquad.agilehub.global.filter.JwtAuthFilter;
-import dynamicquad.agilehub.global.filter.JwtExceptionFilter;
-import dynamicquad.agilehub.global.filter.OAuth2SuccessHandler;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
