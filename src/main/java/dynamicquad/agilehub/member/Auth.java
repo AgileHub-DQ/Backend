@@ -1,0 +1,14 @@
+package dynamicquad.agilehub.member;
+
+import static java.lang.annotation.ElementType.PARAMETER;
+
+import io.swagger.v3.oas.annotations.Hidden;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Hidden
+public @interface Auth {
+}
