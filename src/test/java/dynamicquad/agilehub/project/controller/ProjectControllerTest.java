@@ -50,7 +50,7 @@
 //
 //        when(projectService.createProject(request)).thenReturn("project");
 //
-//        mockMvc.perform(post("/api/projects")
+//        mockMvc.perform(post("/projects")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON))
 //            .andDo(MockMvcResultHandlers.print())
@@ -68,7 +68,7 @@
 //        when(projectService.createProject(request)).thenReturn("project");
 //
 //        //when
-//        mockMvc.perform(post("/api/projects")
+//        mockMvc.perform(post("/projects")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON)
 //            )
@@ -88,7 +88,7 @@
 //        when(projectService.createProject(request)).thenReturn("project");
 //
 //        //when
-//        mockMvc.perform(post("/api/projects")
+//        mockMvc.perform(post("/projects")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON)
 //            )
@@ -107,7 +107,7 @@
 //        when(projectService.createProject(request)).thenReturn("project");
 //
 //        //when
-//        mockMvc.perform(post("/api/projects")
+//        mockMvc.perform(post("/projects")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON)
 //            )
@@ -126,7 +126,7 @@
 //        when(projectService.createProject(request)).thenReturn("project");
 //
 //        //when
-//        mockMvc.perform(post("/api/projects")
+//        mockMvc.perform(post("/projects")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON)
 //            )
@@ -153,7 +153,7 @@
 //
 //        //when
 //        //then
-//        mockMvc.perform(get("/api/projects"))
+//        mockMvc.perform(get("/projects"))
 //            .andDo(MockMvcResultHandlers.print())
 //            .andExpect(status().isOk())
 //            .andExpect(jsonPath("$.code").value("COMMON_200"))
@@ -173,12 +173,12 @@
 //
 //        when(projectService.updateProject(originKey, request)).thenReturn(updateKey);
 //
-//        mockMvc.perform(put("/api/projects/" + originKey)
+//        mockMvc.perform(put("/projects/" + originKey)
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON))
 //            .andDo(MockMvcResultHandlers.print())
 //            .andExpect(status().is2xxSuccessful())
-//            .andExpect(header().string("Location", "/api/projects/" + updateKey + "/issues"));
+//            .andExpect(header().string("Location", "/projects/" + updateKey + "/issues"));
 //
 //
 //    }

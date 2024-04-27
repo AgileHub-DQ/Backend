@@ -38,7 +38,7 @@ public class CommentController {
     @ApiResponse(responseCode = "201", description = "코멘트 생성 성공",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentCreateResponse.class))
     )
-    @PostMapping(value = "/api/projects/{key}/issues/{issueId}/comments")
+    @PostMapping(value = "/projects/{key}/issues/{issueId}/comments")
     public CommonResponse<?> createComment(@Valid @RequestBody CommentCreateRequest request,
                                            @PathVariable("key") String key,
                                            @PathVariable("issueId") Long issueId) {
@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     @Operation(summary = "코멘트 조회", description = "이슈의 코멘트를 조회합니다.")
-    @GetMapping(value = "/api/projects/{key}/issues/{issueId}/comments")
+    @GetMapping(value = "/projects/{key}/issues/{issueId}/comments")
     public CommonResponse<?> getComments(@PathVariable("key") String key,
                                          @PathVariable("issueId") Long issueId) {
 
@@ -61,7 +61,7 @@ public class CommentController {
 
     @Operation(summary = "코멘트 삭제", description = "이슈의 코멘트를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "코멘트 삭제 성공")
-    @DeleteMapping(value = "/api/projects/{key}/issues/{issueId}/comments/{commentId}")
+    @DeleteMapping(value = "/projects/{key}/issues/{issueId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("key") String key,
                                            @PathVariable("issueId") Long issueId,
                                            @PathVariable("commentId") Long commentId) {
@@ -75,7 +75,7 @@ public class CommentController {
 
     @Operation(summary = "코멘트 수정", description = "이슈의 코멘트를 수정합니다.")
     @ApiResponse(responseCode = "204", description = "코멘트 수정 성공")
-    @PutMapping(value = "/api/projects/{key}/issues/{issueId}/comments/{commentId}")
+    @PutMapping(value = "/projects/{key}/issues/{issueId}/comments/{commentId}")
     public CommonResponse<?> updateComment(@PathVariable("key") String key,
                                            @PathVariable("issueId") Long issueId,
                                            @PathVariable("commentId") Long commentId,

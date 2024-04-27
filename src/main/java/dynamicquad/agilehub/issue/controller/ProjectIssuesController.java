@@ -29,7 +29,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "에픽과 통계정보 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponse.class)))}
     )
-    @GetMapping(value = "/api/projects/{key}/epics/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/projects/{key}/epics/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectEpicsWithStats(@PathVariable("key") String key) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpicsWithStats(key));
@@ -39,7 +39,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = StoryResponse.class)))}
     )
-    @GetMapping(value = "/api/projects/{key}/epics/{epicId}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/projects/{key}/epics/{epicId}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getEpicStories(@PathVariable("key") String key, @PathVariable("epicId") Long epicId) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStoriesByEpic(key, epicId));
@@ -49,7 +49,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = TaskResponse.class)))}
     )
-    @GetMapping(value = "/api/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getStoryTasks(@PathVariable("key") String key, @PathVariable("storyId") Long storyId) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getTasksByStory(key, storyId));
@@ -60,7 +60,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
     )
-    @GetMapping(value = "/api/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectEpics(@PathVariable("key") String key) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getEpics(key));
@@ -70,7 +70,7 @@ public class ProjectIssuesController {
         responses = {
             @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
     )
-    @GetMapping(value = "/api/projects/{key}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/projects/{key}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectStories(@PathVariable("key") String key) {
 
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStories(key));
