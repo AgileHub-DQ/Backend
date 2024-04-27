@@ -9,7 +9,7 @@ import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdate
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.domain.Member;
-import dynamicquad.agilehub.member.domain.MemberRepository;
+import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import lombok.RequiredArgsConstructor;

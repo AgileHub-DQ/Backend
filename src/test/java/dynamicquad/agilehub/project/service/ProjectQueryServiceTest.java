@@ -3,8 +3,8 @@ package dynamicquad.agilehub.project.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dynamicquad.agilehub.member.domain.Member;
-import dynamicquad.agilehub.member.domain.MemberRepository;
 import dynamicquad.agilehub.member.domain.MemberStatus;
+import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;

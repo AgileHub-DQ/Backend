@@ -59,6 +59,17 @@ create table project (
                          project_key varchar(255),
                          primary key (project_id)
 ) engine=InnoDB;
+
+create table social_login (
+                              created_at timestamp(6) not null,
+                              member_id bigint,
+                              social_login_id bigint not null auto_increment,
+                              updated_at timestamp(6) not null,
+                              distinct_id varchar(255) not null,
+                              provider enum ('KAKAO') not null,
+                              primary key (social_login_id)
+) engine=InnoDB;
+
 create table sprint (
                         end_date timestamp,
                         start_date timestamp,
@@ -131,6 +142,11 @@ alter table member_project
     add constraint FKl2brpp0how3olc7qjtqyrb207
         foreign key (project_id)
             references project (project_id);
+
+alter table social_login
+    add constraint FK7fvb3iasqcijfcog1eq7xtgh8
+        foreign key (member_id)
+            references member (member_id);
 
 alter table sprint
     add constraint FKerwve0blrvfhqm1coxo69f0xr

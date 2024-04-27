@@ -28,7 +28,6 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-
     @Column(nullable = false)
     private String name;
 
@@ -42,6 +41,11 @@ public class Member extends BaseEntity {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.status = status;
+    }
+
+    public void update(String name, String profileImageUrl) {
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
     }
 
 }
