@@ -2,7 +2,7 @@ jwt:
   secret: ${JWT_SECRET}
 
   access:
-    expiration: 1800  # 30 minutes
+    expiration: 1209600  # TODO: 14 days -> 30 minutes
     header: Authorization
 
   refresh:
