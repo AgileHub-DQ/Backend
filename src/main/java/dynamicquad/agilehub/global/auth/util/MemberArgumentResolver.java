@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.global.auth.util;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.auth.model.SecurityMember;
-import dynamicquad.agilehub.member.Auth;
 import dynamicquad.agilehub.member.domain.Member;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

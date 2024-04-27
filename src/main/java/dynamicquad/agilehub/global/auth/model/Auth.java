@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.member;
+package dynamicquad.agilehub.global.auth.model;
 
 import static java.lang.annotation.ElementType.PARAMETER;
 

@@ -3,9 +3,9 @@ package dynamicquad.agilehub.project.controller;
 import static dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import static dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.member.Auth;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
@@ -41,23 +41,23 @@ public class ProjectController {
 
     @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공"),
-        @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
+            @ApiResponse(responseCode = "201", description = "프로젝트 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
     })
     @PostMapping("/api/projects")
     public ResponseEntity<?> createProject(@RequestBody @Valid ProjectCreateRequest request) {
 
         String key = projectService.createProject(request);
         return ResponseEntity.created(URI.create("/api/projects/" + key + "/issues"))
-            .body(CommonResponse.of(SuccessStatus.CREATED, key));
+                .body(CommonResponse.of(SuccessStatus.CREATED, key));
     }
 
     @Operation(summary = "프로젝트 목록 조회", description = "유저의 프로젝트 목록을 조회합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "프로젝트 목록 조회 성공", content = {
-            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectResponse.class)))}),
-        @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다."),
-        @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "200", description = "프로젝트 목록 조회 성공", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProjectResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "유저가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
     @GetMapping("/api/projects")
     public CommonResponse<?> getProjects(@Auth Member member) {
@@ -70,16 +70,16 @@ public class ProjectController {
 
     @Operation(summary = "프로젝트 수정", description = "프로젝트를 수정합니다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "302", description = "프로젝트 수정 후 보드 페이지로 이동합니다."),
-        @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
-        @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "302", description = "프로젝트 수정 후 보드 페이지로 이동합니다."),
+            @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
+            @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
     @PutMapping("/api/projects/{key}")
     public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key) {
 
         String updateKey = projectService.updateProject(key, request);
         return ResponseEntity.created(URI.create("/api/projects/" + updateKey + "/issues"))
-            .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
+                .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
     }
 
 
