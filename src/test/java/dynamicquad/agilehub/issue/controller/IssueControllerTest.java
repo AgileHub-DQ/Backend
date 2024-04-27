@@ -75,7 +75,7 @@
 //        String key = "project";
 //        when(issueService.createIssue(key, request, memberId)).thenReturn(1L);
 //
-//        mockMvc.perform(post("/api/projects/" + key + "/issues")
+//        mockMvc.perform(post("/projects/" + key + "/issues")
 //                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
 //                .header("Authorization", "Bearer " + token)
 //                .param("title", request.getTitle())
@@ -88,7 +88,7 @@
 //            .andDo(MockMvcResultHandlers.print())
 //            .andExpect(status().isCreated())
 //            .andExpect(header().exists("Location"))
-//            .andExpect(header().string("Location", "/api/projects/" + key + "/issues/1"))
+//            .andExpect(header().string("Location", "/projects/" + key + "/issues/1"))
 //            .andExpect(jsonPath("$.code").value("COMMON_201"));
 //
 //

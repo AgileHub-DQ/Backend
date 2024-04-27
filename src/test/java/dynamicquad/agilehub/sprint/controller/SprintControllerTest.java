@@ -55,12 +55,12 @@
 //        when(sprintService.createSprint(key, request)).thenReturn(response);
 //
 //        // then
-//        mockMvc.perform(post("/api/projects/" + key + "/sprints")
+//        mockMvc.perform(post("/projects/" + key + "/sprints")
 //                .content(objectMapper.writeValueAsString(request))
 //                .contentType(MediaType.APPLICATION_JSON))
 //            .andDo(MockMvcResultHandlers.print())
 //            .andExpect(status().is2xxSuccessful())
-//            .andExpect(header().string("Location", "/api/projects/" + key + "/sprints/1"))
+//            .andExpect(header().string("Location", "/projects/" + key + "/sprints/1"))
 //            .andExpect(jsonPath("$.result.title").value("스프린트 제목"));
 //
 //

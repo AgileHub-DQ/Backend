@@ -34,18 +34,18 @@ public class SprintController {
     private final SprintQueryService sprintQueryService;
 
     @Operation(summary = "스프린트 생성", description = "프로젝트에 스프린트를 생성합니다.")
-    @PostMapping(value = "/api/projects/{key}/sprints")
+    @PostMapping(value = "/projects/{key}/sprints")
     public ResponseEntity<?> createProjectSprint(@Valid @RequestBody SprintCreateRequest request,
                                                  @PathVariable("key") String key) {
 
         SprintCreateResponse resp = sprintService.createSprint(key, request);
 
-        return ResponseEntity.created(URI.create("/api/projects/" + key + "/sprints/" + resp.getSprintId()))
+        return ResponseEntity.created(URI.create("/projects/" + key + "/sprints/" + resp.getSprintId()))
             .body(CommonResponse.of(SuccessStatus.CREATED, resp));
     }
 
     @Operation(summary = "스프린트 내 이슈 할당", description = "이슈를 스프린트에 할당합니다")
-    @PostMapping(value = "/api/projects/{key}/sprints/{sprintId}/issue")
+    @PostMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
     public ResponseEntity<?> assignIssueToSprint(@Valid @RequestBody SprintAssignIssueRequest request,
                                                  @PathVariable("key") String key,
                                                  @PathVariable("sprintId") Long sprintId) {
@@ -56,7 +56,7 @@ public class SprintController {
     }
 
     @Operation(summary = "스프린트 내 이슈 제거", description = "스프린트에 할당된 이슈를 제거합니다")
-    @DeleteMapping(value = "/api/projects/{key}/sprints/{sprintId}/issue")
+    @DeleteMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
     public ResponseEntity<?> removeIssueFromSprint(@Valid @RequestBody SprintAssignIssueRequest request,
                                                    @PathVariable("key") String key,
                                                    @PathVariable("sprintId") Long sprintId) {
@@ -67,7 +67,7 @@ public class SprintController {
     }
 
     @Operation(summary = "스프린트 상태 변경", description = "스프린트의 상태를 변경합니다 (PLANNED, ACTIVE, COMPLETED)")
-    @PatchMapping(value = "/api/projects/{key}/sprints/{sprintId}/status")
+    @PatchMapping(value = "/projects/{key}/sprints/{sprintId}/status")
     public ResponseEntity<?> changeSprintStatus(@Valid @RequestBody SprintChangeStatusRequest request,
                                                 @PathVariable("key") String key,
                                                 @PathVariable("sprintId") Long sprintId) {
@@ -78,14 +78,14 @@ public class SprintController {
     }
 
     @Operation(summary = "스프린트들 조회", description = "프로젝트의 스프린트들을 조회합니다")
-    @GetMapping(value = "/api/projects/{key}/sprints")
+    @GetMapping(value = "/projects/{key}/sprints")
     public ResponseEntity<?> getSprints(@PathVariable("key") String key) {
 
         return ResponseEntity.ok(CommonResponse.of(SuccessStatus.OK, sprintQueryService.getSprints(key)));
     }
 
     @Operation(summary = "스프린트 삭제", description = "스프린트를 삭제합니다")
-    @DeleteMapping(value = "/api/projects/{key}/sprints/{sprintId}")
+    @DeleteMapping(value = "/projects/{key}/sprints/{sprintId}")
     public ResponseEntity<?> deleteSprint(@PathVariable("key") String key,
                                           @PathVariable("sprintId") Long sprintId) {
 
