@@ -31,4 +31,14 @@ public class MemberRequestDto {
         private String distinctId;
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AuthMember {
+        private Long id;
+        private String name;
+        private String profileImageUrl;
+    }
+
 }

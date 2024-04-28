@@ -6,7 +6,7 @@ import static dynamicquad.agilehub.project.controller.request.ProjectRequest.Pro
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
@@ -60,11 +60,9 @@ public class ProjectController {
         @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
     @GetMapping("/projects")
-    public CommonResponse<?> getProjects(@Auth Member member) {
+    public CommonResponse<?> getProjects(@Auth AuthMember authMember) {
 
-        final Long memberId = member.getId();
-
-        List<ProjectResponse> projects = projectQueryService.getProjects(memberId);
+        List<ProjectResponse> projects = projectQueryService.getProjects(authMember.getId());
         return CommonResponse.onSuccess(projects);
     }
 
