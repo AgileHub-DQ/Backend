@@ -8,6 +8,7 @@ import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberProjectService {
 
     private final MemberProjectRepository memberProjectRepository;
-
-    public void validateMemberInProject(Long memberId, Long projectId) {
-        memberProjectRepository.findByMemberIdAndProjectId(memberId, projectId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
-    }
-
 
     @Transactional
     public void createMemberProject(AuthMember authMember, Project project, MemberProjectRole role) {
@@ -38,6 +33,14 @@ public class MemberProjectService {
         memberProjectRepository.save(memberProject);
     }
 
+    public List<Project> findProjects(Long memberId) {
+        return memberProjectRepository.findProjectsByMemberId(memberId);
+    }
+
+    public void validateMemberInProject(Long memberId, Long projectId) {
+        memberProjectRepository.findByMemberIdAndProjectId(memberId, projectId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
+    }
 
     public void validateUpdateProjectAuth(AuthMember authMember, Long projectId) {
         MemberProject memberProject = memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)

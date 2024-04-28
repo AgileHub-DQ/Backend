@@ -33,4 +33,10 @@ public class MemberService {
         return member;
     }
 
+    public void validateMemberExist(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+    }
+
 }
