@@ -2,6 +2,10 @@ package dynamicquad.agilehub.sprint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
+import dynamicquad.agilehub.project.domain.MemberProject;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
@@ -41,8 +45,24 @@ class SprintServiceTest {
             .endDate(LocalDate.of(2021, 1, 2))
             .build();
 
+        Member member = Member.builder()
+            .name("member1")
+            .build();
+        em.persist(member);
+
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(project)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .build();
+
         // when
-        SprintCreateResponse resp = sprintService.createSprint(project.getKey(), request);
+        SprintCreateResponse resp = sprintService.createSprint(project.getKey(), request, authMember);
         em.flush();
 
         // then
