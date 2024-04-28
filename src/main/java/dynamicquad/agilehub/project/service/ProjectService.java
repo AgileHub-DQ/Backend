@@ -36,10 +36,10 @@ public class ProjectService {
     @Transactional
     public String updateProject(String originKey, ProjectUpdateRequest request, AuthMember authMember) {
         Project project = projectValidator.findProject(originKey);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         memberProjectService.validateUpdateProjectAuth(authMember, project.getId());
         validateKeyUniqueness(request.getKey());
-        
+
         return project.updateProject(request).getKey();
     }
 

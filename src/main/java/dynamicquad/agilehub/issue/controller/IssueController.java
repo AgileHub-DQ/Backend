@@ -44,8 +44,9 @@ public class IssueController {
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
     @PostMapping(value = "/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
-                                                @PathVariable("key") String key) {
-        Long issueId = issueService.createIssue(key, request);
+                                                @PathVariable("key") String key,
+                                                @Auth AuthMember authMember) {
+        Long issueId = issueService.createIssue(key, request, authMember);
 
         return ResponseEntity.created(URI.create("/projects/" + key + "/issues/" + issueId))
             .body(CommonResponse.of(SuccessStatus.CREATED, issueId));
@@ -69,9 +70,10 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
-                                              @PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
+                                              @PathVariable("key") String key, @PathVariable("issueId") Long issueId,
+                                              @Auth AuthMember authMember) {
 
-        issueService.updateIssue(key, issueId, request);
+        issueService.updateIssue(key, issueId, request, authMember);
         return ResponseEntity.noContent().build();
     }
 
@@ -80,9 +82,10 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
     @DeleteMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteProjectIssue(@PathVariable("key") String key,
-                                                @PathVariable("issueId") Long issueId) {
+                                                @PathVariable("issueId") Long issueId,
+                                                @Auth AuthMember authMember) {
 
-        issueService.deleteIssue(key, issueId);
+        issueService.deleteIssue(key, issueId, authMember);
         return ResponseEntity.noContent().build();
     }
 

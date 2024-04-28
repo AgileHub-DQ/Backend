@@ -19,8 +19,8 @@ public class MemberProjectService {
 
     private final MemberProjectRepository memberProjectRepository;
 
-    public void validateMemberInProject(AuthMember authMember, Long projectId) {
-        memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)
+    public void validateMemberInProject(Long memberId, Long projectId) {
+        memberProjectRepository.findByMemberIdAndProjectId(memberId, projectId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
     }
 

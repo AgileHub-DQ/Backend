@@ -51,7 +51,7 @@ public class IssueQueryService {
 
     public IssueReadResponseDto getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectValidator.findProjectId(key);
-        memberProjectService.validateMemberInProject(authMember, projectId);
+        memberProjectService.validateMemberInProject(authMember.getId(), projectId);
 
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
@@ -75,7 +75,7 @@ public class IssueQueryService {
 
     public List<EpicWithStatisticResponse> getEpicsWithStats(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
         List<Epic> epicsByProject = epicRepository.findByProject(project);
         List<EpicResponse> epicResponses = getEpicResponses(epicsByProject, project);
@@ -86,7 +86,7 @@ public class IssueQueryService {
 
     public List<StoryResponse> getStoriesByEpic(String key, Long epicId, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
 
         return storiesByEpic.stream()
@@ -96,7 +96,7 @@ public class IssueQueryService {
 
     public List<TaskResponse> getTasksByStory(String key, Long storyId, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
 
         return tasksByStory.stream()
@@ -106,7 +106,7 @@ public class IssueQueryService {
 
     public List<SimpleIssueResponse> getEpics(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
@@ -117,7 +117,7 @@ public class IssueQueryService {
 
     public List<SimpleIssueResponse> getStories(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()

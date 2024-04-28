@@ -37,7 +37,7 @@ public class CommentService {
 
     @Transactional
     public CommentCreateResponse createComment(String key, Long issueId, String content, AuthMember authMember) {
-        
+
         validate(key, issueId, authMember);
         Issue issue = issueValidator.findIssue(issueId);
 
@@ -89,7 +89,7 @@ public class CommentService {
 
     private void validate(String key, Long issueId, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         issueValidator.validateIssueInProject(project.getId(), issueId);
     }
 

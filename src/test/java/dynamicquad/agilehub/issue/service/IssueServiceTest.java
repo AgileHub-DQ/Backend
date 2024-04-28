@@ -6,6 +6,10 @@ import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
+import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
+import dynamicquad.agilehub.project.domain.MemberProject;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,8 +45,23 @@ class IssueServiceTest {
         Story story2P1 = createStory("스토리2", "스토리2 내용", project1, epic2P1);
         em.persist(story2P1);
 
+        Member member = Member.builder().name("member").build();
+        em.persist(member);
+
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(project1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("member")
+            .build();
+
         // when
-        issueService.deleteIssue(project1.getKey(), epic2P1.getId());
+        issueService.deleteIssue(project1.getKey(), epic2P1.getId(), authMember);
         em.flush();
         em.clear();
         // then
