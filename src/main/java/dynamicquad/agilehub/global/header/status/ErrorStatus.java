@@ -53,6 +53,7 @@ public enum ErrorStatus implements BaseStatus {
 
     // COMMENT Error
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_4001", "댓글을 찾을 수 없습니다."),
+    COMMENT_WRITER_MISS_MATCH(HttpStatus.BAD_REQUEST, "COMMENT_4002", "댓글 작성자가 아닙니다."),
 
     // Statics Error
     EPIC_STATISTIC_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "STATICS_500", "에픽 통계를 찾을 수 없습니다.");
