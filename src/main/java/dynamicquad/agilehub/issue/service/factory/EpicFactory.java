@@ -75,7 +75,7 @@ public class EpicFactory implements IssueFactory {
     @Transactional
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
-        // TODO: 멤버 클래스에 이 로직을 따로 만들기 [x]
+
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
 
         Epic epic = getEpic(issue);
