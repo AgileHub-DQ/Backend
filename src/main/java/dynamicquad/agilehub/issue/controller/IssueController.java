@@ -2,12 +2,14 @@ package dynamicquad.agilehub.issue.controller;
 
 import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,9 +57,10 @@ public class IssueController {
             @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
     )
     @GetMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
+    public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId,
+                                             @Auth AuthMember authMember) {
 
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId));
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId, authMember));
     }
 
 
