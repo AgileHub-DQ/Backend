@@ -5,7 +5,9 @@ import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditReque
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,21 +21,25 @@ public class IssueService {
     private final ProjectValidator projectValidator;
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
+    private final MemberProjectService memberProjectService;
 
     private final IssueRepository issueRepository;
 
     @Transactional
-    public Long createIssue(String key, IssueCreateRequest request) {
-        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        Project project = projectValidator.findProject(key);
+    public Long createIssue(String key, IssueCreateRequest request, AuthMember authMember) {
+
+        Project project = validateMemberInProject(key, authMember);
+
         return issueFactoryProvider.getIssueFactory(request.getType())
             .createIssue(request, project);
     }
 
+
     @Transactional
-    public void updateIssue(String key, Long issueId, IssueEditRequest request) {
-        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        Project project = projectValidator.findProject(key);
+    public void updateIssue(String key, Long issueId, IssueEditRequest request, AuthMember authMember) {
+
+        Project project = validateMemberInProject(key, authMember);
+
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(project.getId(), issueId);
         issueValidator.validateEqualsIssueType(issue, request.getType());
@@ -44,10 +50,17 @@ public class IssueService {
 
 
     @Transactional
-    public void deleteIssue(String key, Long issueId) {
-        //TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        projectValidator.findProject(key);
+    public void deleteIssue(String key, Long issueId, AuthMember authMember) {
+
+        validateMemberInProject(key, authMember);
+
         Issue issue = issueValidator.findIssue(issueId);
         issueRepository.delete(issue);
+    }
+
+    private Project validateMemberInProject(String key, AuthMember authMember) {
+        Project project = projectValidator.findProject(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
+        return project;
     }
 }

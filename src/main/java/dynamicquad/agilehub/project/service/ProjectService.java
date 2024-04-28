@@ -2,8 +2,10 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,20 +21,25 @@ public class ProjectService {
 
     private final ProjectValidator projectValidator;
     private final ProjectRepository projectRepository;
+    private final MemberProjectService memberProjectService;
 
     @Transactional
-    public String createProject(ProjectCreateRequest request) {
+    public String createProject(ProjectCreateRequest request, AuthMember authMember) {
         validateKeyUniqueness(request.getKey());
-        //TODO: 프로젝트 생성 후 유저 - 멤버_프로젝트 - 프로젝트 매핑하는 로직 필요. role은 Admin으로 [ ]
-        return projectRepository.save(request.toEntity()).getKey();
+        Project project = projectRepository.save(request.toEntity());
+        // 프로젝트 생성자는 프로젝트에 대한 모든 권한을 가짐(ADMIN)
+        memberProjectService.createMemberProject(authMember, project, MemberProjectRole.ADMIN);
+
+        return project.getKey();
     }
 
     @Transactional
-    public String updateProject(String originKey, ProjectUpdateRequest request) {
+    public String updateProject(String originKey, ProjectUpdateRequest request, AuthMember authMember) {
         Project project = projectValidator.findProject(originKey);
-        //TODO: 해당 멤버가 프로젝트에 속해있는지 확인하는 로직 필요. [ ]
-        //TODO: 프로젝트 수정 권한이 있는지 확인하는 로직 필요. [ ] -> 프로젝트 생성자(ADMIN)만 수정 가능
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
+        memberProjectService.validateMemberRole(authMember, project.getId());
         validateKeyUniqueness(request.getKey());
+
         return project.updateProject(request).getKey();
     }
 

@@ -6,7 +6,9 @@ import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
@@ -26,13 +28,15 @@ public class SprintService {
     private final IssueValidator issueValidator;
     private final SprintValidator sprintValidator;
 
+    private final MemberProjectService memberProjectService;
+
     private final SprintRepository sprintRepository;
     private final IssueRepository issueRepository;
 
     @Transactional
-    public SprintCreateResponse createSprint(String key, SprintCreateRequest request) {
+    public SprintCreateResponse createSprint(String key, SprintCreateRequest request, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
         Sprint sprint = request.toEntity();
         sprint.setProject(project);
@@ -42,13 +46,13 @@ public class SprintService {
     }
 
     @Transactional
-    public void assignIssueToSprint(String key, Long sprintId, Long issueId) {
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+    public void assignIssueToSprint(String key, Long sprintId, Long issueId, AuthMember authMember) {
         if (issueValidator.getIssueType(issueId).equals(IssueType.EPIC)) {
             throw new GeneralException(ErrorStatus.INVALID_ISSUE_TYPE);
         }
 
-        Long projectId = projectValidator.findProjectId(key);
+        Long projectId = validateMemberInProject(key, authMember);
+
         Sprint sprint = sprintValidator.findSprint(sprintId);
         sprintValidator.validateSprintInProject(projectId, sprintId);
         Issue issue = issueValidator.findIssue(issueId);
@@ -58,9 +62,9 @@ public class SprintService {
     }
 
     @Transactional
-    public void removeIssueFromSprint(String key, Long sprintId, Long issueId) {
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        Long projectId = projectValidator.findProjectId(key);
+    public void removeIssueFromSprint(String key, Long sprintId, Long issueId, AuthMember authMember) {
+
+        Long projectId = validateMemberInProject(key, authMember);
         sprintValidator.validateSprintInProject(projectId, sprintId);
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
@@ -69,11 +73,10 @@ public class SprintService {
     }
 
     @Transactional
-    public void changeSprintStatus(String key, Long sprintId, SprintStatus status) {
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        Long projectId = projectValidator.findProjectId(key);
-        sprintValidator.validateSprintInProject(projectId, sprintId);
+    public void changeSprintStatus(String key, Long sprintId, SprintStatus status, AuthMember authMember) {
 
+        Long projectId = validateMemberInProject(key, authMember);
+        sprintValidator.validateSprintInProject(projectId, sprintId);
         Sprint sprint = sprintValidator.findSprint(sprintId);
         if (status != null) {
             sprint.setStatus(status);
@@ -81,12 +84,17 @@ public class SprintService {
     }
 
     @Transactional
-    public void deleteSprint(String key, Long sprintId) {
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        Long projectId = projectValidator.findProjectId(key);
+    public void deleteSprint(String key, Long sprintId, AuthMember authMember) {
+        Long projectId = validateMemberInProject(key, authMember);
         sprintValidator.validateSprintInProject(projectId, sprintId);
 
         issueRepository.updateIssueSprintNull(sprintId);
         sprintRepository.deleteById(sprintId);
+    }
+
+    private Long validateMemberInProject(String key, AuthMember authMember) {
+        Long projectId = projectValidator.findProjectId(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), projectId);
+        return projectId;
     }
 }

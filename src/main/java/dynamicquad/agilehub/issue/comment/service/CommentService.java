@@ -9,9 +9,12 @@ import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdate
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.member.repository.MemberRepository;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectValidator;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,20 +26,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
 
+
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
 
     private final ProjectValidator projectValidator;
     private final IssueValidator issueValidator;
+    private final MemberProjectService memberProjectService;
 
 
     @Transactional
-    public CommentCreateResponse createComment(String key, Long issueId, Long memberId, String content) {
+    public CommentCreateResponse createComment(String key, Long issueId, String content, AuthMember authMember) {
 
-        Issue issue = validateIssueInProject(key, issueId);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
-        // TODO: 코멘트를 작성한 멤버의 아이디를 인자로 받고 memberRepository에서 해당 멤버를 찾아온다음 Comment에 등록함. 체크 필요 [ ]
-        Member writer = memberRepository.findById(memberId)
+        validate(key, issueId, authMember);
+        Issue issue = issueValidator.findIssue(issueId);
+
+        Member writer = memberRepository.findById(authMember.getId())
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         Comment comment = Comment.builder()
@@ -49,35 +54,43 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(String key, Long issueId, Long commentId, Long memberId) {
-        // TODO: 코멘트 삭제 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
-        validateIssueInProject(key, issueId);
+    public void deleteComment(String key, Long issueId, Long commentId, AuthMember authMember) {
+
+        validate(key, issueId, authMember);
 
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+        validateMemberMatch(authMember, comment);
 
         commentRepository.delete(comment);
     }
 
+
     @Transactional
     public CommentUpdateResponse updateComment(String key, Long issueId, Long commentId, String content,
-                                               Long memberId) {
-        //TODO: 코멘트 수정 시, 해당 코멘트를 작성한 멤버와 현재 로그인한 멤버가 같은지 확인 필요 [ ]
-        validateIssueInProject(key, issueId);
+                                               AuthMember authMember) {
+
+        validate(key, issueId, authMember);
 
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+        validateMemberMatch(authMember, comment);
 
         comment.updateComment(content);
         return CommentUpdateResponse.fromEntity(comment);
     }
 
-    private Issue validateIssueInProject(String key, Long issueId) {
-        Project project = projectValidator.findProject(key);
-        Issue issue = issueValidator.findIssue(issueId);
-        issueValidator.validateIssueInProject(project.getId(), issueId);
+    private void validateMemberMatch(AuthMember authMember, Comment comment) {
+        Member writer = comment.getWriter();
+        if (!Objects.equals(writer.getId(), authMember.getId())) {
+            throw new GeneralException(ErrorStatus.COMMENT_WRITER_MISS_MATCH);
+        }
+    }
 
-        return issue;
+    private void validate(String key, Long issueId, AuthMember authMember) {
+        Project project = projectValidator.findProject(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
+        issueValidator.validateIssueInProject(project.getId(), issueId);
     }
 
 }

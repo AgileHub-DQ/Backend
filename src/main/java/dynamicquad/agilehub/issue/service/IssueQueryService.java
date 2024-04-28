@@ -25,7 +25,9 @@ import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectValidator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,15 +42,17 @@ public class IssueQueryService {
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
     private final ProjectValidator projectValidator;
+    private final MemberProjectService memberProjectService;
 
     private final EpicRepository epicRepository;
     private final StoryRepository storyRepository;
     private final TaskRepository taskRepository;
 
 
-    public IssueReadResponseDto getIssue(String key, Long issueId) {
+    public IssueReadResponseDto getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectValidator.findProjectId(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), projectId);
+
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
 
@@ -69,9 +73,9 @@ public class IssueQueryService {
     }
 
 
-    public List<EpicWithStatisticResponse> getEpicsWithStats(String key) {
+    public List<EpicWithStatisticResponse> getEpicsWithStats(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
         List<Epic> epicsByProject = epicRepository.findByProject(project);
         List<EpicResponse> epicResponses = getEpicResponses(epicsByProject, project);
@@ -80,9 +84,9 @@ public class IssueQueryService {
         return getEpicWithStatisticResponses(epicResponses, epicStatics);
     }
 
-    public List<StoryResponse> getStoriesByEpic(String key, Long epicId) {
+    public List<StoryResponse> getStoriesByEpic(String key, Long epicId, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
 
         return storiesByEpic.stream()
@@ -90,9 +94,9 @@ public class IssueQueryService {
             .toList();
     }
 
-    public List<TaskResponse> getTasksByStory(String key, Long storyId) {
+    public List<TaskResponse> getTasksByStory(String key, Long storyId, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
 
         return tasksByStory.stream()
@@ -100,9 +104,9 @@ public class IssueQueryService {
             .toList();
     }
 
-    public List<SimpleIssueResponse> getEpics(String key) {
+    public List<SimpleIssueResponse> getEpics(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
@@ -111,9 +115,9 @@ public class IssueQueryService {
     }
 
 
-    public List<SimpleIssueResponse> getStories(String key) {
+    public List<SimpleIssueResponse> getStories(String key, AuthMember authMember) {
         Project project = projectValidator.findProject(key);
-        // TODO: 프로젝트에 속하는 멤버인지 확인하는 로직 필요 [ ]
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()

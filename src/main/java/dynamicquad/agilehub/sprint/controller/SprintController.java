@@ -4,8 +4,10 @@ import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.Sprin
 import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintChangeStatusRequest;
 import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.service.SprintQueryService;
 import dynamicquad.agilehub.sprint.service.SprintService;
@@ -36,9 +38,10 @@ public class SprintController {
     @Operation(summary = "스프린트 생성", description = "프로젝트에 스프린트를 생성합니다.")
     @PostMapping(value = "/projects/{key}/sprints")
     public ResponseEntity<?> createProjectSprint(@Valid @RequestBody SprintCreateRequest request,
-                                                 @PathVariable("key") String key) {
+                                                 @PathVariable("key") String key,
+                                                 @Auth AuthMember authMember) {
 
-        SprintCreateResponse resp = sprintService.createSprint(key, request);
+        SprintCreateResponse resp = sprintService.createSprint(key, request, authMember);
 
         return ResponseEntity.created(URI.create("/projects/" + key + "/sprints/" + resp.getSprintId()))
             .body(CommonResponse.of(SuccessStatus.CREATED, resp));
@@ -48,9 +51,10 @@ public class SprintController {
     @PostMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
     public ResponseEntity<?> assignIssueToSprint(@Valid @RequestBody SprintAssignIssueRequest request,
                                                  @PathVariable("key") String key,
-                                                 @PathVariable("sprintId") Long sprintId) {
+                                                 @PathVariable("sprintId") Long sprintId,
+                                                 @Auth AuthMember authMember) {
 
-        sprintService.assignIssueToSprint(key, sprintId, request.getIssueId());
+        sprintService.assignIssueToSprint(key, sprintId, request.getIssueId(), authMember);
 
         return ResponseEntity.noContent().build();
     }
@@ -59,9 +63,10 @@ public class SprintController {
     @DeleteMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
     public ResponseEntity<?> removeIssueFromSprint(@Valid @RequestBody SprintAssignIssueRequest request,
                                                    @PathVariable("key") String key,
-                                                   @PathVariable("sprintId") Long sprintId) {
+                                                   @PathVariable("sprintId") Long sprintId,
+                                                   @Auth AuthMember authMember) {
 
-        sprintService.removeIssueFromSprint(key, sprintId, request.getIssueId());
+        sprintService.removeIssueFromSprint(key, sprintId, request.getIssueId(), authMember);
 
         return ResponseEntity.noContent().build();
     }
@@ -70,9 +75,10 @@ public class SprintController {
     @PatchMapping(value = "/projects/{key}/sprints/{sprintId}/status")
     public ResponseEntity<?> changeSprintStatus(@Valid @RequestBody SprintChangeStatusRequest request,
                                                 @PathVariable("key") String key,
-                                                @PathVariable("sprintId") Long sprintId) {
+                                                @PathVariable("sprintId") Long sprintId,
+                                                @Auth AuthMember authMember) {
 
-        sprintService.changeSprintStatus(key, sprintId, request.getStatus());
+        sprintService.changeSprintStatus(key, sprintId, request.getStatus(), authMember);
 
         return ResponseEntity.noContent().build();
     }
@@ -87,9 +93,10 @@ public class SprintController {
     @Operation(summary = "스프린트 삭제", description = "스프린트를 삭제합니다")
     @DeleteMapping(value = "/projects/{key}/sprints/{sprintId}")
     public ResponseEntity<?> deleteSprint(@PathVariable("key") String key,
-                                          @PathVariable("sprintId") Long sprintId) {
+                                          @PathVariable("sprintId") Long sprintId,
+                                          @Auth AuthMember authMember) {
 
-        sprintService.deleteSprint(key, sprintId);
+        sprintService.deleteSprint(key, sprintId, authMember);
         return ResponseEntity.noContent().build();
     }
 }

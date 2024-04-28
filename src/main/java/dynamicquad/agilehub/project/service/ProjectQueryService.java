@@ -1,10 +1,7 @@
 package dynamicquad.agilehub.project.service;
 
-import dynamicquad.agilehub.global.exception.GeneralException;
-import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.member.repository.MemberRepository;
+import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
-import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +15,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(readOnly = true)
 public class ProjectQueryService {
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
+
+    private final MemberService memberService;
+    private final MemberProjectService memberProjectService;
 
     public List<ProjectResponse> getProjects(Long memberId) {
-        // TODO: 멤버 존재 여부 확인 로직 따로 멤버 클래스로 분리하기 - [ ]
-        validateMemberExist(memberId);
-        List<Project> projects = memberProjectRepository.findProjectsByMemberId(memberId);
+
+        memberService.validateMemberExist(memberId);
+        List<Project> projects = memberProjectService.findProjects(memberId);
 
         return projects.stream().map(ProjectResponse::fromEntity).toList();
     }
 
-    private void validateMemberExist(Long memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new GeneralException(ErrorStatus.MEMBER_NOT_FOUND);
-        }
-    }
 
 }

@@ -8,6 +8,9 @@ import dynamicquad.agilehub.issue.comment.service.CommentService;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
+import dynamicquad.agilehub.project.domain.MemberProject;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,9 +44,20 @@ class CommentServiceTest {
             .build();
         em.persist(member);
 
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(project1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .build();
+
         // when
         CommentCreateResponse commentCreateResponse = commentService.createComment(project1.getKey(), epic1P1.getId(),
-            member.getId(), "코멘트 내용");
+            "코멘트 내용", authMember);
 
         // then
         assertThat(commentCreateResponse).isNotNull();
@@ -68,6 +82,13 @@ class CommentServiceTest {
             .build();
         em.persist(member);
 
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(project1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
         Comment comment = Comment.builder()
             .content("코멘트 내용")
             .writer(member)
@@ -76,8 +97,12 @@ class CommentServiceTest {
 
         em.persist(comment);
 
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .build();
+
         //when
-        commentService.updateComment(project1.getKey(), epic1P1.getId(), comment.getId(), "수정된 코멘트 내용", member.getId());
+        commentService.updateComment(project1.getKey(), epic1P1.getId(), comment.getId(), "수정된 코멘트 내용", authMember);
 
         //then
         Comment findComment = em.find(Comment.class, comment.getId());

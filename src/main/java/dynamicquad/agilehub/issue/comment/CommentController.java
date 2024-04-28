@@ -2,12 +2,14 @@ package dynamicquad.agilehub.issue.comment;
 
 import static dynamicquad.agilehub.issue.comment.request.CommentRequest.CommentCreateRequest;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
 import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdateResponse;
 import dynamicquad.agilehub.issue.comment.service.CommentQueryService;
 import dynamicquad.agilehub.issue.comment.service.CommentService;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,13 +43,10 @@ public class CommentController {
     @PostMapping(value = "/projects/{key}/issues/{issueId}/comments")
     public CommonResponse<?> createComment(@Valid @RequestBody CommentCreateRequest request,
                                            @PathVariable("key") String key,
-                                           @PathVariable("issueId") Long issueId) {
+                                           @PathVariable("issueId") Long issueId,
+                                           @Auth AuthMember authMember) {
 
-        //TODO: 현재, 가짜 멤버 객체 1L로 설정한 상태이므로 추후에 제거하고 실제 멤버 객체를 받아오도록 수정 필요
-        //TODO: 가짜 멤버 객체
-        Long memberId = 1L;
-
-        CommentCreateResponse resp = commentService.createComment(key, issueId, memberId, request.getContent());
+        CommentCreateResponse resp = commentService.createComment(key, issueId, request.getContent(), authMember);
         return CommonResponse.of(SuccessStatus.CREATED, resp);
     }
 
@@ -64,12 +63,10 @@ public class CommentController {
     @DeleteMapping(value = "/projects/{key}/issues/{issueId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("key") String key,
                                            @PathVariable("issueId") Long issueId,
-                                           @PathVariable("commentId") Long commentId) {
+                                           @PathVariable("commentId") Long commentId,
+                                           @Auth AuthMember authMember) {
 
-        //TODO: 현재, 가짜 멤버 객체 1L로 설정한 상태이므로 추후에 제거하고 실제 멤버 객체를 받아오도록 수정 필요
-        Long memberId = 1L;
-
-        commentService.deleteComment(key, issueId, commentId, memberId);
+        commentService.deleteComment(key, issueId, commentId, authMember);
         return ResponseEntity.noContent().build();
     }
 
@@ -79,13 +76,11 @@ public class CommentController {
     public CommonResponse<?> updateComment(@PathVariable("key") String key,
                                            @PathVariable("issueId") Long issueId,
                                            @PathVariable("commentId") Long commentId,
-                                           @Valid @RequestBody CommentCreateRequest request) {
-
-        //TODO: 현재, 가짜 멤버 객체 1L로 설정한 상태이므로 추후에 제거하고 실제 멤버 객체를 받아오도록 수정 필요
-        Long memberId = 1L;
+                                           @Valid @RequestBody CommentCreateRequest request,
+                                           @Auth AuthMember authMember) {
 
         CommentUpdateResponse resp = commentService.updateComment(key, issueId, commentId,
-            request.getContent(), memberId);
+            request.getContent(), authMember);
         return CommonResponse.of(SuccessStatus.OK, resp);
     }
 }

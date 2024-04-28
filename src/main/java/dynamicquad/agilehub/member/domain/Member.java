@@ -43,9 +43,18 @@ public class Member extends BaseEntity {
         this.status = status;
     }
 
+    private Member(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public void update(String name, String profileImageUrl) {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public static Member createPojoByAuthMember(Long id, String name) {
+        return new Member(id, name);
     }
 
 }

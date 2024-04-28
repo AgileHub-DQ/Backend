@@ -2,12 +2,14 @@ package dynamicquad.agilehub.issue.controller;
 
 import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 
+import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,8 +44,9 @@ public class IssueController {
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
     @PostMapping(value = "/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
-                                                @PathVariable("key") String key) {
-        Long issueId = issueService.createIssue(key, request);
+                                                @PathVariable("key") String key,
+                                                @Auth AuthMember authMember) {
+        Long issueId = issueService.createIssue(key, request, authMember);
 
         return ResponseEntity.created(URI.create("/projects/" + key + "/issues/" + issueId))
             .body(CommonResponse.of(SuccessStatus.CREATED, issueId));
@@ -55,9 +58,10 @@ public class IssueController {
             @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
     )
     @GetMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
+    public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId,
+                                             @Auth AuthMember authMember) {
 
-        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId));
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getIssue(key, issueId, authMember));
     }
 
 
@@ -66,9 +70,10 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
-                                              @PathVariable("key") String key, @PathVariable("issueId") Long issueId) {
+                                              @PathVariable("key") String key, @PathVariable("issueId") Long issueId,
+                                              @Auth AuthMember authMember) {
 
-        issueService.updateIssue(key, issueId, request);
+        issueService.updateIssue(key, issueId, request, authMember);
         return ResponseEntity.noContent().build();
     }
 
@@ -77,9 +82,10 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
     @DeleteMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteProjectIssue(@PathVariable("key") String key,
-                                                @PathVariable("issueId") Long issueId) {
+                                                @PathVariable("issueId") Long issueId,
+                                                @Auth AuthMember authMember) {
 
-        issueService.deleteIssue(key, issueId);
+        issueService.deleteIssue(key, issueId, authMember);
         return ResponseEntity.noContent().build();
     }
 

@@ -18,8 +18,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
-import dynamicquad.agilehub.member.repository.MemberRepository;
-import dynamicquad.agilehub.project.domain.MemberProjectRepository;
+import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +39,7 @@ public class StoryFactory implements IssueFactory {
     private final TaskRepository taskRepository;
     private final ImageService imageService;
 
-    private final MemberProjectRepository memberProjectRepository;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
@@ -55,8 +53,8 @@ public class StoryFactory implements IssueFactory {
         // TODO: 이슈가 삭제되면 이슈 번호가 중복될 수 있음 1번,2번,3번 이슈 생성뒤 2번 삭제하면 4번 이슈 생성시 3번이 되어 중복 [ ]
         // TODO: 이슈 번호 생성 로직을 따로 만들기 - number 최대로 큰 숫자 + 1로 로직 변경 [ ]
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
-        // TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
-        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
         Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
 
         // TODO: STORY toEntity 메서드에 이 로직 넣기 [ ]
@@ -84,8 +82,8 @@ public class StoryFactory implements IssueFactory {
 
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
-        // TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
-        Member assignee = findMember(request.getAssigneeId(), project.getId());
+
+        Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
 
         Story story = getStory(issue);
         Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
@@ -213,20 +211,5 @@ public class StoryFactory implements IssueFactory {
         if (!IssueType.EPIC.equals(IssueType.valueOf(type))) {
             throw new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_EPIC);
         }
-    }
-
-
-    //TODO: 멤버 클래스에 이 로직을 따로 만들기 [ ]
-    private Member findMember(Long assigneeId, Long projectId) {
-        if (assigneeId == null) {
-            return null;
-        }
-
-        Member member = memberRepository.findById(assigneeId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
-        memberProjectRepository.findByMemberIdAndProjectId(member.getId(), projectId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
-
-        return member;
     }
 }
