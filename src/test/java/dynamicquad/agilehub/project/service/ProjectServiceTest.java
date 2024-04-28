@@ -5,10 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +30,29 @@ class ProjectServiceTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     @Transactional
     void 신규프로젝트를_등록한다_성공시_key_반환() {
         // given
+        Member member = Member.builder()
+            .name("test")
+            .build();
+        em.persist(member);
+
         ProjectCreateRequest request = ProjectCreateRequest.builder()
             .name("프로젝트1")
             .key("PK1")
             .build();
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("test")
+            .build();
         // then
-        assertThat(projectService.createProject(request))
+        assertThat(projectService.createProject(request, authMember))
             .isEqualTo("PK1");
     }
 
@@ -48,10 +64,12 @@ class ProjectServiceTest {
             .name("프로젝트1")
             .key("PK1")
             .build();
-        // when
-        projectService.createProject(request);
+        AuthMember authMember = AuthMember.builder()
+            .id(1L)
+            .name("test")
+            .build();
         // then
-        assertThatThrownBy(() -> projectService.createProject(request))
+        assertThatThrownBy(() -> projectService.createProject(request, authMember))
             .isInstanceOf(RuntimeException.class);
     }
 

@@ -45,9 +45,10 @@ public class ProjectController {
         @ApiResponse(responseCode = "400", description = "프로젝트 키가 중복됩니다."),
     })
     @PostMapping("/projects")
-    public ResponseEntity<?> createProject(@RequestBody @Valid ProjectCreateRequest request) {
+    public ResponseEntity<?> createProject(@RequestBody @Valid ProjectCreateRequest request,
+                                           @Auth AuthMember authMember) {
 
-        String key = projectService.createProject(request);
+        String key = projectService.createProject(request, authMember);
         return ResponseEntity.created(URI.create("/projects/" + key + "/issues"))
             .body(CommonResponse.of(SuccessStatus.CREATED, key));
     }

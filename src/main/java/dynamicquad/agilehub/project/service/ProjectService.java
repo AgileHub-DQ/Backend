@@ -2,8 +2,10 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,15 @@ public class ProjectService {
 
     private final ProjectValidator projectValidator;
     private final ProjectRepository projectRepository;
+    private final MemberProjectService memberProjectService;
 
     @Transactional
-    public String createProject(ProjectCreateRequest request) {
+    public String createProject(ProjectCreateRequest request, AuthMember authMember) {
         validateKeyUniqueness(request.getKey());
-        //TODO: 프로젝트 생성 후 유저 - 멤버_프로젝트 - 프로젝트 매핑하는 로직 필요. role은 Admin으로 [ ]
-        return projectRepository.save(request.toEntity()).getKey();
+        Project project = projectRepository.save(request.toEntity());
+        memberProjectService.createMemberProject(authMember, project, MemberProjectRole.ADMIN);
+
+        return project.getKey();
     }
 
     @Transactional
