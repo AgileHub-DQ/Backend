@@ -42,7 +42,7 @@ public class MemberProjectService {
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
     }
 
-    public void validateUpdateProjectAuth(AuthMember authMember, Long projectId) {
+    public void validateMemberRole(AuthMember authMember, Long projectId) {
         MemberProject memberProject = memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
 

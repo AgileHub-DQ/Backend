@@ -37,7 +37,7 @@ public class ProjectService {
     public String updateProject(String originKey, ProjectUpdateRequest request, AuthMember authMember) {
         Project project = projectValidator.findProject(originKey);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        memberProjectService.validateUpdateProjectAuth(authMember, project.getId());
+        memberProjectService.validateMemberRole(authMember, project.getId());
         validateKeyUniqueness(request.getKey());
 
         return project.updateProject(request).getKey();
