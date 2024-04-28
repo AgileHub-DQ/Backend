@@ -20,8 +20,7 @@ public class MemberProjectService {
     private final MemberProjectRepository memberProjectRepository;
 
     public void validateMemberInProject(AuthMember authMember, Long projectId) {
-        Long memberId = authMember.getId();
-        memberProjectRepository.findByMemberIdAndProjectId(memberId, projectId)
+        memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)
             .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
     }
 
@@ -39,4 +38,13 @@ public class MemberProjectService {
         memberProjectRepository.save(memberProject);
     }
 
+
+    public void validateUpdateProjectAuth(AuthMember authMember, Long projectId) {
+        MemberProject memberProject = memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
+
+        if (memberProject.getRole() != MemberProjectRole.ADMIN) {
+            throw new GeneralException(ErrorStatus.MEMBER_NOT_ADMIN);
+        }
+    }
 }

@@ -9,6 +9,8 @@ import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
+import dynamicquad.agilehub.project.domain.MemberProject;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
 import jakarta.persistence.EntityManager;
@@ -78,6 +80,11 @@ class ProjectServiceTest {
     @Transactional
     void 기존키가_존재하지않은키일때_예외를_반환한다() {
         // given
+        Member member = Member.builder()
+            .name("test")
+            .build();
+        em.persist(member);
+
         Project p1 = createProject("프로젝트1", "PK1");
         projectRepository.save(p1);
         //when
@@ -85,8 +92,13 @@ class ProjectServiceTest {
             .name("프로젝트1")
             .key("PK2")
             .build();
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("test")
+            .build();
         //then
-        assertThatThrownBy(() -> projectService.updateProject("pk13", request))
+        assertThatThrownBy(() -> projectService.updateProject("pk13", request, authMember))
             .isInstanceOf(GeneralException.class)
             .extracting("status").isEqualTo(ErrorStatus.PROJECT_NOT_FOUND);
     }
@@ -95,16 +107,41 @@ class ProjectServiceTest {
     @Transactional
     void 변경하려는키가_이미존재하는키면_예외를_반환한다() {
         // given
+        Member member = Member.builder()
+            .name("test")
+            .build();
+        em.persist(member);
+
         Project p1 = createProject("프로젝트1", "PK1");
         Project p2 = createProject("프로젝트2", "PK2");
         projectRepository.saveAll(List.of(p1, p2));
+
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(p1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
+        MemberProject memberProject2 = MemberProject.builder()
+            .member(member)
+            .project(p2)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject2);
+
         //when
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
             .name("프로젝트1")
             .key("PK2")
             .build();
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("test")
+            .build();
         //then
-        assertThatThrownBy(() -> projectService.updateProject("PK1", request))
+        assertThatThrownBy(() -> projectService.updateProject("PK1", request, authMember))
             .isInstanceOf(GeneralException.class)
             .extracting("status").isEqualTo(ErrorStatus.PROJECT_DUPLICATE);
 
@@ -114,16 +151,41 @@ class ProjectServiceTest {
     @Transactional
     void 변경하려는키가_원래기존키와같으면_예외를_반환한다() {
         // given
+        Member member = Member.builder()
+            .name("test")
+            .build();
+        em.persist(member);
+
         Project p1 = createProject("프로젝트1", "PK1");
         Project p2 = createProject("프로젝트2", "PK2");
         projectRepository.saveAll(List.of(p1, p2));
+
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(p1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
+        MemberProject memberProject2 = MemberProject.builder()
+            .member(member)
+            .project(p2)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject2);
         //when
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
             .name("프로젝트1")
             .key("PK1")
             .build();
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("test")
+            .build();
+
         //then
-        assertThatThrownBy(() -> projectService.updateProject("PK1", request))
+        assertThatThrownBy(() -> projectService.updateProject("PK1", request, authMember))
             .isInstanceOf(GeneralException.class)
             .extracting("status").isEqualTo(ErrorStatus.PROJECT_DUPLICATE);
 
@@ -133,15 +195,34 @@ class ProjectServiceTest {
     @Transactional
     void 변경된키가_정상적으로_프로젝트에_반영() {
         // given
+        Member member = Member.builder()
+            .name("test")
+            .build();
+        em.persist(member);
+
         Project p1 = createProject("프로젝트1", "PK1");
         projectRepository.save(p1);
+
+        MemberProject memberProject = MemberProject.builder()
+            .member(member)
+            .project(p1)
+            .role(MemberProjectRole.ADMIN)
+            .build();
+        em.persist(memberProject);
+
         //when
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
             .name("프로젝트1")
             .key("PK2")
             .build();
+
+        AuthMember authMember = AuthMember.builder()
+            .id(member.getId())
+            .name("test")
+            .build();
+
         //then
-        assertThat(projectService.updateProject("PK1", request))
+        assertThat(projectService.updateProject("PK1", request, authMember))
             .isEqualTo("PK2");
     }
 

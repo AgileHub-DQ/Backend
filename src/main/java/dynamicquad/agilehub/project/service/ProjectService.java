@@ -27,17 +27,19 @@ public class ProjectService {
     public String createProject(ProjectCreateRequest request, AuthMember authMember) {
         validateKeyUniqueness(request.getKey());
         Project project = projectRepository.save(request.toEntity());
+        // 프로젝트 생성자는 프로젝트에 대한 모든 권한을 가짐(ADMIN)
         memberProjectService.createMemberProject(authMember, project, MemberProjectRole.ADMIN);
 
         return project.getKey();
     }
 
     @Transactional
-    public String updateProject(String originKey, ProjectUpdateRequest request) {
+    public String updateProject(String originKey, ProjectUpdateRequest request, AuthMember authMember) {
         Project project = projectValidator.findProject(originKey);
-        //TODO: 해당 멤버가 프로젝트에 속해있는지 확인하는 로직 필요. [ ]
-        //TODO: 프로젝트 수정 권한이 있는지 확인하는 로직 필요. [ ] -> 프로젝트 생성자(ADMIN)만 수정 가능
+        memberProjectService.validateMemberInProject(authMember, project.getId());
+        memberProjectService.validateUpdateProjectAuth(authMember, project.getId());
         validateKeyUniqueness(request.getKey());
+        
         return project.updateProject(request).getKey();
     }
 

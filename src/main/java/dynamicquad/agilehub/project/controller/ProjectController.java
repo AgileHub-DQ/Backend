@@ -74,9 +74,10 @@ public class ProjectController {
         @ApiResponse(responseCode = "404", description = "프로젝트가 존재하지 않습니다.")
     })
     @PutMapping("/projects/{key}")
-    public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key) {
+    public ResponseEntity<?> updateProject(@RequestBody @Valid ProjectUpdateRequest request, @PathVariable String key,
+                                           @Auth AuthMember authMember) {
 
-        String updateKey = projectService.updateProject(key, request);
+        String updateKey = projectService.updateProject(key, request, authMember);
         return ResponseEntity.created(URI.create("/projects/" + updateKey + "/issues"))
             .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
     }
