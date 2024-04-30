@@ -131,6 +131,19 @@ public class IssueQueryService {
             .toList();
     }
 
+    public List<SimpleIssueResponse> getTasks(String key, AuthMember authMember) {
+        Project project = projectValidator.findProject(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
+        List<Task> tasksByProject = taskRepository.findByProject(project);
+
+        return tasksByProject.stream()
+            .map(task -> {
+                AssigneeDto assigneeDto = createAssigneeDto(task);
+                return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
+            })
+            .toList();
+    }
+
     private AssigneeDto createAssigneeDto(Issue issue) {
 
         if (issue.getAssignee() == null) {
