@@ -111,12 +111,8 @@ public class IssueQueryService {
 
         return epicsByProject.stream()
             .map(epic -> {
-                Member assignee = epic.getAssignee();
-                if (assignee != null) {
-                    AssigneeDto assigneeDto = AssigneeDto.from(assignee.getId(), assignee.getName());
-                    return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
-                }
-                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, new AssigneeDto());
+                AssigneeDto assigneeDto = createAssigneeDto(epic);
+                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
             })
             .toList();
     }
@@ -129,13 +125,8 @@ public class IssueQueryService {
 
         return storiesByProject.stream()
             .map(story -> {
-                Member assignee = story.getAssignee();
-                if (assignee != null) {
-                    AssigneeDto assigneeDto = AssigneeDto.from(assignee.getId(), assignee.getName());
-                    return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
-                }
-                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, new AssigneeDto());
-
+                AssigneeDto assigneeDto = createAssigneeDto(story);
+                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
             })
             .toList();
     }
@@ -145,11 +136,7 @@ public class IssueQueryService {
         if (issue.getAssignee() == null) {
             return new AssigneeDto();
         }
-        //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-        return AssigneeDto.builder()
-            .id(issue.getAssignee().getId())
-            .name(issue.getAssignee().getName())
-            .build();
+        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName());
     }
 
     private List<EpicWithStatisticResponse> getEpicWithStatisticResponses(List<EpicResponse> epicResponses,
