@@ -44,7 +44,7 @@ public class SpringSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .cors(cors -> cors.configurationSource(request -> {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("*")); // 추후에 서버 도메인으로 변경 필요
+                config.setAllowedOriginPatterns(Collections.singletonList("*"));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowedHeaders(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
