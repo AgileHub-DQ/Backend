@@ -56,8 +56,11 @@ public enum ErrorStatus implements BaseStatus {
     COMMENT_WRITER_MISS_MATCH(HttpStatus.BAD_REQUEST, "COMMENT_4002", "댓글 작성자가 아닙니다."),
 
     // Statics Error
-    EPIC_STATISTIC_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "STATICS_500", "에픽 통계를 찾을 수 없습니다.");
+    EPIC_STATISTIC_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "STATICS_500", "에픽 통계를 찾을 수 없습니다."),
 
+    // Email Error
+    EMAIL_NOT_SENT(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL_500", "이메일이 정상적으로 송신되지 않았습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -66,19 +69,19 @@ public enum ErrorStatus implements BaseStatus {
     @Override
     public ReasonDto getReason() {
         return ReasonDto.builder()
-            .message(message)
-            .code(code)
-            .isSuccess(false)
-            .build();
+                .message(message)
+                .code(code)
+                .isSuccess(false)
+                .build();
     }
 
     @Override
     public ReasonDto getReasonHttpStatus() {
         return ReasonDto.builder()
-            .status(httpStatus)
-            .message(message)
-            .code(code)
-            .isSuccess(false)
-            .build();
+                .status(httpStatus)
+                .message(message)
+                .code(code)
+                .isSuccess(false)
+                .build();
     }
 }
