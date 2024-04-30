@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: local
-    include: oauth, jwt, redis
+    include: oauth, jwt, redis, mail
   servlet:
     multipart:
       max-file-size: 100MB
