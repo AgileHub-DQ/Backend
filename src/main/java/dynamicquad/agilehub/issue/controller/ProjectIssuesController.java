@@ -80,4 +80,14 @@ public class ProjectIssuesController {
         return CommonResponse.of(SuccessStatus.OK, issueQueryService.getStories(key, authMember));
     }
 
+    @Operation(summary = "프로젝트에 할당된 테스크 간단한 조회", description = "프로젝트에 할당된 테스크들을 간단하게 조회하는 API",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+    )
+    @GetMapping(value = "/projects/{key}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResponse<?> getProjectTasks(@PathVariable("key") String key, @Auth AuthMember authMember) {
+
+        return CommonResponse.of(SuccessStatus.OK, issueQueryService.getTasks(key, authMember));
+    }
+
 }

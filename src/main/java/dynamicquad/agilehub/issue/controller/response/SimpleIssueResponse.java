@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.controller.response;
 
 import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,13 +15,20 @@ public class SimpleIssueResponse {
     private String title;
     private String type;
     private String key;
+    private String status;
+    private AssigneeDto assignee;
 
-    public static SimpleIssueResponse fromEntity(Issue issue, String projectKey, IssueType issueType) {
+    public static SimpleIssueResponse fromEntity(Issue issue, String projectKey, IssueType issueType,
+                                                 AssigneeDto assignee) {
         return SimpleIssueResponse.builder()
             .id(issue.getId())
             .title(issue.getTitle())
             .type(issueType.toString())
+            .status(String.valueOf(issue.getStatus()))
+            .assignee(assignee)
             .key(projectKey + "-" + issue.getNumber())
             .build();
     }
+
+
 }
