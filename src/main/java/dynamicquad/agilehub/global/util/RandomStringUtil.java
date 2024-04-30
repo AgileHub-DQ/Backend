@@ -13,6 +13,9 @@ public class RandomStringUtil {
 
     private static final String ALL_CHARS = CHAR_UPPERCASE + CHAR_LOWERCASE + CHAR_DIGITS + CHAR_SPECIAL;
 
+    private RandomStringUtil() {
+    }
+
     public static String generateRandomKey(int keyLength) {
         StringBuilder sb = new StringBuilder(keyLength);
         Random random = new SecureRandom();
