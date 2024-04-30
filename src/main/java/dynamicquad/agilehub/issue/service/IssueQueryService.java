@@ -110,7 +110,14 @@ public class IssueQueryService {
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
-            .map(epic -> SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC))
+            .map(epic -> {
+                Member assignee = epic.getAssignee();
+                if (assignee != null) {
+                    AssigneeDto assigneeDto = AssigneeDto.from(assignee.getId(), assignee.getName());
+                    return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
+                }
+                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, new AssigneeDto());
+            })
             .toList();
     }
 
@@ -121,7 +128,15 @@ public class IssueQueryService {
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()
-            .map(story -> SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY))
+            .map(story -> {
+                Member assignee = story.getAssignee();
+                if (assignee != null) {
+                    AssigneeDto assigneeDto = AssigneeDto.from(assignee.getId(), assignee.getName());
+                    return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
+                }
+                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, new AssigneeDto());
+
+            })
             .toList();
     }
 

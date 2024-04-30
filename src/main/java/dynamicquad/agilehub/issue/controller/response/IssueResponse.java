@@ -49,6 +49,13 @@ public class IssueResponse {
             this.id = null;
             this.name = "";
         }
+
+        public static AssigneeDto from(Long id, String name) {
+            return AssigneeDto.builder()
+                .id(id)
+                .name(name)
+                .build();
+        }
     }
 
     @Builder
