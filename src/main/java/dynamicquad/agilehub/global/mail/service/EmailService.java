@@ -37,7 +37,7 @@ public class EmailService {
         }
     }
 
-    public String setContext(EmailMessage emailMessage, String type) {
+    private String setContext(EmailMessage emailMessage, String type) {
         Context context = new Context();
         context.setVariable("inviteCode", emailMessage.getInviteCode());
         return templateEngine.process(type, context);
