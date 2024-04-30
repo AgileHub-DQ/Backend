@@ -59,7 +59,8 @@ public enum ErrorStatus implements BaseStatus {
     EPIC_STATISTIC_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "STATICS_500", "에픽 통계를 찾을 수 없습니다."),
 
     // Email Error
-    EMAIL_NOT_SENT(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL_500", "이메일이 정상적으로 송신되지 않았습니다."),
+    EMAIL_NOT_SENT(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL_5001", "이메일이 정상적으로 송신되지 않았습니다."),
+    INVITE_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "EMAIL_4001", "초대 코드를 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
