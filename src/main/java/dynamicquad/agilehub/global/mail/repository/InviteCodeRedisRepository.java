@@ -1,12 +1,12 @@
 package dynamicquad.agilehub.global.mail.repository;
 
-import dynamicquad.agilehub.global.mail.model.InviteCode;
+import dynamicquad.agilehub.global.mail.model.InviteRedisEntity;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InviteCodeRedisRepository extends CrudRepository<InviteCode, String> {
+public interface InviteCodeRedisRepository extends CrudRepository<InviteRedisEntity, String> {
 
-    Optional<InviteCode> findByEmail(String email);
+    Optional<InviteRedisEntity> findByInviteCode(String inviteCode);
 }
