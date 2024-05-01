@@ -5,11 +5,11 @@
 <div style="margin:100px;">
     <h1> 안녕하세요! AgileHub 입니다.</h1>
     <br>
-    <p th:text="${projectName} 초대 코드입니다."></p>
+    <p th:text="|${projectName} 초대 코드입니다.|"></p>
     <br>
 
     <div align="center" style="border:1px solid black; font-family:verdana,sans-serif;">
-        <h3 style="color:blue" th:text="${projectName} 초대코드"></h3>
+        <h3 style="color:blue" th:text="|${projectName} 초대코드|"></h3>
         <div style="font-size:130%" th:text="${inviteCode}"></div>
     </div>
     <br/>
