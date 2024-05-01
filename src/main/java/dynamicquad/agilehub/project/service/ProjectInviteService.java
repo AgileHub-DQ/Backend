@@ -2,10 +2,10 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.global.mail.dto.MailRequestDto;
 import dynamicquad.agilehub.global.mail.service.EmailService;
 import dynamicquad.agilehub.global.util.RandomStringUtil;
 import dynamicquad.agilehub.member.dto.MemberRequestDto;
+import dynamicquad.agilehub.project.controller.request.ProjectInviteRequestDto;
 import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.InviteRedisEntity;
 import dynamicquad.agilehub.project.model.InviteEmailInfo;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class InviteProjectService {
+public class ProjectInviteService {
 
     private static final String INVITE_SUBJECT = "[AgileHub] 초대코드";
 
@@ -28,7 +28,7 @@ public class InviteProjectService {
     private final InviteCodeRedisRepository inviteCodeRedisRepository;
 
     public void sendInviteEmail(MemberRequestDto.AuthMember authMember,
-                                MailRequestDto.SendInviteMail sendInviteMail) {
+                                ProjectInviteRequestDto.SendInviteMail sendInviteMail) {
         memberProjectService.validateMemberInProject(authMember.getId(), sendInviteMail.getProjectId());
         memberProjectService.validateMemberRole(authMember, sendInviteMail.getProjectId());
 
