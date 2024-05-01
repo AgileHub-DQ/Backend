@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.global.mail.model;
+package dynamicquad.agilehub.project.model;
 
+import dynamicquad.agilehub.global.mail.model.EmailInfo;
 import lombok.Builder;
 import lombok.Getter;
 

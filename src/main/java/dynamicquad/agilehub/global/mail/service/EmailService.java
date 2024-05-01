@@ -3,7 +3,7 @@ package dynamicquad.agilehub.global.mail.service;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.mail.model.EmailInfo;
-import dynamicquad.agilehub.global.mail.model.InviteEmailInfo;
+import dynamicquad.agilehub.project.model.InviteEmailInfo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

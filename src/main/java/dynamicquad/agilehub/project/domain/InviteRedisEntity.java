@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.global.mail.model;
+package dynamicquad.agilehub.project.domain;
 
 import jakarta.persistence.Id;
 import java.io.Serializable;
