@@ -6,6 +6,7 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectInviteRequestDto;
 import dynamicquad.agilehub.project.service.ProjectInviteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.RequestToViewNameTranslator;
 
+@Tag(name = "프로젝트 초대", description = "프로젝트에 이메일주소를 통해 초대합니다.")
 @RestController
 @RequiredArgsConstructor
 public class ProjectInviteController {
