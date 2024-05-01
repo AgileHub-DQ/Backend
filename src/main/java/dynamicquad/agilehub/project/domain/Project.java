@@ -48,7 +48,7 @@ public class Project extends BaseEntity {
         return this;
     }
 
-    public Project createPojoProject(long id) {
+    public static Project createPojoProject(long id) {
         return new Project(id);
     }
 

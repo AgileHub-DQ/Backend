@@ -21,12 +21,15 @@ public class InviteRedisEntity implements Serializable {
     @Indexed
     private String inviteCode;
 
+    private String projectId;
+
     @TimeToLive
     private Long expiration;
 
     @Builder
-    public InviteRedisEntity(String inviteCode) {
+    public InviteRedisEntity(String inviteCode, String projectId) {
         this.inviteCode = inviteCode;
+        this.projectId = projectId;
         this.expiration = (long) 60 * 5;
     }
 

@@ -1,15 +1,13 @@
 package dynamicquad.agilehub.project.service;
 
-import dynamicquad.agilehub.global.exception.GeneralException;
-import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.mail.service.EmailService;
 import dynamicquad.agilehub.global.util.RandomStringUtil;
 import dynamicquad.agilehub.member.dto.MemberRequestDto;
 import dynamicquad.agilehub.project.controller.request.ProjectInviteRequestDto;
-import dynamicquad.agilehub.project.controller.response.ProjectResponse;
 import dynamicquad.agilehub.project.domain.InviteRedisEntity;
+import dynamicquad.agilehub.project.domain.MemberProjectRole;
+import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.model.InviteEmailInfo;
-import dynamicquad.agilehub.project.repository.InviteRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +22,7 @@ public class ProjectInviteService {
     private final EmailService emailService;
     private final MemberProjectService memberProjectService;
     private final ProjectQueryService projectQueryService;
-
-    private final InviteRedisRepository inviteRedisRepository;
+    private final InviteRedisService inviteRedisService;
 
     public void sendInviteEmail(MemberRequestDto.AuthMember authMember,
                                 ProjectInviteRequestDto.SendInviteMail sendInviteMail) {
@@ -35,11 +32,11 @@ public class ProjectInviteService {
         String inviteCode = generateInviteCode();
         saveInvite(inviteCode, sendInviteMail.getProjectId());
 
-        ProjectResponse projectDto = projectQueryService.findProjectById(sendInviteMail.getProjectId());
+        Project project = projectQueryService.findProjectById(sendInviteMail.getProjectId());
         InviteEmailInfo emailInfo = InviteEmailInfo.builder()
                 .to(sendInviteMail.getEmail())
                 .subject(INVITE_SUBJECT)
-                .projectName(projectDto.getName())
+                .projectName(project.getName())
                 .inviteCode(inviteCode)
                 .build();
 
@@ -48,7 +45,10 @@ public class ProjectInviteService {
 
     public void receiveInviteEmail(MemberRequestDto.AuthMember authMember,
                                    String inviteCode) {
+        InviteRedisEntity inviteRedisEntity = inviteRedisService.findByInviteCode(inviteCode);
+        Project project = Project.createPojoProject(Long.parseLong(inviteRedisEntity.getId()));
 
+        memberProjectService.createMemberProject(authMember, project, MemberProjectRole.EDITOR);
     }
 
     private String generateInviteCode() {
@@ -60,13 +60,7 @@ public class ProjectInviteService {
                 .inviteCode(inviteCode)
                 .projectId(Long.toString(projectId))
                 .build();
-        inviteRedisRepository.save(inviteRedisEntity);
-    }
-
-    private void validateInviteCode(String inviteCode) {
-        if (inviteRedisRepository.findByInviteCode(inviteCode).isEmpty()) {
-            throw new GeneralException(ErrorStatus.INVITE_CODE_NOT_EXIST);
-        }
+        inviteRedisService.save(inviteRedisEntity);
     }
 
 }

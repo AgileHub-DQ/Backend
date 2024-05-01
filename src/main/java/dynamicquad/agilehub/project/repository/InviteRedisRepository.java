@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InviteCodeRedisRepository extends CrudRepository<InviteRedisEntity, String> {
+public interface InviteRedisRepository extends CrudRepository<InviteRedisEntity, String> {
 
     Optional<InviteRedisEntity> findByInviteCode(String inviteCode);
 }
