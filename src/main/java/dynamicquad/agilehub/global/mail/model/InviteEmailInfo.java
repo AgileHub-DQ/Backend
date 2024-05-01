@@ -4,13 +4,15 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class InviteEmailMessage extends EmailMessage {
+public class InviteEmailInfo extends EmailInfo {
 
+    private final String projectName;
     private final String inviteCode;
 
     @Builder
-    public InviteEmailMessage(String to, String subject, String message, String inviteCode) {
+    public InviteEmailInfo(String to, String subject, String message, String projectName, String inviteCode) {
         super(to, subject, message);
+        this.projectName = projectName;
         this.inviteCode = inviteCode;
     }
 }
