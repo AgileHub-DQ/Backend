@@ -41,4 +41,9 @@ public class ProjectQueryService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
+    public Project findProjectById(long projectId) {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+    }
+
 }
