@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectQueryService {
 
+    private final ProjectRepository projectRepository;
+
     private final MemberService memberService;
     private final MemberProjectService memberProjectService;
-
-    private final ProjectRepository projectRepository;
 
     public List<ProjectResponse> getProjects(Long memberId) {
         memberService.validateMemberExist(memberId);
@@ -31,8 +31,13 @@ public class ProjectQueryService {
         return projects.stream().map(ProjectResponse::fromEntity).toList();
     }
 
-    public ProjectResponse findProjectById(Long projectId) {
-        return projectRepository.findById(projectId).map(ProjectResponse::fromEntity)
+    public Project findProject(String originKey) {
+        return projectRepository.findByKey(originKey)
+                .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+    }
+
+    public Long findProjectId(String originKey) {
+        return projectRepository.findIdByKey(originKey)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 

@@ -9,7 +9,7 @@ import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.MemberProjectService;
-import dynamicquad.agilehub.project.service.ProjectValidator;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SprintService {
 
-    private final ProjectValidator projectValidator;
+    private final ProjectQueryService projectQueryService;
     private final IssueValidator issueValidator;
     private final SprintValidator sprintValidator;
 
@@ -35,7 +35,7 @@ public class SprintService {
 
     @Transactional
     public SprintCreateResponse createSprint(String key, SprintCreateRequest request, AuthMember authMember) {
-        Project project = projectValidator.findProject(key);
+        Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
         Sprint sprint = request.toEntity();
@@ -93,7 +93,7 @@ public class SprintService {
     }
 
     private Long validateMemberInProject(String key, AuthMember authMember) {
-        Long projectId = projectValidator.findProjectId(key);
+        Long projectId = projectQueryService.findProjectId(key);
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
         return projectId;
     }
