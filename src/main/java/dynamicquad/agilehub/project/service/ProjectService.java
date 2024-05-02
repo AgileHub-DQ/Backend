@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProjectService {
 
-    private final ProjectValidator projectValidator;
+    private final ProjectQueryService projectQueryService;
     private final ProjectRepository projectRepository;
     private final MemberProjectService memberProjectService;
 
@@ -35,7 +35,7 @@ public class ProjectService {
 
     @Transactional
     public String updateProject(String originKey, ProjectUpdateRequest request, AuthMember authMember) {
-        Project project = projectValidator.findProject(originKey);
+        Project project = projectQueryService.findProject(originKey);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         memberProjectService.validateMemberRole(authMember, project.getId());
         validateKeyUniqueness(request.getKey());

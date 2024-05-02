@@ -38,10 +38,18 @@ public class Project extends BaseEntity {
         this.key = key;
     }
 
+    private Project(long id) {
+        this.id = id;
+    }
+
     public Project updateProject(ProjectUpdateRequest request) {
         this.name = request.getName();
         this.key = request.getKey();
         return this;
+    }
+
+    public static Project createPojoProject(long id) {
+        return new Project(id);
     }
 
 }

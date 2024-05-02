@@ -13,4 +13,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p.id FROM Project p WHERE p.key = :key")
     Optional<Long> findIdByKey(String key);
+
 }

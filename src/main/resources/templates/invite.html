@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<body>
+<div style="margin:100px;">
+    <h1> 안녕하세요! AgileHub 입니다.</h1>
+
+    <div align="center" style="border:1px solid black; font-family:verdana,sans-serif;">
+        <h3 style="color:blue" th:text="|${projectName} 초대 URL|"></h3>
+        <div style="font-size: 130%">
+            초대를 수락려면
+            <a th:href="@{https://www.agilehub.store/projects/invite(inviteCode=${inviteCode})}">여기</a>
+            로 접속해주세요.
+        </div>
+    </div>
+    <br/>
+</div>
+
+</body>
+</html>

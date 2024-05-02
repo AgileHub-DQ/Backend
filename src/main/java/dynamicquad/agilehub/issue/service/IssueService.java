@@ -8,7 +8,7 @@ import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.MemberProjectService;
-import dynamicquad.agilehub.project.service.ProjectValidator;
+import dynamicquad.agilehub.project.service.ProjectQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class IssueService {
 
-    private final ProjectValidator projectValidator;
+    private final ProjectQueryService projectQueryService;
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
     private final MemberProjectService memberProjectService;
@@ -31,7 +31,7 @@ public class IssueService {
         Project project = validateMemberInProject(key, authMember);
 
         return issueFactoryProvider.getIssueFactory(request.getType())
-            .createIssue(request, project);
+                .createIssue(request, project);
     }
 
 
@@ -45,7 +45,7 @@ public class IssueService {
         issueValidator.validateEqualsIssueType(issue, request.getType());
 
         issueFactoryProvider.getIssueFactory(request.getType())
-            .updateIssue(issue, project, request);
+                .updateIssue(issue, project, request);
     }
 
 
@@ -59,7 +59,7 @@ public class IssueService {
     }
 
     private Project validateMemberInProject(String key, AuthMember authMember) {
-        Project project = projectValidator.findProject(key);
+        Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         return project;
     }
