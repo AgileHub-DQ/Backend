@@ -110,11 +110,11 @@ public class IssueQueryService {
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
-            .map(epic -> {
-                AssigneeDto assigneeDto = createAssigneeDto(epic);
-                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
-            })
-            .toList();
+                .map(epic -> {
+                    AssigneeDto assigneeDto = createAssigneeDto(epic);
+                    return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
+                })
+                .toList();
     }
 
 
@@ -124,24 +124,24 @@ public class IssueQueryService {
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()
-            .map(story -> {
-                AssigneeDto assigneeDto = createAssigneeDto(story);
-                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
-            })
-            .toList();
+                .map(story -> {
+                    AssigneeDto assigneeDto = createAssigneeDto(story);
+                    return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
+                })
+                .toList();
     }
 
     public List<SimpleIssueResponse> getTasks(String key, AuthMember authMember) {
-        Project project = projectValidator.findProject(key);
+        Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Task> tasksByProject = taskRepository.findByProject(project);
 
         return tasksByProject.stream()
-            .map(task -> {
-                AssigneeDto assigneeDto = createAssigneeDto(task);
-                return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
-            })
-            .toList();
+                .map(task -> {
+                    AssigneeDto assigneeDto = createAssigneeDto(task);
+                    return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
+                })
+                .toList();
     }
 
     private AssigneeDto createAssigneeDto(Issue issue) {
