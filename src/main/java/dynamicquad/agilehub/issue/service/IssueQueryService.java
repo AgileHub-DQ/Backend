@@ -110,8 +110,11 @@ public class IssueQueryService {
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
-                .map(epic -> SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC))
-                .toList();
+            .map(epic -> {
+                AssigneeDto assigneeDto = createAssigneeDto(epic);
+                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
+            })
+            .toList();
     }
 
 
@@ -121,8 +124,24 @@ public class IssueQueryService {
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()
-                .map(story -> SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY))
-                .toList();
+            .map(story -> {
+                AssigneeDto assigneeDto = createAssigneeDto(story);
+                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
+            })
+            .toList();
+    }
+
+    public List<SimpleIssueResponse> getTasks(String key, AuthMember authMember) {
+        Project project = projectValidator.findProject(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
+        List<Task> tasksByProject = taskRepository.findByProject(project);
+
+        return tasksByProject.stream()
+            .map(task -> {
+                AssigneeDto assigneeDto = createAssigneeDto(task);
+                return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
+            })
+            .toList();
     }
 
     private AssigneeDto createAssigneeDto(Issue issue) {
@@ -130,11 +149,7 @@ public class IssueQueryService {
         if (issue.getAssignee() == null) {
             return new AssigneeDto();
         }
-        //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-        return AssigneeDto.builder()
-                .id(issue.getAssignee().getId())
-                .name(issue.getAssignee().getName())
-                .build();
+        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName());
     }
 
     private List<EpicWithStatisticResponse> getEpicWithStatisticResponses(List<EpicResponse> epicResponses,
