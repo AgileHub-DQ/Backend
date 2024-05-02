@@ -46,7 +46,7 @@ public class ProjectInviteService {
     public void receiveInviteEmail(MemberRequestDto.AuthMember authMember,
                                    String inviteCode) {
         InviteRedisEntity inviteRedisEntity = inviteRedisService.findByInviteCode(inviteCode);
-        Project project = Project.createPojoProject(Long.parseLong(inviteRedisEntity.getId()));
+        Project project = Project.createPojoProject(Long.parseLong(inviteRedisEntity.getProjectId()));
 
         memberProjectService.createMemberProject(authMember, project, MemberProjectRole.EDITOR);
     }
