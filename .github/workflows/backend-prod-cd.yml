@@ -51,13 +51,6 @@ jobs:
           docker rm -f agilehub-backend || true
           docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
           docker run -v prod-log:/app/log \
-          -e AWS_DB_URL=\$AWS_DB_URL \
-          -e AWS_DB_USERNAME=\$AWS_DB_USERNAME \
-          -e AWS_DB_PASSWORD=\$AWS_DB_PASSWORD \
-          -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
-          -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
-          -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} \
-          -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} \
-          -e REDIS_HOST=${{ secrets.REDIS_HOST }} \
+          --env-file .env \
           -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
           EOF
