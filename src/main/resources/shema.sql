@@ -25,7 +25,7 @@ create table image (
 create table issue (
                        number integer not null,
                        issue_id bigint not null auto_increment,
-                       member_id bigint,
+                       assignee_id bigint,
                        project_id bigint,
                        sprint_id bigint,
                        issue_type varchar(31) not null,
