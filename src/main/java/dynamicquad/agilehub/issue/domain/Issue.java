@@ -55,7 +55,7 @@ public abstract class Issue {
     private IssueStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignee_id")
+    @JoinColumn(name = "member_id")
     private Member assignee;
 
     @ManyToOne(fetch = FetchType.LAZY)

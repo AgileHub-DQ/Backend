@@ -25,7 +25,7 @@ create table image (
 create table issue (
                        number integer not null,
                        issue_id bigint not null auto_increment,
-                       assignee_id bigint,
+                       member_id bigint,
                        project_id bigint,
                        sprint_id bigint,
                        issue_type varchar(31) not null,
@@ -120,7 +120,7 @@ alter table image
 
 alter table issue
     add constraint FKgj9b27brkevgyi6mit3uq92lp
-        foreign key (assignee_id)
+        foreign key (member_id)
             references member (member_id);
 
 alter table issue
