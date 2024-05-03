@@ -60,9 +60,10 @@ public class Story extends Issue {
         if (this.epic != null) {
             this.epic.getStories().remove(this);
         }
-
         this.epic = upEpic;
-        upEpic.getStories().add(this);
+        if (upEpic != null) {
+            upEpic.getStories().add(this);
+        }
     }
 
 }
