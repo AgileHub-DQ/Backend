@@ -40,8 +40,8 @@ public class ProjectInviteController {
     })
     @PostMapping("/receive")
     public CommonResponse<Void> receiveInviteEmail(@Auth AuthMember authMember,
-                                                   @RequestBody String inviteCode) {
-        projectInviteService.receiveInviteEmail(authMember, inviteCode);
+                                                   @RequestBody ProjectInviteRequestDto.ReceiveInviteMail receiveInviteMail) {
+        projectInviteService.receiveInviteEmail(authMember, receiveInviteMail.getInviteCode());
         return CommonResponse.onSuccess(null);
     }
 
