@@ -43,7 +43,9 @@ public class Task extends Issue {
             this.story.getTasks().remove(this);
         }
         this.story = upStory;
-        upStory.getTasks().add(this);
+        if (upStory != null) {
+            upStory.getTasks().add(this);
+        }
 
     }
 }

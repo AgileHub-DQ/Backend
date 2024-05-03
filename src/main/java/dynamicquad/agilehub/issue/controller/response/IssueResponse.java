@@ -44,16 +44,19 @@ public class IssueResponse {
     public static class AssigneeDto {
         private Long id;
         private String name;
+        private String profileImageURL;
 
         public AssigneeDto() {
             this.id = null;
             this.name = "";
+            this.profileImageURL = "";
         }
 
-        public static AssigneeDto from(Long id, String name) {
+        public static AssigneeDto from(Long id, String name, String profileImageURL) {
             return AssigneeDto.builder()
                 .id(id)
                 .name(name)
+                .profileImageURL(profileImageURL)
                 .build();
         }
     }
