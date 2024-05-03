@@ -17,8 +17,6 @@ COPY . /app
 # Gradle 빌드를 실행하여 JAR 파일 생성
 ENV JWT_SECRET 12341234
 ENV REDIS_HOST redis
-ENV MAIL_USERNAME mail
-ENV MAIL_PASSWORD 12341234
 RUN gradle clean build --no-daemon
 
 FROM --platform=linux/arm64/v8 eclipse-temurin:17.0.10_7-jre
