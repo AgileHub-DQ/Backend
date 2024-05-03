@@ -66,10 +66,10 @@ public class IssueQueryService {
         List<SubIssueDto> childIssueDtos = issueFactory.createChildIssueDtos(issue);
 
         return IssueReadResponseDto.builder()
-                .issue(issueDto)
-                .parentIssue(parentIssueDto)
-                .childIssues(childIssueDtos)
-                .build();
+            .issue(issueDto)
+            .parentIssue(parentIssueDto)
+            .childIssues(childIssueDtos)
+            .build();
     }
 
 
@@ -90,8 +90,8 @@ public class IssueQueryService {
         List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
 
         return storiesByEpic.stream()
-                .map(story -> StoryResponse.fromEntity(story, project.getKey(), epicId))
-                .toList();
+            .map(story -> StoryResponse.fromEntity(story, project.getKey(), epicId))
+            .toList();
     }
 
     public List<TaskResponse> getTasksByStory(String key, Long storyId, AuthMember authMember) {
@@ -100,8 +100,8 @@ public class IssueQueryService {
         List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
 
         return tasksByStory.stream()
-                .map(task -> TaskResponse.fromEntity(task, project.getKey(), storyId))
-                .toList();
+            .map(task -> TaskResponse.fromEntity(task, project.getKey(), storyId))
+            .toList();
     }
 
     public List<SimpleIssueResponse> getEpics(String key, AuthMember authMember) {
@@ -110,11 +110,11 @@ public class IssueQueryService {
         List<Epic> epicsByProject = epicRepository.findByProject(project);
 
         return epicsByProject.stream()
-                .map(epic -> {
-                    AssigneeDto assigneeDto = createAssigneeDto(epic);
-                    return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
-                })
-                .toList();
+            .map(epic -> {
+                AssigneeDto assigneeDto = createAssigneeDto(epic);
+                return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
+            })
+            .toList();
     }
 
 
@@ -124,11 +124,11 @@ public class IssueQueryService {
         List<Story> storiesByProject = storyRepository.findByProject(project);
 
         return storiesByProject.stream()
-                .map(story -> {
-                    AssigneeDto assigneeDto = createAssigneeDto(story);
-                    return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
-                })
-                .toList();
+            .map(story -> {
+                AssigneeDto assigneeDto = createAssigneeDto(story);
+                return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
+            })
+            .toList();
     }
 
     public List<SimpleIssueResponse> getTasks(String key, AuthMember authMember) {
@@ -137,11 +137,11 @@ public class IssueQueryService {
         List<Task> tasksByProject = taskRepository.findByProject(project);
 
         return tasksByProject.stream()
-                .map(task -> {
-                    AssigneeDto assigneeDto = createAssigneeDto(task);
-                    return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
-                })
-                .toList();
+            .map(task -> {
+                AssigneeDto assigneeDto = createAssigneeDto(task);
+                return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
+            })
+            .toList();
     }
 
     private AssigneeDto createAssigneeDto(Issue issue) {
@@ -149,37 +149,38 @@ public class IssueQueryService {
         if (issue.getAssignee() == null) {
             return new AssigneeDto();
         }
-        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName());
+        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName(),
+            issue.getAssignee().getProfileImageUrl());
     }
 
     private List<EpicWithStatisticResponse> getEpicWithStatisticResponses(List<EpicResponse> epicResponses,
                                                                           List<EpicStatisticDto> epicStatics) {
         return epicResponses.stream()
-                .map(epic -> {
-                    EpicStatisticDto epicStatisticDto = epicStatics.stream()
-                            .filter(epicStatistic -> epicStatistic.getEpicId().equals(epic.getId()))
-                            .findFirst()
-                            .orElseThrow(() -> new GeneralException(ErrorStatus.EPIC_STATISTIC_NOT_FOUND));
-                    return new EpicWithStatisticResponse(epic, epicStatisticDto);
-                })
-                .toList();
+            .map(epic -> {
+                EpicStatisticDto epicStatisticDto = epicStatics.stream()
+                    .filter(epicStatistic -> epicStatistic.getEpicId().equals(epic.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new GeneralException(ErrorStatus.EPIC_STATISTIC_NOT_FOUND));
+                return new EpicWithStatisticResponse(epic, epicStatisticDto);
+            })
+            .toList();
     }
 
     private List<EpicResponse> getEpicResponses(List<Epic> epicsByProject, Project project) {
         return epicsByProject.stream()
-                .map(epic -> {
-                    Member assignee = epic.getAssignee();
-                    if (assignee == null) {
-                        return EpicResponse.fromEntity(epic, project.getKey(), new AssigneeDto());
-                    }
-                    AssigneeDto assigneeDto = AssigneeDto.builder()
-                            .id(assignee.getId())
-                            .name(assignee.getName())
-                            .build();
-                    return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
+            .map(epic -> {
+                Member assignee = epic.getAssignee();
+                if (assignee == null) {
+                    return EpicResponse.fromEntity(epic, project.getKey(), new AssigneeDto());
+                }
+                AssigneeDto assigneeDto = AssigneeDto.builder()
+                    .id(assignee.getId())
+                    .name(assignee.getName())
+                    .build();
+                return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
 
-                })
-                .toList();
+            })
+            .toList();
     }
 
 
