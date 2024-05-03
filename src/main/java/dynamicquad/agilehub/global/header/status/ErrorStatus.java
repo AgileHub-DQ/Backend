@@ -28,7 +28,6 @@ public enum ErrorStatus implements BaseStatus {
     PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND, "PROJECT_4002", "프로젝트가 없습니다."),
     MEMBER_NOT_IN_PROJECT(HttpStatus.NOT_FOUND, "PROJECT_4003", "프로젝트에 해당 멤버가 속하지 않습니다"),
 
-
     // File Error
     FILE_CONVERT_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "FILE_500", "파일 변환 실패"),
     FILE_NOT_EXIST(HttpStatus.NOT_FOUND, "FILE_4001", "파일이 존재하지 않습니다."),
