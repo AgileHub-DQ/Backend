@@ -120,7 +120,7 @@ alter table image
 
 alter table issue
     add constraint FKgj9b27brkevgyi6mit3uq92lp
-        foreign key (member_id)
+        foreign key (assignee_id)
             references member (member_id);
 
 alter table issue
