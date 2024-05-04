@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.global.config;
 
 import dynamicquad.agilehub.global.auth.util.MemberArgumentResolver;
+import dynamicquad.agilehub.global.util.StringToIssueLabelConverter;
 import dynamicquad.agilehub.global.util.StringToIssueStatusConverter;
 import dynamicquad.agilehub.global.util.StringToIssueTypeConverter;
 import java.util.List;
@@ -18,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(new StringToIssueTypeConverter());
         registry.addConverter(new StringToIssueStatusConverter());
+        registry.addConverter(new StringToIssueLabelConverter());
     }
 
     @Override
