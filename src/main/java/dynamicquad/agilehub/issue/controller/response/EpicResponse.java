@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.issue.controller.response;
 
 import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

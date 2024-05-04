@@ -4,7 +4,6 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
@@ -16,6 +15,7 @@ import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
 import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
@@ -134,9 +134,7 @@ public class EpicFactory implements IssueFactory {
 
     private SubIssueDto getStoryToSubIssueDto(Story story) {
 
-        AssigneeDto assigneeDto = Optional.ofNullable(story.getAssignee())
-            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
-            .orElse(new AssigneeDto());
+        AssigneeDto assigneeDto = getAssigneeDto(story);
 
         return SubIssueDto.builder()
             .issueId(story.getId())
@@ -146,6 +144,12 @@ public class EpicFactory implements IssueFactory {
             .title(story.getTitle())
             .assignee(assigneeDto)
             .build();
+    }
+
+    private AssigneeDto getAssigneeDto(Story story) {
+        return Optional.ofNullable(story.getAssignee())
+            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
+            .orElse(new AssigneeDto());
     }
 
     private Epic getEpic(Issue issue) {
