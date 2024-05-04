@@ -177,11 +177,7 @@ public class StoryFactory implements IssueFactory {
     private SubIssueDto getTaskToSubIssueDto(Task task) {
 
         AssigneeDto assigneeDto = Optional.ofNullable(task.getAssignee())
-            //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-            .map(assignee -> AssigneeDto.builder()
-                .id(assignee.getId())
-                .name(assignee.getName())
-                .build())
+            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
             .orElse(new AssigneeDto());
 
         return SubIssueDto.builder()
