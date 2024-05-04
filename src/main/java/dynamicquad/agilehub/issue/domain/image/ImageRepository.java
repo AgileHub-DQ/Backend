@@ -17,4 +17,8 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Modifying
     @Query("delete from Image i where i.path in :paths")
     void deletePaths(@Param("paths") List<String> paths);
+
+    @Modifying
+    @Query("delete from Image i where i in :images")
+    void deleteImages(@Param("images") List<Image> images);
 }
