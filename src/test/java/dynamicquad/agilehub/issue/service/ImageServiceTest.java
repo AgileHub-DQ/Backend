@@ -110,6 +110,51 @@ class ImageServiceTest {
         assertThat(em.find(Image.class, image1.getId())).isNotNull();
     }
 
+    @Test
+    @Transactional
+    void 이미지링크를_안넘겼을때_모두_삭제() {
+        //given
+        Image image1 = Image.builder()
+            .path("https://file1.jpg")
+            .build();
+        em.persist(image1);
+
+        Image image2 = Image.builder()
+            .path("https://file2.jpg")
+            .build();
+        em.persist(image2);
+
+        Image image3 = Image.builder()
+            .path("https://file2.jpg")
+            .build();
+        em.persist(image3);
+
+        Epic epic = Epic.builder()
+            .title("이슈1")
+            .content("이슈1 내용")
+            .status(IssueStatus.DO)
+            .build();
+        em.persist(epic);
+
+        image1.setIssue(epic);
+        image2.setIssue(epic);
+        image3.setIssue(epic);
+
+        List<String> files = null;
+        when(photoS3Manager.deletePhotos(files, "/issue")).thenReturn(true);
+
+        //when
+        imageService.cleanupMismatchedImages(epic, files, "/issue");
+
+        //then
+        em.flush();
+        em.clear();
+        assertThat(em.find(Image.class, image2.getId())).isNull();
+        assertThat(em.find(Image.class, image1.getId())).isNull();
+        assertThat(em.find(Image.class, image3.getId())).isNull();
+    }
+
+
     private Project createProject(String projectName, String projectKey) {
         return Project.builder()
             .name(projectName)
