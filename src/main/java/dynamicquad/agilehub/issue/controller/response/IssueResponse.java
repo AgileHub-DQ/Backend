@@ -18,6 +18,7 @@ public class IssueResponse {
         private String title;
         private String type;
         private String status;
+        private String label;
         private String startDate;
         private String endDate;
         private ContentDto content;

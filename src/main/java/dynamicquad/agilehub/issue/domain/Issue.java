@@ -29,6 +29,7 @@ import lombok.EqualsAndHashCode;
 import lombok.EqualsAndHashCode.Include;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,6 +38,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name = "issue_type")
 @Table(name = "issue")
 @Entity
+@SuperBuilder
 public abstract class Issue {
 
     @Id
@@ -53,6 +55,9 @@ public abstract class Issue {
 
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private IssueLabel label;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -76,20 +81,12 @@ public abstract class Issue {
         this.sprint = newSprint;
     }
 
-    protected Issue(String title, String content, int number, IssueStatus status, Member assignee, Project project) {
-        this.title = title;
-        this.content = content;
-        this.number = number;
-        this.status = status;
-        this.assignee = assignee;
-        this.project = project;
-
-    }
 
     protected void updateIssue(IssueEditRequest request, Member assignee) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.status = request.getStatus();
+        this.label = request.getLabel();
         this.assignee = assignee;
     }
 
