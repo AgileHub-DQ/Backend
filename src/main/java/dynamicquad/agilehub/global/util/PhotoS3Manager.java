@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PhotoS3Manager implements PhotoManager {
 
     private static final String SYSTEM_PATH = System.getProperty("user.dir"); // 현재 디렉터리
+    private static final String SLASH = "/";
 
     @Value("${aws.s3.bucket}")
     private String bucket;
@@ -59,14 +60,14 @@ public class PhotoS3Manager implements PhotoManager {
         ObjectMetadata metadata = getObjectMetadata(multipartFile);
         try {
             amazonS3.putObject(
-                new PutObjectRequest(bucket, workingDirectory + "/" + fileName, new FileInputStream(file), metadata));
+                new PutObjectRequest(bucket, workingDirectory + SLASH + fileName, new FileInputStream(file), metadata));
         } catch (FileNotFoundException e) {
             log.error("파일 업로드 실패", e);
             throw new GeneralException(ErrorStatus.FILE_UPLOAD_FAIL);
         }
 
         file.delete();
-        return rootURL + "/" + workingDirectory + "/" + fileName;
+        return rootURL + SLASH + workingDirectory + SLASH + fileName;
     }
 
     private ObjectMetadata getObjectMetadata(MultipartFile multipartFile) {
@@ -97,7 +98,7 @@ public class PhotoS3Manager implements PhotoManager {
     }
 
     private String getLocalDirectoryPath(String workingDirectory) {
-        return SYSTEM_PATH + "/" + localDirectory + workingDirectory;
+        return SYSTEM_PATH + SLASH + localDirectory + workingDirectory;
     }
 
 
@@ -133,11 +134,13 @@ public class PhotoS3Manager implements PhotoManager {
 
     @Override
     public void delete(String originalImageUrl, String workingDirectory) {
-        if (originalImageUrl.contains(rootURL + "/" + workingDirectory)) {
-            String fileName = originalImageUrl.substring(originalImageUrl.length() + 1);
-            amazonS3.deleteObject(bucket, workingDirectory + "/" + fileName);
+        if (originalImageUrl.contains(rootURL + SLASH + workingDirectory)) {
+            String combinedURL = rootURL + SLASH + workingDirectory + SLASH;
+            String fileName = originalImageUrl.substring(combinedURL.length());
+            amazonS3.deleteObject(bucket, workingDirectory + SLASH + fileName);
         }
     }
+
 
     public List<String> uploadPhotos(List<MultipartFile> files, String workingDirectory) {
 
