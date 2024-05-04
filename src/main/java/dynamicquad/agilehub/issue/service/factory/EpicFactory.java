@@ -51,18 +51,7 @@ public class EpicFactory implements IssueFactory {
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
-
-        // TODO: EPIC toEntity 메서드에 이 로직 넣기 [ ]
-        Epic epic = Epic.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .number(issueNumber)
-            .status(request.getStatus())
-            .assignee(assignee)
-            .project(project)
-            .startDate(request.getStartDate())
-            .endDate(request.getEndDate())
-            .build();
+        Epic epic = toEntity(request, project, issueNumber, assignee);
 
         issueRepository.save(epic);
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
@@ -100,13 +89,14 @@ public class EpicFactory implements IssueFactory {
     @Override
     public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
         Epic epic = getEpic(issue);
-        //TODO: IssueDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
+
         return IssueDto.builder()
             .issueId(epic.getId())
             .key(epic.getProject().getKey() + "-" + epic.getNumber())
             .title(epic.getTitle())
             .type(EPIC)
             .status(String.valueOf(epic.getStatus()))
+            .label(String.valueOf(epic.getLabel()))
             .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
             .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
             .content(contentDto)
@@ -158,6 +148,20 @@ public class EpicFactory implements IssueFactory {
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
         return epic;
+    }
+
+    private Epic toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee) {
+        return Epic.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .number(issueNumber)
+            .status(request.getStatus())
+            .label(request.getLabel())
+            .assignee(assignee)
+            .project(project)
+            .startDate(request.getStartDate())
+            .endDate(request.getEndDate())
+            .build();
     }
 
 
