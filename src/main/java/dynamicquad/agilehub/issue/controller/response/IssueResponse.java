@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.issue.controller.response;
 
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class IssueResponse {
         private String title;
         private String type;
         private String status;
+        private String label;
         private String startDate;
         private String endDate;
         private ContentDto content;
@@ -41,30 +43,6 @@ public class IssueResponse {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
-    public static class AssigneeDto {
-        private Long id;
-        private String name;
-        private String profileImageURL;
-
-        public AssigneeDto() {
-            this.id = null;
-            this.name = "";
-            this.profileImageURL = "";
-        }
-
-        public static AssigneeDto from(Long id, String name, String profileImageURL) {
-            return AssigneeDto.builder()
-                .id(id)
-                .name(name)
-                .profileImageURL(profileImageURL)
-                .build();
-        }
-    }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @EqualsAndHashCode
     public static class IssueReadResponseDto {
         private IssueDto issue;
         private SubIssueDto parentIssue;
@@ -79,6 +57,7 @@ public class IssueResponse {
         private Long issueId;
         private String key;
         private String status;
+        private String label;
         private String type;
         private String title;
         private AssigneeDto assignee;

@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.issue.controller.request;
 
+import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -37,6 +38,9 @@ public class IssueRequest {
         @Schema(description = "이슈 상태", example = "DO")
         @NotNull(message = "상태는 필수입니다.")
         private IssueStatus status;
+
+        @Schema(description = "이슈 라벨 (PLAN, DESIGN, DEVELOP, TEST, FEEDBACK)", example = "PLAN")
+        private IssueLabel label;
 
         @Schema(description = "이슈 내용", example = "이슈 내용")
         private String content;
@@ -79,6 +83,9 @@ public class IssueRequest {
         @Schema(description = "이슈 상태", example = "DO")
         @NotNull(message = "상태는 필수입니다.")
         private IssueStatus status;
+
+        @Schema(description = "이슈 라벨 (PLAN, DESIGN, DEVELOP, TEST, FEEDBACK)", example = "PLAN, DESIGN, DEVELOP, TEST, FEEDBACK")
+        private IssueLabel label;
 
         @Schema(description = "이슈 내용", example = "이슈 내용")
         private String content;

@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.domain.task;
 
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.member.domain.Member;
@@ -28,9 +29,10 @@ public class Task extends Issue {
     private Story story;
 
     @Builder
-    private Task(String title, String content, int number, IssueStatus status, Member assignee, Project project,
+    private Task(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+                 Project project,
                  Story story) {
-        super(title, content, number, status, assignee, project);
+        super(title, content, number, status, label, assignee, project);
         this.story = story;
         if (story != null) {
             story.getTasks().add(this);

@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.sprint.service;
 
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.IssueInSprintDto;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintReadResponse;
@@ -36,6 +36,7 @@ public class SprintQueryService {
                     return SprintReadResponse.builder()
                         .sprintId(sprint.getId())
                         .title(sprint.getTitle())
+                        .status(String.valueOf(sprint.getStatus()))
                         .description(sprint.getTargetDescription())
                         .startDate(sprint.getStartDate() == null ? "" : sprint.getStartDate().toString())
                         .endDate(sprint.getEndDate() == null ? "" : sprint.getEndDate().toString())

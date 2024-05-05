@@ -5,7 +5,6 @@ import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
@@ -14,6 +13,7 @@ import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
@@ -43,19 +43,8 @@ public class TaskFactory implements IssueFactory {
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
-
         Story upStory = retrieveStoryFromParentIssue(request.getParentId());
-
-        // TODO: TASK toEntity 메서드에 이 로직 넣기 [ ]
-        Task task = Task.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .number(issueNumber)
-            .status(request.getStatus())
-            .assignee(assignee)
-            .project(project)
-            .story(upStory)
-            .build();
+        Task task = toEntity(request, project, issueNumber, assignee, upStory);
 
         issueRepository.save(task);
         return task.getId();
@@ -82,13 +71,14 @@ public class TaskFactory implements IssueFactory {
     @Override
     public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
         Task task = getTask(issue);
-        //TODO: IssueDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
+
         return IssueDto.builder()
             .issueId(task.getId())
             .key(task.getProject().getKey() + "-" + task.getNumber())
             .title(task.getTitle())
             .type(TASK)
             .status(String.valueOf(task.getStatus()))
+            .label(String.valueOf(task.getLabel()))
             .startDate("")
             .endDate("")
             .content(contentDto)
@@ -106,23 +96,19 @@ public class TaskFactory implements IssueFactory {
             return null;
         }
 
-        AssigneeDto assigneeDto = Optional.ofNullable(story.getAssignee())
-            //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-            .map(assignee -> AssigneeDto.builder()
-                .id(assignee.getId())
-                .name(assignee.getName())
-                .build())
-            .orElse(new AssigneeDto());
+        AssigneeDto assigneeDto = createAssigneeDto(story);
 
         return SubIssueDto.builder()
             .issueId(story.getId())
             .key(story.getProject().getKey() + "-" + story.getNumber())
             .status(String.valueOf(story.getStatus()))
+            .label(String.valueOf(story.getLabel()))
             .type(STORY)
             .title(story.getTitle())
             .assignee(assigneeDto)
             .build();
     }
+
 
     @Override
     public List<SubIssueDto> createChildIssueDtos(Issue issue) {
@@ -155,6 +141,26 @@ public class TaskFactory implements IssueFactory {
             throw new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_STORY);
         }
 
+    }
+
+    private Task toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee,
+                          Story upStory) {
+        return Task.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .number(issueNumber)
+            .status(request.getStatus())
+            .label(request.getLabel())
+            .assignee(assignee)
+            .project(project)
+            .story(upStory)
+            .build();
+    }
+
+    private AssigneeDto createAssigneeDto(Story story) {
+        return Optional.ofNullable(story.getAssignee())
+            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
+            .orElse(new AssigneeDto());
     }
 
 }

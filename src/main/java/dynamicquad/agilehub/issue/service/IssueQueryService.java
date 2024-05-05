@@ -8,7 +8,6 @@ import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicWithStatisticResponse;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
@@ -24,7 +23,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
-import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.MemberProjectService;
@@ -90,7 +89,10 @@ public class IssueQueryService {
         List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
 
         return storiesByEpic.stream()
-            .map(story -> StoryResponse.fromEntity(story, project.getKey(), epicId))
+            .map(story -> {
+                AssigneeDto assigneeDto = createAssigneeDto(story);
+                return StoryResponse.fromEntity(story, project.getKey(), epicId, assigneeDto);
+            })
             .toList();
     }
 
@@ -100,7 +102,10 @@ public class IssueQueryService {
         List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
 
         return tasksByStory.stream()
-            .map(task -> TaskResponse.fromEntity(task, project.getKey(), storyId))
+            .map(task -> {
+                AssigneeDto assigneeDto = createAssigneeDto(task);
+                return TaskResponse.fromEntity(task, project.getKey(), storyId, assigneeDto);
+            })
             .toList();
     }
 
@@ -144,15 +149,6 @@ public class IssueQueryService {
             .toList();
     }
 
-    private AssigneeDto createAssigneeDto(Issue issue) {
-
-        if (issue.getAssignee() == null) {
-            return new AssigneeDto();
-        }
-        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName(),
-            issue.getAssignee().getProfileImageUrl());
-    }
-
     private List<EpicWithStatisticResponse> getEpicWithStatisticResponses(List<EpicResponse> epicResponses,
                                                                           List<EpicStatisticDto> epicStatics) {
         return epicResponses.stream()
@@ -169,18 +165,19 @@ public class IssueQueryService {
     private List<EpicResponse> getEpicResponses(List<Epic> epicsByProject, Project project) {
         return epicsByProject.stream()
             .map(epic -> {
-                Member assignee = epic.getAssignee();
-                if (assignee == null) {
-                    return EpicResponse.fromEntity(epic, project.getKey(), new AssigneeDto());
-                }
-                AssigneeDto assigneeDto = AssigneeDto.builder()
-                    .id(assignee.getId())
-                    .name(assignee.getName())
-                    .build();
+                AssigneeDto assigneeDto = createAssigneeDto(epic);
                 return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
-
             })
             .toList();
+    }
+
+    private AssigneeDto createAssigneeDto(Issue issue) {
+
+        if (issue.getAssignee() == null) {
+            return new AssigneeDto();
+        }
+        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName(),
+            issue.getAssignee().getProfileImageUrl());
     }
 
 

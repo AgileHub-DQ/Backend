@@ -1,9 +1,9 @@
 package dynamicquad.agilehub.sprint.controller.response;
 
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -40,6 +40,7 @@ public class SprintResponse {
     public static class SprintReadResponse {
         private Long sprintId;
         private String title;
+        private String status;
         private String description;
         private String startDate;
         private String endDate;
@@ -58,6 +59,7 @@ public class SprintResponse {
         private Long issueId;
         private String key;
         private String status;
+        private String label;
         private String startDate;
         private String endDate;
         private AssigneeDto assigneeDto;
@@ -68,6 +70,7 @@ public class SprintResponse {
             this.issueId = null;
             this.key = "";
             this.status = "";
+            this.label = "";
             this.startDate = "";
             this.endDate = "";
             this.assigneeDto = new AssigneeDto();
@@ -93,6 +96,7 @@ public class SprintResponse {
                 .issueId(issue.getId())
                 .key(key + "-" + issue.getNumber())
                 .status(String.valueOf(issue.getStatus()))
+                .label(String.valueOf(issue.getLabel()))
                 .startDate(startDate)
                 .endDate(endDate)
                 .assigneeDto(assigneeDto)

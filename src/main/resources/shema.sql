@@ -32,6 +32,7 @@ create table issue (
                        content varchar(255),
                        title varchar(255),
                        status enum ('DO','PROGRESS','DONE'),
+                       label enum ('NONE', 'PLAN', 'DESIGN', 'DEVELOP', 'TEST', 'FEEDBACK'),
                        primary key (issue_id)
 ) engine=InnoDB;
 create table member (

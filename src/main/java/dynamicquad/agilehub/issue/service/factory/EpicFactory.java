@@ -4,7 +4,6 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
@@ -16,6 +15,7 @@ import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
 import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
@@ -51,18 +51,7 @@ public class EpicFactory implements IssueFactory {
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
-
-        // TODO: EPIC toEntity 메서드에 이 로직 넣기 [ ]
-        Epic epic = Epic.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .number(issueNumber)
-            .status(request.getStatus())
-            .assignee(assignee)
-            .project(project)
-            .startDate(request.getStartDate())
-            .endDate(request.getEndDate())
-            .build();
+        Epic epic = toEntity(request, project, issueNumber, assignee);
 
         issueRepository.save(epic);
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
@@ -100,13 +89,14 @@ public class EpicFactory implements IssueFactory {
     @Override
     public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
         Epic epic = getEpic(issue);
-        //TODO: IssueDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
+
         return IssueDto.builder()
             .issueId(epic.getId())
             .key(epic.getProject().getKey() + "-" + epic.getNumber())
             .title(epic.getTitle())
             .type(EPIC)
             .status(String.valueOf(epic.getStatus()))
+            .label(String.valueOf(epic.getLabel()))
             .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
             .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
             .content(contentDto)
@@ -134,13 +124,7 @@ public class EpicFactory implements IssueFactory {
 
     private SubIssueDto getStoryToSubIssueDto(Story story) {
 
-        AssigneeDto assigneeDto = Optional.ofNullable(story.getAssignee())
-            //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-            .map(assignee -> AssigneeDto.builder()
-                .id(assignee.getId())
-                .name(assignee.getName())
-                .build())
-            .orElse(new AssigneeDto());
+        AssigneeDto assigneeDto = createAssigneeDto(story);
 
         return SubIssueDto.builder()
             .issueId(story.getId())
@@ -152,12 +136,32 @@ public class EpicFactory implements IssueFactory {
             .build();
     }
 
+    private AssigneeDto createAssigneeDto(Story story) {
+        return Optional.ofNullable(story.getAssignee())
+            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
+            .orElse(new AssigneeDto());
+    }
+
     private Epic getEpic(Issue issue) {
         if (!(issue instanceof Epic epic)) {
             log.error("issue is not instance of Epic = {}", issue.getClass());
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
         return epic;
+    }
+
+    private Epic toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee) {
+        return Epic.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .number(issueNumber)
+            .status(request.getStatus())
+            .label(request.getLabel())
+            .assignee(assignee)
+            .project(project)
+            .startDate(request.getStartDate())
+            .endDate(request.getEndDate())
+            .build();
     }
 
 
