@@ -124,7 +124,7 @@ public class EpicFactory implements IssueFactory {
 
     private SubIssueDto getStoryToSubIssueDto(Story story) {
 
-        AssigneeDto assigneeDto = getAssigneeDto(story);
+        AssigneeDto assigneeDto = createAssigneeDto(story);
 
         return SubIssueDto.builder()
             .issueId(story.getId())
@@ -136,7 +136,7 @@ public class EpicFactory implements IssueFactory {
             .build();
     }
 
-    private AssigneeDto getAssigneeDto(Story story) {
+    private AssigneeDto createAssigneeDto(Story story) {
         return Optional.ofNullable(story.getAssignee())
             .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
             .orElse(new AssigneeDto());

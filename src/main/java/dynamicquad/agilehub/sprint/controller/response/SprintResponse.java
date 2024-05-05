@@ -58,6 +58,7 @@ public class SprintResponse {
         private Long issueId;
         private String key;
         private String status;
+        private String label;
         private String startDate;
         private String endDate;
         private AssigneeDto assigneeDto;
@@ -68,6 +69,7 @@ public class SprintResponse {
             this.issueId = null;
             this.key = "";
             this.status = "";
+            this.label = "";
             this.startDate = "";
             this.endDate = "";
             this.assigneeDto = new AssigneeDto();
@@ -93,6 +95,7 @@ public class SprintResponse {
                 .issueId(issue.getId())
                 .key(key + "-" + issue.getNumber())
                 .status(String.valueOf(issue.getStatus()))
+                .label(String.valueOf(issue.getLabel()))
                 .startDate(startDate)
                 .endDate(endDate)
                 .assigneeDto(assigneeDto)

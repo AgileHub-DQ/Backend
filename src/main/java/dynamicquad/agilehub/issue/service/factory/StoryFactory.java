@@ -21,7 +21,6 @@ import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,29 +55,15 @@ public class StoryFactory implements IssueFactory {
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
         Epic upEpic = retrieveEpicFromParentIssue(request.getParentId());
-
-        // TODO: STORY toEntity 메서드에 이 로직 넣기 [ ]
-        Story story = Story.builder()
-            .title(request.getTitle())
-            .content(request.getContent())
-            .number(issueNumber)
-            .status(request.getStatus())
-            .assignee(assignee)
-            .project(project)
-            .startDate(request.getStartDate())
-            .endDate(request.getEndDate())
-            .epic(upEpic)
-            .build();
+        Story story = toEntity(request, project, issueNumber, assignee, upEpic);
 
         issueRepository.save(story);
-
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
             imageService.saveImages(story, request.getFiles(), WORKING_DIRECTORY);
         }
 
         return story.getId();
     }
-
 
     @Override
     public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
@@ -109,13 +94,14 @@ public class StoryFactory implements IssueFactory {
     @Override
     public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
         Story story = getStory(issue);
-        //TODO: IssueDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
+
         return IssueDto.builder()
             .issueId(story.getId())
             .key(story.getProject().getKey() + "-" + story.getNumber())
             .title(story.getTitle())
             .type(STORY)
             .status(String.valueOf(story.getStatus()))
+            .label(String.valueOf(story.getLabel()))
             .startDate(story.getStartDate() == null ? "" : story.getStartDate().toString())
             .endDate(story.getEndDate() == null ? "" : story.getEndDate().toString())
             .content(contentDto)
@@ -131,19 +117,13 @@ public class StoryFactory implements IssueFactory {
         if (epic == null) {
             return new SubIssueDto();
         }
-
-        AssigneeDto assigneeDto = Optional.ofNullable(epic.getAssignee())
-            //TODO: AssigneeDto 클래스에 해당 부분 fromEntity 메서드로 만들기 [ ]
-            .map(assignee -> AssigneeDto.builder()
-                .id(assignee.getId())
-                .name(assignee.getName())
-                .build())
-            .orElse(new AssigneeDto());
+        AssigneeDto assigneeDto = createAssigneeDto(epic);
 
         return SubIssueDto.builder()
             .issueId(epic.getId())
             .key(epic.getProject().getKey() + "-" + epic.getNumber())
             .status(String.valueOf(epic.getStatus()))
+            .label(String.valueOf(epic.getLabel()))
             .type(EPIC)
             .title(epic.getTitle())
             .assignee(assigneeDto)
@@ -176,14 +156,13 @@ public class StoryFactory implements IssueFactory {
 
     private SubIssueDto getTaskToSubIssueDto(Task task) {
 
-        AssigneeDto assigneeDto = Optional.ofNullable(task.getAssignee())
-            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
-            .orElse(new AssigneeDto());
+        AssigneeDto assigneeDto = createAssigneeDto(task);
 
         return SubIssueDto.builder()
             .issueId(task.getId())
             .key(task.getProject().getKey() + "-" + task.getNumber())
             .status(String.valueOf(task.getStatus()))
+            .label(String.valueOf(task.getLabel()))
             .type(TASK)
             .title(task.getTitle())
             .assignee(assigneeDto)
@@ -208,4 +187,30 @@ public class StoryFactory implements IssueFactory {
             throw new GeneralException(ErrorStatus.PARENT_ISSUE_NOT_EPIC);
         }
     }
+
+    private Story toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee, Epic upEpic) {
+        return Story.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .number(issueNumber)
+            .status(request.getStatus())
+            .label(request.getLabel())
+            .assignee(assignee)
+            .project(project)
+            .startDate(request.getStartDate())
+            .endDate(request.getEndDate())
+            .epic(upEpic)
+            .build();
+    }
+
+    private AssigneeDto createAssigneeDto(Issue issue) {
+
+        if (issue.getAssignee() == null) {
+            return new AssigneeDto();
+        }
+        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName(),
+            issue.getAssignee().getProfileImageUrl());
+    }
+
+
 }

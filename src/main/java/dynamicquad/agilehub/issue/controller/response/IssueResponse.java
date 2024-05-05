@@ -57,6 +57,7 @@ public class IssueResponse {
         private Long issueId;
         private String key;
         private String status;
+        private String label;
         private String type;
         private String title;
         private AssigneeDto assignee;

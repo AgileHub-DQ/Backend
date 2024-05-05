@@ -26,6 +26,7 @@ public class TaskResponse {
             .title(task.getTitle())
             .key(projectKey + "-" + task.getNumber())
             .status(task.getStatus().toString())
+            .label(task.getLabel().toString())
             .type(IssueType.TASK.toString())
             .parentId(parentId)
             .assignee(assigneeDto)
