@@ -27,7 +27,7 @@
 
 ### 프론트엔드
 
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/cfde0d1f-a6f2-41a9-8da7-ff8e9241df8d">
+<img width="80%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/06f863f9-a9e5-4f48-90c4-a03ea935f456">
 
 ### 백엔드
 
