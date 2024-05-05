@@ -27,15 +27,13 @@
 
 ### 프론트엔드
 
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 43 48" src="https://github.com/woowacourse-teams/2023-hang-log/assets/45068522/9284b40e-c931-4f04-ac78-9c97a548338e">
-
 ### 백엔드
 
 <img width="80%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/5ae46555-02d5-41e0-bf05-f9b6cdfa809e">
 
 ### 인프라
 
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/9bd8f63e-0bf5-4fb8-9383-6f03b3c28f1f">
+<img width="80%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/80aa0b22-01a3-4b9d-98b9-3d569c9f1647">
 
 <br>
 
@@ -79,4 +77,4 @@
 
 ## 더보기
 
-### AgileHub의 프로젝트를 더 알아보고 싶다면, [팀 WIKI](https://azure-capston.atlassian.net/wiki/x/3IAH)를 클릭해주세요.
+#### AgileHub의 프로젝트를 더 알아보고 싶다면, [팀 WIKI](https://azure-capston.atlassian.net/wiki/x/3IAH)를 클릭해주세요.
