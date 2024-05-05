@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.sprint.service;
 
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.AssigneeDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
+import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.IssueInSprintDto;
 import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintReadResponse;
