@@ -40,6 +40,7 @@ public class SprintResponse {
     public static class SprintReadResponse {
         private Long sprintId;
         private String title;
+        private String status;
         private String description;
         private String startDate;
         private String endDate;

@@ -36,6 +36,7 @@ public class SprintQueryService {
                     return SprintReadResponse.builder()
                         .sprintId(sprint.getId())
                         .title(sprint.getTitle())
+                        .status(String.valueOf(sprint.getStatus()))
                         .description(sprint.getTargetDescription())
                         .startDate(sprint.getStartDate() == null ? "" : sprint.getStartDate().toString())
                         .endDate(sprint.getEndDate() == null ? "" : sprint.getEndDate().toString())
