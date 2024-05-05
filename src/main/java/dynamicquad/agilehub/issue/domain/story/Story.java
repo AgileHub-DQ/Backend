@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.domain.story;
 
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.task.Task;
@@ -40,9 +41,10 @@ public class Story extends Issue {
     private List<Task> tasks = new ArrayList<>();
 
     @Builder
-    private Story(String title, String content, int number, IssueStatus status, Member assignee, Project project,
+    private Story(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+                  Project project,
                   int storyPoint, LocalDate startDate, LocalDate endDate, Epic epic) {
-        super(title, content, number, status, assignee, project);
+        super(title, content, number, status, label, assignee, project);
         this.storyPoint = storyPoint;
         this.startDate = startDate;
         this.endDate = endDate;

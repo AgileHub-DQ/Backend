@@ -16,10 +16,11 @@ public class EpicResponse {
     private String key;
     private String status;
     private String type;
+    private String label;
     private String startDate;
     private String endDate;
     private AssigneeDto assignee;
-    //TODO: 태그 추가 필요
+
 
     public static EpicResponse fromEntity(Epic epic, String projectKey, AssigneeDto assigneeDto) {
         return EpicResponse.builder()
@@ -27,6 +28,7 @@ public class EpicResponse {
             .title(epic.getTitle())
             .key(projectKey + "-" + epic.getNumber())
             .status(epic.getStatus().toString())
+            .label(epic.getLabel().toString())
             .type(IssueType.EPIC.toString())
             .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
             .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
