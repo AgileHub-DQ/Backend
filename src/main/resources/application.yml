@@ -24,3 +24,12 @@ aws:
     directory: /images
     workingDirectory:
       issue: issue
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: true
