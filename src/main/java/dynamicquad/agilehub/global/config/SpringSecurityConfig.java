@@ -58,7 +58,7 @@ public class SpringSecurityConfig {
             .logout(AbstractHttpConfigurer::disable)
             // requestMatchers 설정
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/oauth2/**", "/auth/success/**", "*/api-docs/**", "/swagger-ui/**")
+                .requestMatchers("/oauth2/**", "/auth/success/**", "*/api-docs/**", "/swagger-ui/**", "/actuator/**")
                 .permitAll()
                 .anyRequest().authenticated()
             )
