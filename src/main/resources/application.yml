@@ -25,13 +25,3 @@ aws:
     workingDirectory:
       issue: issue
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: [ "prometheus", "logfile" ]
-  endpoint:
-    prometheus:
-      enabled: true
-    logfile:
-      external-file: ./logs/agilehub-prod.log
