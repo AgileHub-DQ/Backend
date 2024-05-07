@@ -7,7 +7,10 @@ import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
+import dynamicquad.agilehub.member.dto.MemberResponseDto;
+import dynamicquad.agilehub.member.dto.MemberResponseDto.MemberList;
 import dynamicquad.agilehub.project.controller.response.ProjectResponseDto;
+import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
 import dynamicquad.agilehub.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +41,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final ProjectQueryService projectQueryService;
+    private final MemberProjectService memberProjectService;
 
     @Operation(summary = "프로젝트 생성", description = "프로젝트를 생성합니다.")
     @ApiResponses({
@@ -80,6 +84,15 @@ public class ProjectController {
         String updateKey = projectService.updateProject(key, request, authMember);
         return ResponseEntity.created(URI.create("/projects/" + updateKey + "/issues"))
                 .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
+    }
+
+    @GetMapping("/projects/{key}/members")
+    public CommonResponse<MemberResponseDto.MemberList> getMembers(@PathVariable String key,
+                                                                   @Auth AuthMember authMember) {
+        Long projectId = projectQueryService.findProjectId(key);
+        memberProjectService.validateMemberInProject(authMember.getId(), projectId);
+
+        return CommonResponse.onSuccess(MemberList.from(memberProjectService.findMembers(projectId)));
     }
 
 }
