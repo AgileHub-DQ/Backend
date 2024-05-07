@@ -86,6 +86,7 @@ public class ProjectController {
                 .body(CommonResponse.of(SuccessStatus.CREATED, updateKey));
     }
 
+    @Operation(summary = "프로젝트 멤버 조회", description = "프로젝트의 멤버 목록을 조회합니다.")
     @GetMapping("/projects/{key}/members")
     public CommonResponse<MemberResponseDto.MemberList> getMembers(@PathVariable String key,
                                                                    @Auth AuthMember authMember) {
