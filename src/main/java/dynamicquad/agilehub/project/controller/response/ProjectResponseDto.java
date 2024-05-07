@@ -9,18 +9,19 @@ import lombok.Getter;
 @Builder
 @Getter
 @EqualsAndHashCode
-public class ProjectResponse {
+public class ProjectResponseDto {
     private Long id;
     private String key;
     private String name;
     private LocalDate createdAt;
 
-    public static ProjectResponse fromEntity(Project project) {
-        return ProjectResponse.builder()
-            .id(project.getId())
-            .key(project.getKey())
-            .name(project.getName())
-            .createdAt(project.getCreatedAt().toLocalDate())
-            .build();
+    public static ProjectResponseDto fromEntity(Project project) {
+        return ProjectResponseDto.builder()
+                .id(project.getId())
+                .key(project.getKey())
+                .name(project.getName())
+                .createdAt(project.getCreatedAt().toLocalDate())
+                .build();
     }
+
 }
