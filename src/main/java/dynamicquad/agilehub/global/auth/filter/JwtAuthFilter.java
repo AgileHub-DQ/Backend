@@ -99,6 +99,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.contains("/oauth2") || path.contains("/api-docs") || path.contains("/swagger-ui") || path.contains(
-            "/actuator");
+            "/actuator") || path.contains("/favicon.ico") || path.contains("/error");
     }
 }
