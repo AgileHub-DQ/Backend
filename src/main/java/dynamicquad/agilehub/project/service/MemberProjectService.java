@@ -25,10 +25,10 @@ public class MemberProjectService {
         Member member = Member.createPojoByAuthMember(authMember.getId(), authMember.getName());
 
         MemberProject memberProject = MemberProject.builder()
-            .member(member)
-            .project(project)
-            .role(role)
-            .build();
+                .member(member)
+                .project(project)
+                .role(role)
+                .build();
 
         memberProjectRepository.save(memberProject);
     }
@@ -37,14 +37,18 @@ public class MemberProjectService {
         return memberProjectRepository.findProjectsByMemberId(memberId);
     }
 
+    public List<Member> findMembers(Long projectId) {
+        return memberProjectRepository.findMembersByProjectId(projectId);
+    }
+
     public void validateMemberInProject(Long memberId, Long projectId) {
         memberProjectRepository.findByMemberIdAndProjectId(memberId, projectId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
     }
 
     public void validateMemberRole(AuthMember authMember, Long projectId) {
         MemberProject memberProject = memberProjectRepository.findByMemberIdAndProjectId(authMember.getId(), projectId)
-            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_IN_PROJECT));
 
         if (memberProject.getRole() != MemberProjectRole.ADMIN) {
             throw new GeneralException(ErrorStatus.MEMBER_NOT_ADMIN);

@@ -11,7 +11,7 @@
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 //import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
-//import dynamicquad.agilehub.project.controller.response.ProjectResponse;
+//import dynamicquad.agilehub.project.controller.response.ProjectResponseDto;
 //import dynamicquad.agilehub.project.service.ProjectQueryService;
 //import dynamicquad.agilehub.project.service.ProjectService;
 //import java.util.List;
@@ -138,12 +138,12 @@
 //    @Test
 //    void 멤버가_소속된_프로젝트를_조회() throws Exception {
 //        //given
-//        List<ProjectResponse> projects = List.of(
-//            ProjectResponse.builder()
+//        List<ProjectResponseDto> projects = List.of(
+//            ProjectResponseDto.builder()
 //                .key("project")
 //                .name("프로젝트")
 //                .build(),
-//            ProjectResponse.builder()
+//            ProjectResponseDto.builder()
 //                .key("project2")
 //                .name("프로젝트2")
 //                .build()
