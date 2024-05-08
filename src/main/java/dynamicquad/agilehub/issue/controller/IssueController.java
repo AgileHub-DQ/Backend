@@ -5,6 +5,7 @@ import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEd
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
+import dynamicquad.agilehub.issue.controller.request.IssueRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
@@ -13,7 +14,6 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "이슈", description = "이슈를 생성하고 조회합니다.")
@@ -40,7 +41,7 @@ public class IssueController {
     private final IssueQueryService issueQueryService;
 
     @Operation(summary = "이슈 생성", description = "프로젝트의 이슈를 생성합니다.",
-        requestBody = @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueCreateRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueCreateRequest.class))))
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
     @PostMapping(value = "/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
@@ -66,7 +67,7 @@ public class IssueController {
 
 
     @Operation(summary = "이슈 수정", description = "프로젝트의 이슈를 수정합니다.",
-        requestBody = @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
@@ -77,6 +78,20 @@ public class IssueController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @Operation(summary = "이슈 상태 수정", description = "프로젝트의 이슈 상태를 수정합니다.")
+    @ApiResponse(responseCode = "204", description = "이슈 상태 수정 성공")
+    @PutMapping(value = "/projects/{key}/issues/{issueId}/status")
+    public CommonResponse<?> editProjectIssueStatus(
+        @Valid @RequestBody IssueRequest.IssueStatusRequest request,
+        @PathVariable("key") String key,
+        @PathVariable("issueId") Long issueId,
+        @Auth AuthMember authMember
+    ) {
+        
+        issueService.updateIssueStatus(key, issueId, authMember, request.getStatus());
+        return CommonResponse.of(SuccessStatus.OK, issueId);
+    }
 
     @Operation(summary = "이슈 삭제", description = "프로젝트의 이슈를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "이슈 삭제 성공")
