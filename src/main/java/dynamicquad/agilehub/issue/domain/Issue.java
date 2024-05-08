@@ -100,4 +100,8 @@ public abstract class Issue {
     }
 
 
+    public void updateStatus(IssueStatus updateStatus) {
+
+        this.status = updateStatus;
+    }
 }

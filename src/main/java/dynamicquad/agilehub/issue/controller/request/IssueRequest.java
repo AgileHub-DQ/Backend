@@ -111,4 +111,16 @@ public class IssueRequest {
         private Long parentId;
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class IssueStatusRequest {
+
+        @NotNull(message = "상태는 필수입니다.")
+        private IssueStatus status;
+
+    }
+
 }
