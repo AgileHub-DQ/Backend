@@ -50,7 +50,7 @@ jobs:
           ssh -i pem_key -o StrictHostKeyChecking=no ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_PUBLIC_IP }} << EOF
           docker rm -f agilehub-backend || true
           docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
-          docker run -v prod-vol:/app \
+          docker run -v /var/log/backend:/app/log \
           --env-file .env \
           -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
           EOF
