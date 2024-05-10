@@ -1,10 +1,10 @@
 package dynamicquad.agilehub.issue.service;
 
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
@@ -29,7 +29,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
 
     @Transactional
-    public Long createIssue(String key, IssueCreateRequest request, AuthMember authMember) {
+    public Long createIssue(String key, IssueRequestDto.CreateIssue request, AuthMember authMember) {
 
         Project project = validateMemberInProject(key, authMember);
 

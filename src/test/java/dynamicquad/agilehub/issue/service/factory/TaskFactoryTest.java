@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -53,7 +53,7 @@ class TaskFactoryTest {
         Long parentIssueId2 = task.getId();
 
         // when
-        IssueCreateRequest taskIssueRequest = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue taskIssueRequest = IssueRequestDto.CreateIssue.builder()
             .title("테스크 제목")
             .type(IssueType.TASK)
             .status(IssueStatus.DONE)
@@ -66,7 +66,7 @@ class TaskFactoryTest {
             .hasFieldOrPropertyWithValue("status", ErrorStatus.PARENT_ISSUE_NOT_STORY);
 
         // when
-        IssueCreateRequest taskIssueRequest1 = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue taskIssueRequest1 = IssueRequestDto.CreateIssue.builder()
             .title("테스크 제목")
             .type(IssueType.TASK)
             .status(IssueStatus.DONE)
@@ -95,7 +95,7 @@ class TaskFactoryTest {
         Long parentIssueId = story.getId();
 
         // when
-        IssueCreateRequest taskIssueRequest = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue taskIssueRequest = IssueRequestDto.CreateIssue.builder()
             .title("테스크 제목")
             .type(IssueType.TASK)
             .status(IssueStatus.DONE)

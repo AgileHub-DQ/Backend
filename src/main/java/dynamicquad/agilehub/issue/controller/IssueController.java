@@ -6,8 +6,8 @@ import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
@@ -41,10 +41,10 @@ public class IssueController {
     private final IssueQueryService issueQueryService;
 
     @Operation(summary = "이슈 생성", description = "프로젝트의 이슈를 생성합니다.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueCreateRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueRequestDto.CreateIssue.class))))
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
     @PostMapping(value = "/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
+    public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueRequestDto.CreateIssue request,
                                                 @PathVariable("key") String key,
                                                 @Auth AuthMember authMember) {
         Long issueId = issueService.createIssue(key, request, authMember);
@@ -88,7 +88,7 @@ public class IssueController {
         @PathVariable("issueId") Long issueId,
         @Auth AuthMember authMember
     ) {
-        
+
         issueService.updateIssueStatus(key, issueId, authMember, request.getStatus());
         return CommonResponse.of(SuccessStatus.OK, issueId);
     }

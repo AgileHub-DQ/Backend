@@ -1,17 +1,17 @@
 package dynamicquad.agilehub.issue.service.factory;
 
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
 
 public interface IssueFactory {
-    Long createIssue(IssueCreateRequest request, Project project);
+    Long createIssue(IssueRequestDto.CreateIssue request, Project project);
 
     ContentDto createContentDto(Issue issue);
 

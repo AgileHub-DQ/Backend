@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -57,7 +57,7 @@ class StoryFactoryTest {
         Long parentIssueId2 = task.getId();
 
         // when
-        IssueCreateRequest storyIssueRequest = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue storyIssueRequest = IssueRequestDto.CreateIssue.builder()
             .title("스토리 제목")
             .type(IssueType.STORY)
             .status(IssueStatus.DONE)
@@ -70,7 +70,7 @@ class StoryFactoryTest {
             .hasFieldOrPropertyWithValue("status", ErrorStatus.PARENT_ISSUE_NOT_EPIC);
 
         // when
-        IssueCreateRequest storyIssueRequest2 = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue storyIssueRequest2 = IssueRequestDto.CreateIssue.builder()
             .title("스토리 제목")
             .type(IssueType.STORY)
             .status(IssueStatus.DONE)
@@ -96,7 +96,7 @@ class StoryFactoryTest {
         em.persist(epic);
 
         // when
-        IssueCreateRequest storyIssueRequest = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue storyIssueRequest = IssueRequestDto.CreateIssue.builder()
             .title("스토리 제목")
             .type(IssueType.STORY)
             .status(IssueStatus.DO)
@@ -121,7 +121,7 @@ class StoryFactoryTest {
         em.persist(epic);
 
         // when
-        IssueCreateRequest storyIssueRequest = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue storyIssueRequest = IssueRequestDto.CreateIssue.builder()
             .title("스토리 제목")
             .type(IssueType.STORY)
             .status(IssueStatus.DO)

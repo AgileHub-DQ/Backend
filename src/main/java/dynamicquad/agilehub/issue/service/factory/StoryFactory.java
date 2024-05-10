@@ -2,7 +2,6 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
@@ -15,6 +14,7 @@ import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.service.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
@@ -48,7 +48,7 @@ public class StoryFactory implements IssueFactory {
 
     @Transactional
     @Override
-    public Long createIssue(IssueCreateRequest request, Project project) {
+    public Long createIssue(IssueRequestDto.CreateIssue request, Project project) {
         // TODO: 이슈가 삭제되면 이슈 번호가 중복될 수 있음 1번,2번,3번 이슈 생성뒤 2번 삭제하면 4번 이슈 생성시 3번이 되어 중복 [ ]
         // TODO: 이슈 번호 생성 로직을 따로 만들기 - number 최대로 큰 숫자 + 1로 로직 변경 [ ]
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
@@ -188,7 +188,8 @@ public class StoryFactory implements IssueFactory {
         }
     }
 
-    private Story toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee, Epic upEpic) {
+    private Story toEntity(IssueRequestDto.CreateIssue request, Project project, int issueNumber, Member assignee,
+                           Epic upEpic) {
         return Story.builder()
             .title(request.getTitle())
             .content(request.getContent())
