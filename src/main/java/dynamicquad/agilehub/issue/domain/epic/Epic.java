@@ -1,10 +1,10 @@
 package dynamicquad.agilehub.issue.domain.epic;
 
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.CascadeType;
@@ -39,7 +39,7 @@ public class Epic extends Issue {
         this.endDate = endDate;
     }
 
-    public void updateEpic(IssueEditRequest request, Member assignee) {
+    public void updateEpic(IssueRequestDto.EditIssue request, Member assignee) {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();

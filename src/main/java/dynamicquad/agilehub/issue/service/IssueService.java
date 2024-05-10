@@ -1,6 +1,5 @@
 package dynamicquad.agilehub.issue.service;
 
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -39,7 +38,7 @@ public class IssueService {
 
 
     @Transactional
-    public void updateIssue(String key, Long issueId, IssueEditRequest request, AuthMember authMember) {
+    public void updateIssue(String key, Long issueId, IssueRequestDto.EditIssue request, AuthMember authMember) {
 
         Project project = validateMemberInProject(key, authMember);
 

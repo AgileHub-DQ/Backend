@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -264,7 +263,7 @@ class EpicFactoryTest {
             .build();
         em.persist(epic);
 
-        IssueEditRequest request = IssueEditRequest.builder()
+        IssueRequestDto.EditIssue request = IssueRequestDto.EditIssue.builder()
             .title("이슈 제목")
             .status(IssueStatus.DO)
             .content("content 내용")

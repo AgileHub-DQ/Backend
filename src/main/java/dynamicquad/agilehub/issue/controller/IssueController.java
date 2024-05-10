@@ -1,7 +1,5 @@
 package dynamicquad.agilehub.issue.controller;
 
-import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
@@ -67,10 +65,10 @@ public class IssueController {
 
 
     @Operation(summary = "이슈 수정", description = "프로젝트의 이슈를 수정합니다.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueRequestDto.EditIssue.class))))
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
+    public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueRequestDto.EditIssue request,
                                               @PathVariable("key") String key, @PathVariable("issueId") Long issueId,
                                               @Auth AuthMember authMember) {
 

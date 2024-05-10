@@ -2,7 +2,6 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.controller.request.IssueType;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
@@ -66,7 +65,7 @@ public class StoryFactory implements IssueFactory {
     }
 
     @Override
-    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+    public Long updateIssue(Issue issue, Project project, IssueRequestDto.EditIssue request) {
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
 

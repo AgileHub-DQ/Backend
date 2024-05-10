@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.comment.domain.Comment;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.image.Image;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.domain.Sprint;
@@ -91,7 +91,7 @@ public abstract class Issue {
         this.project = project;
     }
 
-    protected void updateIssue(IssueEditRequest request, Member assignee) {
+    protected void updateIssue(IssueRequestDto.EditIssue request, Member assignee) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.status = request.getStatus();

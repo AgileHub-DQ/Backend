@@ -1,11 +1,11 @@
 package dynamicquad.agilehub.issue.domain.story;
 
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.task.Task;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.CascadeType;
@@ -54,7 +54,7 @@ public class Story extends Issue {
         }
     }
 
-    public void updateStory(IssueEditRequest request, Member assignee, Epic upEpic) {
+    public void updateStory(IssueRequestDto.EditIssue request, Member assignee, Epic upEpic) {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
