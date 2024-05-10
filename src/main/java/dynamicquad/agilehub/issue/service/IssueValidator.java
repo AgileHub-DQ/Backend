@@ -2,7 +2,7 @@ package dynamicquad.agilehub.issue.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import lombok.RequiredArgsConstructor;

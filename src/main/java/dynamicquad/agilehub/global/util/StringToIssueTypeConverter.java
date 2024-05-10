@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.global.util;
 
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToIssueTypeConverter implements Converter<String, IssueType> {

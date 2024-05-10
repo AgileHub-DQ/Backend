@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.issue.dto;
 
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -110,4 +110,15 @@ public class IssueRequestDto {
         private Long parentId;
     }
 
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class EditIssueStatus {
+
+        @NotNull(message = "상태는 필수입니다.")
+        private IssueStatus status;
+
+    }
 }

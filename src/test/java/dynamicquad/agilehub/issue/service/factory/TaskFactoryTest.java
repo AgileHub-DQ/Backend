@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;

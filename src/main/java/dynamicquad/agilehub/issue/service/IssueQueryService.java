@@ -4,7 +4,7 @@ import static dynamicquad.agilehub.issue.controller.response.IssueResponse.Issue
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicWithStatisticResponse;

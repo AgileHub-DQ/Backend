@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.issue.controller.response;
 
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;

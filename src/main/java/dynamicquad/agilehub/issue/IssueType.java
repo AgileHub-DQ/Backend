@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.issue.controller.request;
+package dynamicquad.agilehub.issue;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.stream.Stream;
@@ -10,7 +10,6 @@ public enum IssueType {
 
     @JsonCreator
     public static IssueType parsing(String value) {
-        log.info("IssueType parsing value: {}", value);
         return Stream.of(IssueType.values())
             .filter(status -> status.toString().equalsIgnoreCase(value))
             .findFirst()

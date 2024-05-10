@@ -3,7 +3,6 @@ package dynamicquad.agilehub.issue.controller;
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest;
 import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
@@ -81,7 +80,7 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 상태 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}/status")
     public CommonResponse<?> editProjectIssueStatus(
-        @Valid @RequestBody IssueRequest.IssueStatusRequest request,
+        @Valid @RequestBody IssueRequestDto.EditIssueStatus request,
         @PathVariable("key") String key,
         @PathVariable("issueId") Long issueId,
         @Auth AuthMember authMember

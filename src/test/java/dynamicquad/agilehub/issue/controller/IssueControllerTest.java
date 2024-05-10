@@ -9,7 +9,7 @@
 //import dynamicquad.agilehub.WithMockCustomUser;
 //import dynamicquad.agilehub.global.filter.JwtAuthFilter;
 //import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueRequestDto.CreateIssue;
-//import dynamicquad.agilehub.issue.controller.request.IssueType;
+//import dynamicquad.agilehub.issue.IssueType;
 //import dynamicquad.agilehub.issue.domain.IssueStatus;
 //import dynamicquad.agilehub.issue.service.IssueQueryService;
 //import dynamicquad.agilehub.issue.service.IssueService;
