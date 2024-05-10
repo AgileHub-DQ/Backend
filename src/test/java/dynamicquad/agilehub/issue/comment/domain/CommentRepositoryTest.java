@@ -2,6 +2,8 @@ package dynamicquad.agilehub.issue.comment.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.comment.domain.CommentRepository;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.member.domain.Member;

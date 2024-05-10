@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.issue.domain;
 
-import dynamicquad.agilehub.issue.comment.domain.Comment;
+import dynamicquad.agilehub.comment.domain.Comment;
 import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
 import dynamicquad.agilehub.issue.domain.image.Image;
 import dynamicquad.agilehub.member.domain.Member;

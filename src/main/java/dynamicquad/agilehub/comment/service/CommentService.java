@@ -1,11 +1,11 @@
-package dynamicquad.agilehub.issue.comment.service;
+package dynamicquad.agilehub.comment.service;
 
+import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.comment.domain.CommentRepository;
+import dynamicquad.agilehub.comment.response.CommentResponse.CommentCreateResponse;
+import dynamicquad.agilehub.comment.response.CommentResponse.CommentUpdateResponse;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.comment.domain.Comment;
-import dynamicquad.agilehub.issue.comment.domain.CommentRepository;
-import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
-import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdateResponse;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.domain.Member;
@@ -42,13 +42,13 @@ public class CommentService {
         Issue issue = issueValidator.findIssue(issueId);
 
         Member writer = memberRepository.findById(authMember.getId())
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         Comment comment = Comment.builder()
-                .content(content)
-                .writer(writer)
-                .issue(issue)
-                .build();
+            .content(content)
+            .writer(writer)
+            .issue(issue)
+            .build();
 
         return CommentCreateResponse.fromEntity(commentRepository.save(comment));
     }
@@ -59,7 +59,7 @@ public class CommentService {
         validate(key, issueId, authMember);
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
         validateMemberMatch(authMember, comment);
 
         commentRepository.delete(comment);
@@ -73,7 +73,7 @@ public class CommentService {
         validate(key, issueId, authMember);
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
         validateMemberMatch(authMember, comment);
 
         comment.updateComment(content);

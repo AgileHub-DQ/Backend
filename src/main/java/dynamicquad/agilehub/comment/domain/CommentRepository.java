@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.issue.comment.domain;
+package dynamicquad.agilehub.comment.domain;
 
 import dynamicquad.agilehub.issue.domain.Issue;
 import java.util.List;

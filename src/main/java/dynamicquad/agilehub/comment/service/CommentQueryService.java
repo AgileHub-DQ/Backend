@@ -1,9 +1,9 @@
-package dynamicquad.agilehub.issue.comment.service;
+package dynamicquad.agilehub.comment.service;
 
-import static dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentReadResponse;
+import static dynamicquad.agilehub.comment.response.CommentResponse.CommentReadResponse;
 
-import dynamicquad.agilehub.issue.comment.domain.Comment;
-import dynamicquad.agilehub.issue.comment.domain.CommentRepository;
+import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.comment.domain.CommentRepository;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.project.domain.Project;

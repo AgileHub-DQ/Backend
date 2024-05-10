@@ -1,14 +1,14 @@
-package dynamicquad.agilehub.issue.comment;
+package dynamicquad.agilehub.comment;
 
-import static dynamicquad.agilehub.issue.comment.request.CommentRequest.CommentCreateRequest;
+import static dynamicquad.agilehub.comment.request.CommentRequest.CommentCreateRequest;
 
+import dynamicquad.agilehub.comment.response.CommentResponse.CommentCreateResponse;
+import dynamicquad.agilehub.comment.response.CommentResponse.CommentUpdateResponse;
+import dynamicquad.agilehub.comment.service.CommentQueryService;
+import dynamicquad.agilehub.comment.service.CommentService;
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
-import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentUpdateResponse;
-import dynamicquad.agilehub.issue.comment.service.CommentQueryService;
-import dynamicquad.agilehub.issue.comment.service.CommentService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

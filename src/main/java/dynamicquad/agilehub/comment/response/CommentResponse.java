@@ -1,6 +1,6 @@
-package dynamicquad.agilehub.issue.comment.response;
+package dynamicquad.agilehub.comment.response;
 
-import dynamicquad.agilehub.issue.comment.domain.Comment;
+import dynamicquad.agilehub.comment.domain.Comment;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

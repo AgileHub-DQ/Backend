@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.issue.comment.request;
+package dynamicquad.agilehub.comment.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
