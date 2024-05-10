@@ -49,7 +49,7 @@
 
 ## 모니터링 구조도
 
-![모니터링 구조도]()
+<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/da43cf14-7254-4765-a66f-17678c4b87ba">
 
 ## 로그인 요청 흐름도
 
