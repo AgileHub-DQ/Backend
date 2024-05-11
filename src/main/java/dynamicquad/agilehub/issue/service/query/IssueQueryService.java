@@ -1,20 +1,21 @@
-package dynamicquad.agilehub.issue.service;
+package dynamicquad.agilehub.issue.service.query;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Epic;
-import dynamicquad.agilehub.issue.repository.EpicRepository;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.repository.StoryRepository;
 import dynamicquad.agilehub.issue.domain.Task;
-import dynamicquad.agilehub.issue.repository.TaskRepository;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.SimpleIssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
+import dynamicquad.agilehub.issue.repository.EpicRepository;
+import dynamicquad.agilehub.issue.repository.StoryRepository;
+import dynamicquad.agilehub.issue.repository.TaskRepository;
+import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;

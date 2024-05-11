@@ -7,7 +7,7 @@ import dynamicquad.agilehub.issue.dto.SimpleIssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
-import dynamicquad.agilehub.issue.service.IssueQueryService;
+import dynamicquad.agilehub.issue.service.query.IssueQueryService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

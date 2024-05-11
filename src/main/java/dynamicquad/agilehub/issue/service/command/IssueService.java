@@ -1,9 +1,10 @@
-package dynamicquad.agilehub.issue.service;
+package dynamicquad.agilehub.issue.service.command;
 
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
+import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;

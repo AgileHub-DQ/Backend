@@ -1,8 +1,8 @@
-package dynamicquad.agilehub.issue.service;
+package dynamicquad.agilehub.issue.service.command;
 
 import dynamicquad.agilehub.global.util.PhotoS3Manager;
-import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Image;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.repository.ImageRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

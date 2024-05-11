@@ -11,8 +11,8 @@
 //import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueRequestDto.CreateIssue;
 //import dynamicquad.agilehub.issue.IssueType;
 //import dynamicquad.agilehub.issue.domain.IssueStatus;
-//import dynamicquad.agilehub.issue.service.IssueQueryService;
-//import dynamicquad.agilehub.issue.service.IssueService;
+//import dynamicquad.agilehub.issue.service.query.IssueQueryService;
+//import dynamicquad.agilehub.issue.service.command.IssueService;
 //import java.time.LocalDate;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

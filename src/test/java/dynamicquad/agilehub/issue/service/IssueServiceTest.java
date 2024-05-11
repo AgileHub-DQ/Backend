@@ -2,10 +2,11 @@ package dynamicquad.agilehub.issue.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
+import dynamicquad.agilehub.issue.service.command.IssueService;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.MemberProject;
