@@ -2,10 +2,10 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueRepository;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.story.Story;
-import dynamicquad.agilehub.issue.domain.story.StoryRepository;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
+import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Story;
+import dynamicquad.agilehub.issue.repository.StoryRepository;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto.SubIssueDetail;

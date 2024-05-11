@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.issue.domain;
+package dynamicquad.agilehub.issue.repository;
 
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;

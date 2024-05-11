@@ -2,9 +2,9 @@ package dynamicquad.agilehub.issue.dto;
 
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.image.Image;
-import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Image;
+import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import java.util.List;
 import lombok.AllArgsConstructor;

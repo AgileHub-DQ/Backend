@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.issue.domain.epic;
+package dynamicquad.agilehub.issue.repository;
 
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;

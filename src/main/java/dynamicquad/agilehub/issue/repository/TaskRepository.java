@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.issue.domain.task;
+package dynamicquad.agilehub.issue.repository;
 
+import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

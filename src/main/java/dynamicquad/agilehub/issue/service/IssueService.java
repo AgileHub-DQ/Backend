@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.issue.service;
 
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueRepository;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;

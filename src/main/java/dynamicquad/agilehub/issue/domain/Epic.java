@@ -1,11 +1,7 @@
-package dynamicquad.agilehub.issue.domain.epic;
+package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueLabel;
-import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;

@@ -2,6 +2,8 @@ package dynamicquad.agilehub.issue.domain.image;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import dynamicquad.agilehub.issue.domain.Image;
+import dynamicquad.agilehub.issue.repository.ImageRepository;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

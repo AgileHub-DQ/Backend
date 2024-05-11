@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.issue.dto.backlog;
 
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -1,8 +1,8 @@
 package dynamicquad.agilehub.sprint.controller.response;
 
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;

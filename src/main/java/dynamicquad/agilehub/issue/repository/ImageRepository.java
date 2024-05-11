@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.issue.domain.image;
+package dynamicquad.agilehub.issue.repository;
 
+import dynamicquad.agilehub.issue.domain.Image;
 import dynamicquad.agilehub.issue.domain.Issue;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

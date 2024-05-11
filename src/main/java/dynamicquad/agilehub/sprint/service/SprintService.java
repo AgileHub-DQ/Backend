@@ -4,7 +4,7 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueRepository;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
