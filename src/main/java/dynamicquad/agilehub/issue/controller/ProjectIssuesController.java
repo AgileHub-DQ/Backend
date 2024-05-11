@@ -3,7 +3,7 @@ package dynamicquad.agilehub.issue.controller;
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
+import dynamicquad.agilehub.issue.dto.SimpleIssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
@@ -62,7 +62,7 @@ public class ProjectIssuesController {
 
     @Operation(summary = "프로젝트에 할당된 에픽 간단한 조회", description = "프로젝트에 할당된 에픽들을 간단하게 조회하는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "에픽 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponseDto.ReadIssue.class)))}
     )
     @GetMapping(value = "/projects/{key}/epics", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectEpics(@PathVariable("key") String key, @Auth AuthMember authMember) {
@@ -72,7 +72,7 @@ public class ProjectIssuesController {
 
     @Operation(summary = "프로젝트에 할당된 스토리 간단한 조회", description = "프로젝트에 할당된 스토리들을 간단하게 조회하는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "스토리 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponseDto.ReadIssue.class)))}
     )
     @GetMapping(value = "/projects/{key}/stories", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectStories(@PathVariable("key") String key, @Auth AuthMember authMember) {
@@ -82,7 +82,7 @@ public class ProjectIssuesController {
 
     @Operation(summary = "프로젝트에 할당된 테스크 간단한 조회", description = "프로젝트에 할당된 테스크들을 간단하게 조회하는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = SimpleIssueResponseDto.ReadIssue.class)))}
     )
     @GetMapping(value = "/projects/{key}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectTasks(@PathVariable("key") String key, @Auth AuthMember authMember) {
