@@ -4,7 +4,6 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
-import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
@@ -15,6 +14,7 @@ import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
+import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
@@ -70,7 +70,8 @@ public class IssueQueryService {
         return getEpicWithStatisticResponses(epicDetailForBacklogs, epicStatics);
     }
 
-    public List<StoryResponse> getStoriesByEpic(String key, Long epicId, AuthMember authMember) {
+    public List<StoryResponseDto.StoryDetailForBacklog> getStoriesByEpic(String key, Long epicId,
+                                                                         AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
@@ -78,7 +79,7 @@ public class IssueQueryService {
         return storiesByEpic.stream()
             .map(story -> {
                 AssigneeDto assigneeDto = AssigneeDto.from(story);
-                return StoryResponse.fromEntity(story, project.getKey(), epicId, assigneeDto);
+                return StoryResponseDto.StoryDetailForBacklog.from(story, project.getKey(), epicId, assigneeDto);
             })
             .toList();
     }
