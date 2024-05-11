@@ -2,9 +2,9 @@ package dynamicquad.agilehub.issue.domain.epic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.story.Story;
+import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -66,7 +66,7 @@ class EpicRepositoryTest {
         em.flush();
         em.clear();
         // When
-        List<EpicStatisticDto> epicStatics = epicRepository.getEpicStatics(project1.getId());
+        List<EpicResponseDto.EpicStatistic> epicStatics = epicRepository.getEpicStatics(project1.getId());
         // Then
         assertThat(epicStatics).hasSize(2);
         assertThat(epicStatics.get(0).getStoriesCount()).isEqualTo(2);

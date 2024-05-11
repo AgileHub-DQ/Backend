@@ -3,10 +3,10 @@ package dynamicquad.agilehub.issue.controller;
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.response.EpicResponse;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
 import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
+import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +29,7 @@ public class ProjectIssuesController {
 
     @Operation(summary = "프로젝트에 할당된 에픽과 통계 정보 조회", description = "프로젝트에 할당된 에픽들과 에픽에 속한 스토리들에 대한 통계정보를 조회하는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "에픽과 통계정보 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "에픽과 통계정보 조회 성공", content = @Content(schema = @Schema(implementation = EpicResponseDto.EpicDetailForBacklog.class)))}
     )
     @GetMapping(value = "/projects/{key}/epics/stats", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectEpicsWithStats(@PathVariable("key") String key, @Auth AuthMember authMember) {

@@ -3,9 +3,6 @@ package dynamicquad.agilehub.issue.service;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.controller.response.EpicResponse;
-import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
-import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicWithStatisticResponse;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
 import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
@@ -17,6 +14,7 @@ import dynamicquad.agilehub.issue.domain.story.StoryRepository;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
+import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
@@ -47,16 +45,13 @@ public class IssueQueryService {
     public IssueResponseDto.IssueAndSubIssueDetail getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectQueryService.findProjectId(key);
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
-
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
 
-        IssueType issueType = issueValidator.getIssueType(issueId);
-        IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueType);
+        IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueValidator.getIssueType(issueId));
 
-        IssueResponseDto.ContentDto contentDto = issueFactory.createContentDto(issue);
-        AssigneeDto assigneeDto = AssigneeDto.from(issue);
-        IssueResponseDto.IssueDetail issueDetail = issueFactory.createIssueDetail(issue, contentDto, assigneeDto);
+        IssueResponseDto.IssueDetail issueDetail = issueFactory.createIssueDetail(issue,
+            issueFactory.createContentDto(issue), AssigneeDto.from(issue));
         IssueResponseDto.SubIssueDetail parentIssue = issueFactory.createParentIssue(issue);
         List<IssueResponseDto.SubIssueDetail> childIssueList = issueFactory.createChildIssueDtos(issue);
 
@@ -64,15 +59,15 @@ public class IssueQueryService {
     }
 
 
-    public List<EpicWithStatisticResponse> getEpicsWithStats(String key, AuthMember authMember) {
+    public List<EpicResponseDto.EpicDetailWithStatistic> getEpicsWithStats(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
         List<Epic> epicsByProject = epicRepository.findByProject(project);
-        List<EpicResponse> epicResponses = getEpicResponses(epicsByProject, project);
-        List<EpicStatisticDto> epicStatics = epicRepository.getEpicStatics(project.getId());
+        List<EpicResponseDto.EpicDetailForBacklog> epicDetailForBacklogs = getEpicResponses(epicsByProject, project);
+        List<EpicResponseDto.EpicStatistic> epicStatics = epicRepository.getEpicStatics(project.getId());
 
-        return getEpicWithStatisticResponses(epicResponses, epicStatics);
+        return getEpicWithStatisticResponses(epicDetailForBacklogs, epicStatics);
     }
 
     public List<StoryResponse> getStoriesByEpic(String key, Long epicId, AuthMember authMember) {
@@ -141,24 +136,25 @@ public class IssueQueryService {
             .toList();
     }
 
-    private List<EpicWithStatisticResponse> getEpicWithStatisticResponses(List<EpicResponse> epicResponses,
-                                                                          List<EpicStatisticDto> epicStatics) {
-        return epicResponses.stream()
+    private List<EpicResponseDto.EpicDetailWithStatistic> getEpicWithStatisticResponses(
+        List<EpicResponseDto.EpicDetailForBacklog> epics,
+        List<EpicResponseDto.EpicStatistic> epicStatistics) {
+        return epics.stream()
             .map(epic -> {
-                EpicStatisticDto epicStatisticDto = epicStatics.stream()
+                EpicResponseDto.EpicStatistic epicStatisticDto = epicStatistics.stream()
                     .filter(epicStatistic -> epicStatistic.getEpicId().equals(epic.getId()))
                     .findFirst()
                     .orElseThrow(() -> new GeneralException(ErrorStatus.EPIC_STATISTIC_NOT_FOUND));
-                return new EpicWithStatisticResponse(epic, epicStatisticDto);
+                return new EpicResponseDto.EpicDetailWithStatistic(epic, epicStatisticDto);
             })
             .toList();
     }
 
-    private List<EpicResponse> getEpicResponses(List<Epic> epicsByProject, Project project) {
+    private List<EpicResponseDto.EpicDetailForBacklog> getEpicResponses(List<Epic> epicsByProject, Project project) {
         return epicsByProject.stream()
             .map(epic -> {
-                AssigneeDto assigneeDto = AssigneeDto.from(epic);
-                return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
+                AssigneeDto assignee = AssigneeDto.from(epic);
+                return EpicResponseDto.EpicDetailForBacklog.from(epic, project.getKey(), assignee);
             })
             .toList();
     }
