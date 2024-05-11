@@ -4,9 +4,9 @@ import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
-import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
+import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +50,7 @@ public class ProjectIssuesController {
 
     @Operation(summary = "스토리에 속하는 테스크들 조회", description = "스토리 아이디를 부모이슈로 요청해서 테스크들만 가져오는 API",
         responses = {
-            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = TaskResponse.class)))}
+            @ApiResponse(responseCode = "200", description = "테스크 조회 성공", content = @Content(schema = @Schema(implementation = TaskResponseDto.TaskDetailForBacklog.class)))}
     )
     @GetMapping(value = "/projects/{key}/stories/{storyId}/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getStoryTasks(@PathVariable("key") String key, @PathVariable("storyId") Long storyId,

@@ -4,7 +4,6 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
-import dynamicquad.agilehub.issue.controller.response.TaskResponse;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.epic.EpicRepository;
@@ -15,6 +14,7 @@ import dynamicquad.agilehub.issue.domain.task.TaskRepository;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
+import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
@@ -84,7 +84,7 @@ public class IssueQueryService {
             .toList();
     }
 
-    public List<TaskResponse> getTasksByStory(String key, Long storyId, AuthMember authMember) {
+    public List<TaskResponseDto.TaskDetailForBacklog> getTasksByStory(String key, Long storyId, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
@@ -92,7 +92,7 @@ public class IssueQueryService {
         return tasksByStory.stream()
             .map(task -> {
                 AssigneeDto assigneeDto = AssigneeDto.from(task);
-                return TaskResponse.fromEntity(task, project.getKey(), storyId, assigneeDto);
+                return TaskResponseDto.TaskDetailForBacklog.from(task, project.getKey(), storyId, assigneeDto);
             })
             .toList();
     }
