@@ -1,6 +1,8 @@
 package dynamicquad.agilehub.issue.domain.task;
 
 
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -49,5 +51,12 @@ public class Task extends Issue {
             upStory.getTasks().add(this);
         }
 
+    }
+
+    public static Task extractFromIssue(Issue issue) {
+        if (!(issue instanceof Task task)) {
+            throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
+        }
+        return task;
     }
 }

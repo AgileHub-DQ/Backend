@@ -1,5 +1,7 @@
 package dynamicquad.agilehub.member.dto;
 
+import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -27,4 +29,17 @@ public class AssigneeDto {
             .profileImageURL(profileImageURL)
             .build();
     }
+
+    public static AssigneeDto from(Issue issue) {
+        Member assignee = issue.getAssignee();
+        if (assignee == null) {
+            return new AssigneeDto();
+        }
+        return AssigneeDto.builder()
+            .id(assignee.getId())
+            .name(assignee.getName())
+            .profileImageURL(assignee.getProfileImageUrl())
+            .build();
+    }
+
 }

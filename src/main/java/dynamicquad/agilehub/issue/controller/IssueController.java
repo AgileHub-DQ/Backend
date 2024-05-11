@@ -3,8 +3,8 @@ package dynamicquad.agilehub.issue.controller;
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto.IssueAndSubIssueDetail;
 import dynamicquad.agilehub.issue.service.IssueQueryService;
 import dynamicquad.agilehub.issue.service.IssueService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
@@ -53,7 +53,7 @@ public class IssueController {
 
     @Operation(summary = "이슈 상세 조회", description = "프로젝트의 이슈를 조회합니다.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
+            @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueAndSubIssueDetail.class)))}
     )
     @GetMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId,

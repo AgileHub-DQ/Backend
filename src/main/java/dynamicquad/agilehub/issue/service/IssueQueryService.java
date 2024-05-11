@@ -1,16 +1,11 @@
 package dynamicquad.agilehub.issue.service;
 
-import static dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
-
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicStatisticDto;
 import dynamicquad.agilehub.issue.controller.response.EpicResponse.EpicWithStatisticResponse;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.controller.response.SimpleIssueResponse;
 import dynamicquad.agilehub.issue.controller.response.StoryResponse;
 import dynamicquad.agilehub.issue.controller.response.TaskResponse;
@@ -21,6 +16,7 @@ import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.story.StoryRepository;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.domain.task.TaskRepository;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
@@ -48,7 +44,7 @@ public class IssueQueryService {
     private final TaskRepository taskRepository;
 
 
-    public IssueReadResponseDto getIssue(String key, Long issueId, AuthMember authMember) {
+    public IssueResponseDto.IssueAndSubIssueDetail getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectQueryService.findProjectId(key);
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
 
@@ -58,17 +54,13 @@ public class IssueQueryService {
         IssueType issueType = issueValidator.getIssueType(issueId);
         IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueType);
 
-        ContentDto contentDto = issueFactory.createContentDto(issue);
-        AssigneeDto assigneeDto = createAssigneeDto(issue);
-        IssueDto issueDto = issueFactory.createIssueDto(issue, contentDto, assigneeDto);
-        SubIssueDto parentIssueDto = issueFactory.createParentIssueDto(issue);
-        List<SubIssueDto> childIssueDtos = issueFactory.createChildIssueDtos(issue);
+        IssueResponseDto.ContentDto contentDto = issueFactory.createContentDto(issue);
+        AssigneeDto assigneeDto = AssigneeDto.from(issue);
+        IssueResponseDto.IssueDetail issueDetail = issueFactory.createIssueDetail(issue, contentDto, assigneeDto);
+        IssueResponseDto.SubIssueDetail parentIssue = issueFactory.createParentIssue(issue);
+        List<IssueResponseDto.SubIssueDetail> childIssueList = issueFactory.createChildIssueDtos(issue);
 
-        return IssueReadResponseDto.builder()
-            .issue(issueDto)
-            .parentIssue(parentIssueDto)
-            .childIssues(childIssueDtos)
-            .build();
+        return IssueResponseDto.IssueAndSubIssueDetail.from(issueDetail, parentIssue, childIssueList);
     }
 
 
@@ -90,7 +82,7 @@ public class IssueQueryService {
 
         return storiesByEpic.stream()
             .map(story -> {
-                AssigneeDto assigneeDto = createAssigneeDto(story);
+                AssigneeDto assigneeDto = AssigneeDto.from(story);
                 return StoryResponse.fromEntity(story, project.getKey(), epicId, assigneeDto);
             })
             .toList();
@@ -103,7 +95,7 @@ public class IssueQueryService {
 
         return tasksByStory.stream()
             .map(task -> {
-                AssigneeDto assigneeDto = createAssigneeDto(task);
+                AssigneeDto assigneeDto = AssigneeDto.from(task);
                 return TaskResponse.fromEntity(task, project.getKey(), storyId, assigneeDto);
             })
             .toList();
@@ -116,7 +108,7 @@ public class IssueQueryService {
 
         return epicsByProject.stream()
             .map(epic -> {
-                AssigneeDto assigneeDto = createAssigneeDto(epic);
+                AssigneeDto assigneeDto = AssigneeDto.from(epic);
                 return SimpleIssueResponse.fromEntity(epic, project.getKey(), IssueType.EPIC, assigneeDto);
             })
             .toList();
@@ -130,7 +122,7 @@ public class IssueQueryService {
 
         return storiesByProject.stream()
             .map(story -> {
-                AssigneeDto assigneeDto = createAssigneeDto(story);
+                AssigneeDto assigneeDto = AssigneeDto.from(story);
                 return SimpleIssueResponse.fromEntity(story, project.getKey(), IssueType.STORY, assigneeDto);
             })
             .toList();
@@ -143,7 +135,7 @@ public class IssueQueryService {
 
         return tasksByProject.stream()
             .map(task -> {
-                AssigneeDto assigneeDto = createAssigneeDto(task);
+                AssigneeDto assigneeDto = AssigneeDto.from(task);
                 return SimpleIssueResponse.fromEntity(task, project.getKey(), IssueType.TASK, assigneeDto);
             })
             .toList();
@@ -165,19 +157,10 @@ public class IssueQueryService {
     private List<EpicResponse> getEpicResponses(List<Epic> epicsByProject, Project project) {
         return epicsByProject.stream()
             .map(epic -> {
-                AssigneeDto assigneeDto = createAssigneeDto(epic);
+                AssigneeDto assigneeDto = AssigneeDto.from(epic);
                 return EpicResponse.fromEntity(epic, project.getKey(), assigneeDto);
             })
             .toList();
-    }
-
-    private AssigneeDto createAssigneeDto(Issue issue) {
-
-        if (issue.getAssignee() == null) {
-            return new AssigneeDto();
-        }
-        return AssigneeDto.from(issue.getAssignee().getId(), issue.getAssignee().getName(),
-            issue.getAssignee().getProfileImageUrl());
     }
 
 

@@ -3,20 +3,17 @@ package dynamicquad.agilehub.issue.service.factory;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueRepository;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,9 +27,6 @@ public class TaskFactory implements IssueFactory {
 
     private final IssueRepository issueRepository;
     private final MemberService memberService;
-
-    private final String TASK = "TASK";
-    private final String STORY = "STORY";
 
     @Transactional
     @Override
@@ -54,73 +48,39 @@ public class TaskFactory implements IssueFactory {
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
 
-        Task task = getTask(issue);
+        Task task = Task.extractFromIssue(issue);
         Story upStory = retrieveStoryFromParentIssue(request.getParentId());
         task.updateTask(request, assignee, upStory);
         return task.getId();
     }
 
     @Override
-    public ContentDto createContentDto(Issue issue) {
-        return ContentDto.builder()
-            .text(issue.getContent())
-            .build();
+    public IssueResponseDto.ContentDto createContentDto(Issue issue) {
+        return IssueResponseDto.ContentDto.from(issue);
     }
 
     @Override
-    public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
-        Task task = getTask(issue);
-
-        return IssueDto.builder()
-            .issueId(task.getId())
-            .key(task.getProject().getKey() + "-" + task.getNumber())
-            .title(task.getTitle())
-            .type(TASK)
-            .status(String.valueOf(task.getStatus()))
-            .label(String.valueOf(task.getLabel()))
-            .startDate("")
-            .endDate("")
-            .content(contentDto)
-            .assignee(assigneeDto)
-            .build();
+    public IssueResponseDto.IssueDetail createIssueDetail(Issue issue, IssueResponseDto.ContentDto contentDto,
+                                                          AssigneeDto assigneeDto) {
+        return IssueResponseDto.IssueDetail.from(issue, contentDto, assigneeDto, IssueType.TASK);
     }
 
 
     @Override
-    public SubIssueDto createParentIssueDto(Issue issue) {
-        Task task = getTask(issue);
+    public IssueResponseDto.SubIssueDetail createParentIssue(Issue issue) {
+        Task task = Task.extractFromIssue(issue);
         Story story = task.getStory();
-
         if (story == null) {
             return null;
         }
-
-        AssigneeDto assigneeDto = createAssigneeDto(story);
-
-        return SubIssueDto.builder()
-            .issueId(story.getId())
-            .key(story.getProject().getKey() + "-" + story.getNumber())
-            .status(String.valueOf(story.getStatus()))
-            .label(String.valueOf(story.getLabel()))
-            .type(STORY)
-            .title(story.getTitle())
-            .assignee(assigneeDto)
-            .build();
+        AssigneeDto assigneeDto = AssigneeDto.from(story);
+        return IssueResponseDto.SubIssueDetail.from(story, IssueType.STORY, assigneeDto);
     }
 
 
     @Override
-    public List<SubIssueDto> createChildIssueDtos(Issue issue) {
+    public List<IssueResponseDto.SubIssueDetail> createChildIssueDtos(Issue issue) {
         return List.of();
-    }
-
-
-    private Task getTask(Issue issue) {
-        if (!(issue instanceof Task task)) {
-            log.error("issue is not instance of Task = {}", issue.getClass());
-            throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
-        }
-        return task;
     }
 
     private Story retrieveStoryFromParentIssue(Long parentId) {
@@ -156,10 +116,5 @@ public class TaskFactory implements IssueFactory {
             .build();
     }
 
-    private AssigneeDto createAssigneeDto(Story story) {
-        return Optional.ofNullable(story.getAssignee())
-            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
-            .orElse(new AssigneeDto());
-    }
 
 }

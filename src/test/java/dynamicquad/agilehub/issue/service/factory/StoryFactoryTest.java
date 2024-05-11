@@ -6,12 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.epic.Epic;
 import dynamicquad.agilehub.issue.domain.story.Story;
 import dynamicquad.agilehub.issue.domain.task.Task;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto.SubIssueDetail;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -176,7 +176,7 @@ class StoryFactoryTest {
 
         // when
         Story storyFromDB = em.find(Story.class, story.getId());
-        List<SubIssueDto> childIssueDtos = storyFactory.createChildIssueDtos(storyFromDB);
+        List<SubIssueDetail> childIssueDtos = storyFactory.createChildIssueDtos(storyFromDB);
         // then
         assertThat(childIssueDtos).hasSize(2);
         assertThat(childIssueDtos.get(0).getTitle()).isEqualTo("task1");

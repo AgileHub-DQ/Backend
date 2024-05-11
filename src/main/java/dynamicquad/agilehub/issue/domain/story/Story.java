@@ -1,5 +1,7 @@
 package dynamicquad.agilehub.issue.domain.story;
 
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueLabel;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
@@ -66,6 +68,13 @@ public class Story extends Issue {
         if (upEpic != null) {
             upEpic.getStories().add(this);
         }
+    }
+
+    public static Story extractFromIssue(Issue issue) {
+        if (!(issue instanceof Story story)) {
+            throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
+        }
+        return story;
     }
 
 }
