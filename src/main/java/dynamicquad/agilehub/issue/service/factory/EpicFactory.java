@@ -1,25 +1,20 @@
 package dynamicquad.agilehub.issue.service.factory;
 
-import dynamicquad.agilehub.global.exception.GeneralException;
-import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueDto;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.SubIssueDto;
+import dynamicquad.agilehub.issue.IssueType;
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueRepository;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.image.Image;
-import dynamicquad.agilehub.issue.domain.story.Story;
-import dynamicquad.agilehub.issue.domain.story.StoryRepository;
-import dynamicquad.agilehub.issue.service.ImageService;
+import dynamicquad.agilehub.issue.domain.Story;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto.SubIssueDetail;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
+import dynamicquad.agilehub.issue.repository.StoryRepository;
+import dynamicquad.agilehub.issue.service.command.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
 import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,12 +35,11 @@ public class EpicFactory implements IssueFactory {
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
-    private String EPIC = "EPIC";
     private String STORY = "STORY";
 
     @Transactional
     @Override
-    public Long createIssue(IssueCreateRequest request, Project project) {
+    public Long createIssue(IssueRequestDto.CreateIssue request, Project project) {
         // TODO: 이슈가 삭제되면 이슈 번호가 중복될 수 있음 1번,2번,3번 이슈 생성뒤 2번 삭제하면 4번 이슈 생성시 3번이 되어 중복 [ ]
         // TODO: 이슈 번호 생성 로직을 따로 만들기 - number 최대로 큰 숫자 + 1로 로직 변경 [ ]
         int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
@@ -63,94 +57,55 @@ public class EpicFactory implements IssueFactory {
 
     @Transactional
     @Override
-    public Long updateIssue(Issue issue, Project project, IssueEditRequest request) {
+    public Long updateIssue(Issue issue, Project project, IssueRequestDto.EditIssue request) {
 
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
 
-        Epic epic = getEpic(issue);
+        Epic epic = Epic.extractFromIssue(issue);
         epic.updateEpic(request, assignee);
         imageService.cleanupMismatchedImages(epic, request.getImageUrls(), WORKING_DIRECTORY);
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
-            log.info("uploading images");
             imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
         }
         return epic.getId();
     }
 
     @Override
-    public ContentDto createContentDto(Issue issue) {
-
-        return ContentDto.builder()
-            .text(issue.getContent())
-            .imagesURLs(issue.getImages().stream().map(Image::getPath).toList())
-            .build();
+    public IssueResponseDto.ContentDto createContentDto(Issue issue) {
+        return IssueResponseDto.ContentDto.from(issue);
     }
 
     @Override
-    public IssueDto createIssueDto(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
-        Epic epic = getEpic(issue);
-
-        return IssueDto.builder()
-            .issueId(epic.getId())
-            .key(epic.getProject().getKey() + "-" + epic.getNumber())
-            .title(epic.getTitle())
-            .type(EPIC)
-            .status(String.valueOf(epic.getStatus()))
-            .label(String.valueOf(epic.getLabel()))
-            .startDate(epic.getStartDate() == null ? "" : epic.getStartDate().toString())
-            .endDate(epic.getEndDate() == null ? "" : epic.getEndDate().toString())
-            .content(contentDto)
-            .assignee(assigneeDto)
-            .build();
+    public IssueResponseDto.IssueDetail createIssueDetail(Issue issue, IssueResponseDto.ContentDto contentDto,
+                                                          AssigneeDto assigneeDto) {
+        return IssueResponseDto.IssueDetail.from(issue, contentDto, assigneeDto, IssueType.EPIC);
     }
 
     @Override
-    public SubIssueDto createParentIssueDto(Issue issue) {
-        return new SubIssueDto();
+    public IssueResponseDto.SubIssueDetail createParentIssue(Issue issue) {
+        return new IssueResponseDto.SubIssueDetail();
     }
 
     @Override
-    public List<SubIssueDto> createChildIssueDtos(Issue issue) {
-        Epic epic = getEpic(issue);
+    public List<IssueResponseDto.SubIssueDetail> createChildIssueDtos(Issue issue) {
+        Epic epic = Epic.extractFromIssue(issue);
         List<Story> stories = storyRepository.findByEpicId(epic.getId());
         if (stories.isEmpty()) {
             return List.of();
         }
 
         return stories.stream()
-            .map(this::getStoryToSubIssueDto)
+            .map(this::getStoryToSubIssue)
             .toList();
     }
 
-    private SubIssueDto getStoryToSubIssueDto(Story story) {
-
-        AssigneeDto assigneeDto = createAssigneeDto(story);
-
-        return SubIssueDto.builder()
-            .issueId(story.getId())
-            .key(story.getProject().getKey() + "-" + story.getNumber())
-            .status(String.valueOf(story.getStatus()))
-            .type(STORY)
-            .title(story.getTitle())
-            .assignee(assigneeDto)
-            .build();
+    private SubIssueDetail getStoryToSubIssue(Story story) {
+        AssigneeDto assigneeDto = AssigneeDto.from(story);
+        return IssueResponseDto.SubIssueDetail.from(story, IssueType.STORY, assigneeDto);
     }
 
-    private AssigneeDto createAssigneeDto(Story story) {
-        return Optional.ofNullable(story.getAssignee())
-            .map(assignee -> AssigneeDto.from(assignee.getId(), assignee.getName(), assignee.getProfileImageUrl()))
-            .orElse(new AssigneeDto());
-    }
 
-    private Epic getEpic(Issue issue) {
-        if (!(issue instanceof Epic epic)) {
-            log.error("issue is not instance of Epic = {}", issue.getClass());
-            throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
-        }
-        return epic;
-    }
-
-    private Epic toEntity(IssueCreateRequest request, Project project, int issueNumber, Member assignee) {
+    private Epic toEntity(IssueRequestDto.CreateIssue request, Project project, int issueNumber, Member assignee) {
         return Epic.builder()
             .title(request.getTitle())
             .content(request.getContent())

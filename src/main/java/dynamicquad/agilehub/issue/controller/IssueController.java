@@ -1,15 +1,12 @@
 package dynamicquad.agilehub.issue.controller;
 
-import static dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.IssueReadResponseDto;
-import dynamicquad.agilehub.issue.service.IssueQueryService;
-import dynamicquad.agilehub.issue.service.IssueService;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto.IssueAndSubIssueDetail;
+import dynamicquad.agilehub.issue.service.command.IssueService;
+import dynamicquad.agilehub.issue.service.query.IssueQueryService;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,10 +38,10 @@ public class IssueController {
     private final IssueQueryService issueQueryService;
 
     @Operation(summary = "이슈 생성", description = "프로젝트의 이슈를 생성합니다.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueCreateRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueRequestDto.CreateIssue.class))))
     @ApiResponse(responseCode = "201", description = "이슈 생성 성공")
     @PostMapping(value = "/projects/{key}/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueCreateRequest request,
+    public ResponseEntity<?> createProjectIssue(@Valid @ModelAttribute IssueRequestDto.CreateIssue request,
                                                 @PathVariable("key") String key,
                                                 @Auth AuthMember authMember) {
         Long issueId = issueService.createIssue(key, request, authMember);
@@ -56,7 +53,7 @@ public class IssueController {
 
     @Operation(summary = "이슈 상세 조회", description = "프로젝트의 이슈를 조회합니다.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueReadResponseDto.class)))}
+            @ApiResponse(responseCode = "200", description = "이슈 조회 성공", content = @Content(schema = @Schema(implementation = IssueAndSubIssueDetail.class)))}
     )
     @GetMapping(value = "/projects/{key}/issues/{issueId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse<?> getProjectIssue(@PathVariable("key") String key, @PathVariable("issueId") Long issueId,
@@ -67,10 +64,10 @@ public class IssueController {
 
 
     @Operation(summary = "이슈 수정", description = "프로젝트의 이슈를 수정합니다.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueEditRequest.class))))
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = IssueRequestDto.EditIssue.class))))
     @ApiResponse(responseCode = "204", description = "이슈 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueEditRequest request,
+    public ResponseEntity<?> editProjectIssue(@Valid @ModelAttribute IssueRequestDto.EditIssue request,
                                               @PathVariable("key") String key, @PathVariable("issueId") Long issueId,
                                               @Auth AuthMember authMember) {
 
@@ -83,12 +80,12 @@ public class IssueController {
     @ApiResponse(responseCode = "204", description = "이슈 상태 수정 성공")
     @PutMapping(value = "/projects/{key}/issues/{issueId}/status")
     public CommonResponse<?> editProjectIssueStatus(
-        @Valid @RequestBody IssueRequest.IssueStatusRequest request,
+        @Valid @RequestBody IssueRequestDto.EditIssueStatus request,
         @PathVariable("key") String key,
         @PathVariable("issueId") Long issueId,
         @Auth AuthMember authMember
     ) {
-        
+
         issueService.updateIssueStatus(key, issueId, authMember, request.getStatus());
         return CommonResponse.of(SuccessStatus.OK, issueId);
     }

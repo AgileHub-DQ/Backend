@@ -2,11 +2,11 @@ package dynamicquad.agilehub.issue.comment;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dynamicquad.agilehub.issue.comment.domain.Comment;
-import dynamicquad.agilehub.issue.comment.response.CommentResponse.CommentCreateResponse;
-import dynamicquad.agilehub.issue.comment.service.CommentService;
+import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.comment.response.CommentResponse.CommentCreateResponse;
+import dynamicquad.agilehub.comment.service.CommentService;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.MemberProject;

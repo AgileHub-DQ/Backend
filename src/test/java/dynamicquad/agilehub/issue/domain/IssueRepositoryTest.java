@@ -2,9 +2,7 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.story.Story;
-import dynamicquad.agilehub.issue.domain.task.Task;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

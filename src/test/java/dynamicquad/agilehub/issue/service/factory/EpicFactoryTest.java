@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueCreateRequest;
-import dynamicquad.agilehub.issue.controller.request.IssueRequest.IssueEditRequest;
-import dynamicquad.agilehub.issue.controller.request.IssueType;
-import dynamicquad.agilehub.issue.controller.response.IssueResponse.ContentDto;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.epic.Epic;
-import dynamicquad.agilehub.issue.domain.image.Image;
+import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Image;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto;
+import dynamicquad.agilehub.issue.dto.IssueResponseDto.ContentDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
@@ -62,7 +62,7 @@ class EpicFactoryTest {
             .build();
         em.persist(memberProject2);
 
-        IssueCreateRequest request = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue request = IssueRequestDto.CreateIssue.builder()
             .title("이슈 제목")
             .type(IssueType.EPIC)
             .status(IssueStatus.DO)
@@ -102,7 +102,7 @@ class EpicFactoryTest {
         Project project2 = createProject("프로젝트2", "project2");
         em.persist(project2);
 
-        IssueCreateRequest request = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue request = IssueRequestDto.CreateIssue.builder()
             .title("이슈 제목")
             .type(IssueType.EPIC)
             .status(IssueStatus.DO)
@@ -139,7 +139,7 @@ class EpicFactoryTest {
             .build();
         em.persist(memberProject1);
 
-        IssueCreateRequest request = IssueCreateRequest.builder()
+        IssueRequestDto.CreateIssue request = IssueRequestDto.CreateIssue.builder()
             .title("이슈 제목")
             .type(IssueType.EPIC)
             .status(IssueStatus.DO)
@@ -190,7 +190,7 @@ class EpicFactoryTest {
         em.persist(image2);
 
         //when
-        ContentDto contentDto = epicFactory.createContentDto(epic);
+        IssueResponseDto.ContentDto contentDto = epicFactory.createContentDto(epic);
 
         //then
         assertThat(contentDto.getText()).isEqualTo("content 내용");
@@ -264,7 +264,7 @@ class EpicFactoryTest {
             .build();
         em.persist(epic);
 
-        IssueEditRequest request = IssueEditRequest.builder()
+        IssueRequestDto.EditIssue request = IssueRequestDto.EditIssue.builder()
             .title("이슈 제목")
             .status(IssueStatus.DO)
             .content("content 내용")

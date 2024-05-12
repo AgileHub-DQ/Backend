@@ -2,7 +2,7 @@ package dynamicquad.agilehub.issue.service.factory;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.controller.request.IssueType;
+import dynamicquad.agilehub.issue.IssueType;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Qualifier;
