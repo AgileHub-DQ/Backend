@@ -92,6 +92,8 @@ create table story (
 create table task (
                       issue_id bigint not null,
                       story_id bigint,
+                      start_date timestamp(6),
+                      end_date timestamp(6),
                       primary key (issue_id)
 ) engine=InnoDB;
 

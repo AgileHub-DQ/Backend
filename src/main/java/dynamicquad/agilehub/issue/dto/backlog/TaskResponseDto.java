@@ -22,6 +22,8 @@ public class TaskResponseDto {
         private String status;
         private String label;
         private String type;
+        private String startDate;
+        private String endDate;
         private Long parentId;
         private AssigneeDto assignee;
 
@@ -34,6 +36,8 @@ public class TaskResponseDto {
                 .status(String.valueOf(task.getStatus()))
                 .label(String.valueOf(task.getLabel()))
                 .type(IssueType.TASK.toString())
+                .startDate(task.getStartDate() == null ? "" : task.getStartDate().toString())
+                .endDate(task.getEndDate() == null ? "" : task.getEndDate().toString())
                 .parentId(parentId)
                 .assignee(assigneeDto)
                 .build();

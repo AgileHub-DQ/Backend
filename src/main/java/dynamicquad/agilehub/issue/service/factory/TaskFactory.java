@@ -4,11 +4,12 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
+import dynamicquad.agilehub.issue.service.command.ImageService;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
@@ -16,6 +17,7 @@ import dynamicquad.agilehub.project.domain.Project;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskFactory implements IssueFactory {
 
     private final IssueRepository issueRepository;
+    private final ImageService imageService;
     private final MemberService memberService;
+
+    @Value("${aws.s3.workingDirectory.issue}")
+    private String WORKING_DIRECTORY;
 
     @Transactional
     @Override
@@ -40,6 +46,9 @@ public class TaskFactory implements IssueFactory {
         Task task = toEntity(request, project, issueNumber, assignee, upStory);
 
         issueRepository.save(task);
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            imageService.saveImages(task, request.getFiles(), WORKING_DIRECTORY);
+        }
         return task.getId();
     }
 
@@ -51,6 +60,12 @@ public class TaskFactory implements IssueFactory {
         Task task = Task.extractFromIssue(issue);
         Story upStory = retrieveStoryFromParentIssue(request.getParentId());
         task.updateTask(request, assignee, upStory);
+
+        imageService.cleanupMismatchedImages(task, request.getImageUrls(), WORKING_DIRECTORY);
+        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
+            imageService.saveImages(task, request.getFiles(), WORKING_DIRECTORY);
+        }
+
         return task.getId();
     }
 
@@ -112,6 +127,8 @@ public class TaskFactory implements IssueFactory {
             .label(request.getLabel())
             .assignee(assignee)
             .project(project)
+            .startDate(request.getStartDate())
+            .endDate(request.getEndDate())
             .story(upStory)
             .build();
     }
