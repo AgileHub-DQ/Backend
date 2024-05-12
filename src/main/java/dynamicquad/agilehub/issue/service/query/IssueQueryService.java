@@ -8,7 +8,6 @@ import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
-import dynamicquad.agilehub.issue.dto.SimpleIssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
@@ -98,7 +97,7 @@ public class IssueQueryService {
             .toList();
     }
 
-    public List<SimpleIssueResponseDto.ReadIssue> getEpics(String key, AuthMember authMember) {
+    public List<IssueResponseDto.ReadSimpleIssue> getEpics(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Epic> epicsByProject = epicRepository.findByProject(project);
@@ -106,13 +105,13 @@ public class IssueQueryService {
         return epicsByProject.stream()
             .map(epic -> {
                 AssigneeDto assigneeDto = AssigneeDto.from(epic);
-                return SimpleIssueResponseDto.ReadIssue.from(epic, project.getKey(), IssueType.EPIC, assigneeDto);
+                return IssueResponseDto.ReadSimpleIssue.from(epic, project.getKey(), IssueType.EPIC, assigneeDto);
             })
             .toList();
     }
 
 
-    public List<SimpleIssueResponseDto.ReadIssue> getStories(String key, AuthMember authMember) {
+    public List<IssueResponseDto.ReadSimpleIssue> getStories(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Story> storiesByProject = storyRepository.findByProject(project);
@@ -120,12 +119,12 @@ public class IssueQueryService {
         return storiesByProject.stream()
             .map(story -> {
                 AssigneeDto assigneeDto = AssigneeDto.from(story);
-                return SimpleIssueResponseDto.ReadIssue.from(story, project.getKey(), IssueType.STORY, assigneeDto);
+                return IssueResponseDto.ReadSimpleIssue.from(story, project.getKey(), IssueType.STORY, assigneeDto);
             })
             .toList();
     }
 
-    public List<SimpleIssueResponseDto.ReadIssue> getTasks(String key, AuthMember authMember) {
+    public List<IssueResponseDto.ReadSimpleIssue> getTasks(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         List<Task> tasksByProject = taskRepository.findByProject(project);
@@ -133,7 +132,7 @@ public class IssueQueryService {
         return tasksByProject.stream()
             .map(task -> {
                 AssigneeDto assigneeDto = AssigneeDto.from(task);
-                return SimpleIssueResponseDto.ReadIssue.from(task, project.getKey(), IssueType.TASK, assigneeDto);
+                return IssueResponseDto.ReadSimpleIssue.from(task, project.getKey(), IssueType.TASK, assigneeDto);
             })
             .toList();
     }

@@ -138,5 +138,32 @@ public class IssueResponseDto {
 
     }
 
+    @Builder
+    @Getter
+    @EqualsAndHashCode
+    public static class ReadSimpleIssue {
+        private Long id;
+        private String title;
+        private String type;
+        private String key;
+        private String status;
+        private String label;
+        private AssigneeDto assignee;
+
+        public static IssueResponseDto.ReadSimpleIssue from(Issue issue, String projectKey, IssueType issueType,
+                                                            AssigneeDto assignee) {
+            return IssueResponseDto.ReadSimpleIssue.builder()
+                .id(issue.getId())
+                .title(issue.getTitle())
+                .type(issueType.toString())
+                .status(String.valueOf(issue.getStatus()))
+                .label(String.valueOf(issue.getLabel()))
+                .assignee(assignee)
+                .key(projectKey + "-" + issue.getNumber())
+                .build();
+        }
+
+    }
+
 
 }
