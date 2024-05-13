@@ -7,6 +7,7 @@ WORKDIR /app
 
 # 빌드하는데 필요한 build.gradle, settings.gradle 파일 현재 디렉토리로 복사
 COPY build.gradle settings.gradle ./
+RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 외부라이브러리 빌드
 RUN gradle dependencies --no-daemon
@@ -19,7 +20,7 @@ ENV JWT_SECRET 12341234
 ENV REDIS_HOST redis
 ENV MAIL_USERNAME mail
 ENV MAIL_PASSWORD 12341234
-RUN gradle clean build --no-daemon
+RUN gradle build --no-daemon
 
 FROM --platform=linux/arm64/v8 eclipse-temurin:17.0.10_7-jre
 
