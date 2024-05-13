@@ -7,7 +7,6 @@ WORKDIR /app
 
 # 빌드하는데 필요한 build.gradle, settings.gradle 파일 현재 디렉토리로 복사
 COPY build.gradle settings.gradle ./
-RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 외부라이브러리 빌드
 RUN gradle dependencies --no-daemon
