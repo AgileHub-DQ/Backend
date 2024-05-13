@@ -6,10 +6,9 @@ FROM --platform=linux/arm64 gradle:8.3-jdk17-jammy AS build
 WORKDIR /app
 
 # 빌드하는데 필요한 build.gradle, settings.gradle 파일 현재 디렉토리로 복사
-COPY build.gradle settings.gradle ./
-
-# 외부라이브러리 빌드
-RUN gradle dependencies --no-daemon
+COPY build.gradle settings.gradle /app/
+# 그래들 파일이 변경되었을 때만 새롭게 의존패키지 다운로드 받게함.
+RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 소스코드파일 /app 작업 디렉토리로 복사
 COPY . /app
@@ -19,7 +18,7 @@ ENV JWT_SECRET 12341234
 ENV REDIS_HOST redis
 ENV MAIL_USERNAME mail
 ENV MAIL_PASSWORD 12341234
-RUN gradle build --no-daemon
+RUN gradle build -x test --parallel
 
 FROM --platform=linux/arm64/v8 eclipse-temurin:17.0.10_7-jre
 
