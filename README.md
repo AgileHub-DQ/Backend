@@ -6,10 +6,14 @@
 
 <br>
 <br>
+
+<b> 🚀 애자일 기반 이슈 추적 웹 서비스 🚀
+<br>
+프로젝트 진행의 모든 순간을 쉽고 빠르게, 당신과 팀의 완벽한 꿀조합으로 관리하세요!</b>
 <br>
 <br>
 
-
+## 서비스 소개
 
 ![image2]()
 
@@ -23,7 +27,7 @@
 
 <br>
 
-## 기술 스택
+## 🛠️ 기술 스택
 
 ### 프론트엔드
 
@@ -41,19 +45,25 @@
 
 ## 서비스 요청 흐름도
 
-<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/2076a033-f124-4e60-b089-2af1fbbea3be">
+<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/0ee31d45-7faa-42cd-9705-040bbc0d39ef">
 
 ## CI/CD
 
-<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/4708246a-944f-4b7f-841e-848670629d61">
+<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/161395f7-eae6-4ff0-ab98-8de072dad09d">
 
 ## 모니터링 구조도
 
-<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/da43cf14-7254-4765-a66f-17678c4b87ba">
+<img width="90%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/29bdf578-f76b-41dd-9c6f-bbc5ca9b5038">
+
+## [Backend API Swagger Link](https://api.agilehub.store/swagger-ui/index.html)
+
+## ERD
+
+<img width="90%" alt="image" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/5c071e20-2ed5-4477-9d0c-e88489350b29">
 
 ## 로그인 요청 흐름도
 
-<img width="50%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/3cc2f6ae-636c-4ced-a2dc-7b0d872c9242">
+<img width="50%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/2581aad8-8c02-4a7d-a213-6caeac67dcc9">
 
 ## 이메일 인증 요청 흐름도
 
