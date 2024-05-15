@@ -3,6 +3,7 @@ package dynamicquad.agilehub.sprint.domain;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.sprint.repository.SprintRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
