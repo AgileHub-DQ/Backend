@@ -72,4 +72,8 @@ public class Story extends Issue {
         return story;
     }
 
+    public void updatePeriod(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

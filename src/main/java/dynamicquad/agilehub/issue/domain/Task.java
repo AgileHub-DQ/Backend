@@ -46,7 +46,7 @@ public class Task extends Issue {
         super.updateIssue(request, assignee);
         this.startDate = request.getStartDate();
         this.endDate = request.getEndDate();
-        
+
         if (this.story != null) {
             this.story.getTasks().remove(this);
         }
@@ -62,5 +62,10 @@ public class Task extends Issue {
             throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
         }
         return task;
+    }
+
+    public void updatePeriod(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }

@@ -121,4 +121,19 @@ public class IssueRequestDto {
         private IssueStatus status;
 
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class EditIssuePeriod {
+        @Schema(description = "시작일", example = "2021-01-01")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate startDate;
+
+        @Schema(description = "종료일", example = "2021-01-02")
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate endDate;
+    }
+
 }
