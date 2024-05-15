@@ -35,7 +35,6 @@ public class EpicFactory implements IssueFactory {
 
     @Value("${aws.s3.workingDirectory.issue}")
     private String WORKING_DIRECTORY;
-    private String STORY = "STORY";
 
     @Transactional
     @Override
