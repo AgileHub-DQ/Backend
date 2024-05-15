@@ -1,8 +1,14 @@
 package dynamicquad.agilehub.issue.service.command;
 
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.Story;
+import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto.EditIssuePeriod;
 import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
@@ -72,9 +78,33 @@ public class IssueService {
         issue.updateStatus(updateStatus);
     }
 
+    @Transactional
+    public void updateIssuePeriod(String key, Long issueId, AuthMember authMember, EditIssuePeriod request) {
+
+        Project project = validateMemberInProject(key, authMember);
+
+        Issue issue = issueValidator.findIssue(issueId);
+        issueValidator.validateIssueInProject(project.getId(), issueId);
+
+        if (issue instanceof Epic epic) {
+            epic.updatePeriod(request.getStartDate(), request.getEndDate());
+            return;
+        } else if (issue instanceof Story story) {
+            story.updatePeriod(request.getStartDate(), request.getEndDate());
+            return;
+        } else if (issue instanceof Task task) {
+            task.updatePeriod(request.getStartDate(), request.getEndDate());
+            return;
+        }
+
+        throw new GeneralException(ErrorStatus.ISSUE_TYPE_NOT_FOUND);
+    }
+
     private Project validateMemberInProject(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
         return project;
     }
+
+
 }

@@ -50,4 +50,8 @@ public class Epic extends Issue {
         return epic;
     }
 
+    public void updatePeriod(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
