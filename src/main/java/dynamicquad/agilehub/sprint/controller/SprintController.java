@@ -1,14 +1,11 @@
 package dynamicquad.agilehub.sprint.controller;
 
-import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintAssignIssueRequest;
-import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintChangeStatusRequest;
-import static dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
-
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
-import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
+import dynamicquad.agilehub.sprint.dto.SprintRequestDto;
+import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
 import dynamicquad.agilehub.sprint.service.SprintQueryService;
 import dynamicquad.agilehub.sprint.service.SprintService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,11 +34,11 @@ public class SprintController {
 
     @Operation(summary = "스프린트 생성", description = "프로젝트에 스프린트를 생성합니다.")
     @PostMapping(value = "/projects/{key}/sprints")
-    public ResponseEntity<?> createProjectSprint(@Valid @RequestBody SprintCreateRequest request,
+    public ResponseEntity<?> createProjectSprint(@Valid @RequestBody SprintRequestDto.CreateSprint request,
                                                  @PathVariable("key") String key,
                                                  @Auth AuthMember authMember) {
 
-        SprintCreateResponse resp = sprintService.createSprint(key, request, authMember);
+        SprintResponseDto.CreatedSprint resp = sprintService.createSprint(key, request, authMember);
 
         return ResponseEntity.created(URI.create("/projects/" + key + "/sprints/" + resp.getSprintId()))
             .body(CommonResponse.of(SuccessStatus.CREATED, resp));
@@ -49,7 +46,7 @@ public class SprintController {
 
     @Operation(summary = "스프린트 내 이슈 할당", description = "이슈를 스프린트에 할당합니다")
     @PostMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
-    public ResponseEntity<?> assignIssueToSprint(@Valid @RequestBody SprintAssignIssueRequest request,
+    public ResponseEntity<?> assignIssueToSprint(@Valid @RequestBody SprintRequestDto.AssignIssueToSprint request,
                                                  @PathVariable("key") String key,
                                                  @PathVariable("sprintId") Long sprintId,
                                                  @Auth AuthMember authMember) {
@@ -61,7 +58,7 @@ public class SprintController {
 
     @Operation(summary = "스프린트 내 이슈 제거", description = "스프린트에 할당된 이슈를 제거합니다")
     @DeleteMapping(value = "/projects/{key}/sprints/{sprintId}/issue")
-    public ResponseEntity<?> removeIssueFromSprint(@Valid @RequestBody SprintAssignIssueRequest request,
+    public ResponseEntity<?> removeIssueFromSprint(@Valid @RequestBody SprintRequestDto.AssignIssueToSprint request,
                                                    @PathVariable("key") String key,
                                                    @PathVariable("sprintId") Long sprintId,
                                                    @Auth AuthMember authMember) {
@@ -73,7 +70,7 @@ public class SprintController {
 
     @Operation(summary = "스프린트 상태 변경", description = "스프린트의 상태를 변경합니다 (PLANNED, ACTIVE, COMPLETED)")
     @PatchMapping(value = "/projects/{key}/sprints/{sprintId}/status")
-    public ResponseEntity<?> changeSprintStatus(@Valid @RequestBody SprintChangeStatusRequest request,
+    public ResponseEntity<?> changeSprintStatus(@Valid @RequestBody SprintRequestDto.SprintChangeStatus request,
                                                 @PathVariable("key") String key,
                                                 @PathVariable("sprintId") Long sprintId,
                                                 @Auth AuthMember authMember) {

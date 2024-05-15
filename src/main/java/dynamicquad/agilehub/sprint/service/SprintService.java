@@ -10,11 +10,11 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
-import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
-import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintRepository;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
+import dynamicquad.agilehub.sprint.dto.SprintRequestDto;
+import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,8 @@ public class SprintService {
     private final IssueRepository issueRepository;
 
     @Transactional
-    public SprintCreateResponse createSprint(String key, SprintCreateRequest request, AuthMember authMember) {
+    public SprintResponseDto.CreatedSprint createSprint(String key, SprintRequestDto.CreateSprint request,
+                                                        AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
@@ -42,7 +43,7 @@ public class SprintService {
         sprint.setProject(project);
 
         Sprint saveSprint = sprintRepository.save(sprint);
-        return SprintCreateResponse.fromEntity(saveSprint);
+        return SprintResponseDto.CreatedSprint.from(saveSprint);
     }
 
     @Transactional

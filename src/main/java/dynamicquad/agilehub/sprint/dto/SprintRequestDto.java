@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint.controller.request;
+package dynamicquad.agilehub.sprint.dto;
 
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
@@ -12,12 +12,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class SprintRequest {
+public class SprintRequestDto {
+    private SprintRequestDto() {
+    }
 
     @NoArgsConstructor
     @Getter
     @EqualsAndHashCode
-    public static class SprintCreateRequest {
+    public static class CreateSprint {
 
         @Schema(description = "스프린트 제목", example = "스프린트 제목")
         @NotBlank(message = "스프린트 제목은 필수입니다.")
@@ -37,7 +39,7 @@ public class SprintRequest {
         private LocalDate endDate;
 
         @Builder
-        public SprintCreateRequest(String title, String description, LocalDate startDate, LocalDate endDate) {
+        public CreateSprint(String title, String description, LocalDate startDate, LocalDate endDate) {
             this.title = title;
             this.description = description;
             this.startDate = startDate;
@@ -58,16 +60,16 @@ public class SprintRequest {
     @NoArgsConstructor
     @Getter
     @EqualsAndHashCode
-    public static class SprintAssignIssueRequest {
+    public static class AssignIssueToSprint {
         @NotNull(message = "이슈 ID는 필수입니다. 에픽 ID는 스프린트에 할당할 수 없습니다.")
         Long issueId;
     }
 
-
     @NoArgsConstructor
     @Getter
     @EqualsAndHashCode
-    public static class SprintChangeStatusRequest {
+    public static class SprintChangeStatus {
         SprintStatus status;
     }
+
 }
