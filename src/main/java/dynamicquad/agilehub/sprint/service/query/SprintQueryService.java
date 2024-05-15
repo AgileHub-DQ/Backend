@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint.service;
+package dynamicquad.agilehub.sprint.service.query;
 
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.repository.IssueRepository;

@@ -9,8 +9,8 @@
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
 //import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
-//import dynamicquad.agilehub.sprint.service.SprintQueryService;
-//import dynamicquad.agilehub.sprint.service.SprintService;
+//import dynamicquad.agilehub.sprint.service.query.SprintQueryService;
+//import dynamicquad.agilehub.sprint.service.command.SprintService;
 //import java.time.LocalDate;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

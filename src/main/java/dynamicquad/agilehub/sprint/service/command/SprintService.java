@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.sprint.service;
+package dynamicquad.agilehub.sprint.service.command;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
@@ -15,6 +15,7 @@ import dynamicquad.agilehub.sprint.domain.SprintRepository;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
 import dynamicquad.agilehub.sprint.dto.SprintRequestDto;
 import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
+import dynamicquad.agilehub.sprint.service.SprintValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

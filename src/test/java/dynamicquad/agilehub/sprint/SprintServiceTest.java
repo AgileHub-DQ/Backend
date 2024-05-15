@@ -11,7 +11,7 @@ import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
 import dynamicquad.agilehub.sprint.dto.SprintRequestDto;
 import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
-import dynamicquad.agilehub.sprint.service.SprintService;
+import dynamicquad.agilehub.sprint.service.command.SprintService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
