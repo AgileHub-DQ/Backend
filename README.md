@@ -66,7 +66,7 @@
 
 ## 로그인 요청 흐름도
 
-<img width="50%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/2581aad8-8c02-4a7d-a213-6caeac67dcc9">
+<img width="100%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/2581aad8-8c02-4a7d-a213-6caeac67dcc9">
 
 ## 이메일 인증 요청 흐름도
 
