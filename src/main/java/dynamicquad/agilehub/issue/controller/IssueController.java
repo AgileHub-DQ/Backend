@@ -101,4 +101,18 @@ public class IssueController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "이슈 기간 수정", description = "프로젝트의 이슈 기간을 수정합니다.")
+    @ApiResponse(responseCode = "204", description = "이슈 기간 수정 성공")
+    @PutMapping(value = "/projects/{key}/issues/{issueId}/period")
+    public CommonResponse<?> editProjectIssuePeriod(
+        @Valid @RequestBody IssueRequestDto.EditIssuePeriod request,
+        @PathVariable("key") String key,
+        @PathVariable("issueId") Long issueId,
+        @Auth AuthMember authMember
+    ) {
+
+        issueService.updateIssuePeriod(key, issueId, authMember, request);
+        return CommonResponse.of(SuccessStatus.OK, issueId);
+    }
+
 }
