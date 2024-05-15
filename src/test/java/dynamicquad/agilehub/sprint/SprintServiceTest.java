@@ -7,11 +7,11 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.MemberProject;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
-import dynamicquad.agilehub.sprint.controller.request.SprintRequest.SprintCreateRequest;
-import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintCreateResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import dynamicquad.agilehub.sprint.domain.SprintStatus;
-import dynamicquad.agilehub.sprint.service.SprintService;
+import dynamicquad.agilehub.sprint.dto.SprintRequestDto;
+import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
+import dynamicquad.agilehub.sprint.service.command.SprintService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -38,7 +38,7 @@ class SprintServiceTest {
         Project project = createProject("project12311", "P1");
         em.persist(project);
 
-        SprintCreateRequest request = SprintCreateRequest.builder()
+        SprintRequestDto.CreateSprint request = SprintRequestDto.CreateSprint.builder()
             .title("스프린트 제목")
             .description("스프린트 목표")
             .startDate(LocalDate.of(2021, 1, 1))
@@ -62,7 +62,7 @@ class SprintServiceTest {
             .build();
 
         // when
-        SprintCreateResponse resp = sprintService.createSprint(project.getKey(), request, authMember);
+        SprintResponseDto.CreatedSprint resp = sprintService.createSprint(project.getKey(), request, authMember);
         em.flush();
 
         // then

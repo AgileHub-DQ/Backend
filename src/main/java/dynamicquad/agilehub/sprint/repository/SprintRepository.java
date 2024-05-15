@@ -1,5 +1,6 @@
-package dynamicquad.agilehub.sprint.domain;
+package dynamicquad.agilehub.sprint.repository;
 
+import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

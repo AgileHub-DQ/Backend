@@ -3,7 +3,7 @@ package dynamicquad.agilehub.sprint.service;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.sprint.domain.Sprint;
-import dynamicquad.agilehub.sprint.domain.SprintRepository;
+import dynamicquad.agilehub.sprint.repository.SprintRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

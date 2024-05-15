@@ -6,9 +6,9 @@ import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.project.domain.Project;
-import dynamicquad.agilehub.sprint.controller.response.SprintResponse.SprintReadResponse;
 import dynamicquad.agilehub.sprint.domain.Sprint;
-import dynamicquad.agilehub.sprint.service.SprintQueryService;
+import dynamicquad.agilehub.sprint.dto.SprintResponseDto;
+import dynamicquad.agilehub.sprint.service.query.SprintQueryService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
@@ -34,7 +34,7 @@ class SprintQueryServiceTest {
         // given
         prepareData();
         // when
-        List<SprintReadResponse> results = sprintQueryService.getSprints("P1");
+        List<SprintResponseDto.SprintDetail> results = sprintQueryService.getSprints("P1");
         // then
         assertThat(results).hasSize(1);
         assertThat(results).extracting("title")
