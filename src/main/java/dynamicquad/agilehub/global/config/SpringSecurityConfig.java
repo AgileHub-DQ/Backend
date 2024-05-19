@@ -65,7 +65,7 @@ public class SpringSecurityConfig {
 
             // jwt 설정
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtExceptionFilter(), jwtAuthFilter.getClass());
+            .addFilterBefore(new JwtExceptionFilter(), JwtAuthFilter.class);
 
         return http.build();
     }
