@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.member.dto;
 
 import dynamicquad.agilehub.global.auth.oauth2info.OAuth2Attribute;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +40,23 @@ public class MemberRequestDto {
         private Long id;
         private String name;
         private String profileImageUrl;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            AuthMember that = (AuthMember) o;
+            return Objects.equals(id, that.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
     }
 
 }

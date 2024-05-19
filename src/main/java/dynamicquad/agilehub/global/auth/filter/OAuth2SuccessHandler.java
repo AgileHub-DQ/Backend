@@ -34,13 +34,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        log.info("OAuth2SuccessHandler.onAuthenticationSuccess");
-
         GeneratedToken generatedToken = generateMemberToken(authentication);
 
         String redirectUrl = UriComponentsBuilder.fromUriString(REDIRECT_URL)
-                .queryParam("accessToken", generatedToken.getAccessToken())
-                .build().toUriString();
+            .queryParam("accessToken", generatedToken.getAccessToken())
+            .build().toUriString();
 
         response.sendRedirect(CLIENT_DOMAIN + redirectUrl);
     }
@@ -51,7 +49,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         String distinctId = principal.getId();
         String name = principal.getName();
         String role = principal.getAuthorities().stream().findFirst()
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_ROLE_NOT_EXIST)).getAuthority();
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_ROLE_NOT_EXIST)).getAuthority();
 
         GeneratedToken token = jwtUtil.generateToken(name, role, provider, distinctId);
 
