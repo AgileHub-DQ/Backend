@@ -8,19 +8,21 @@
 <br>
 
 <b> 🚀 애자일 기반 이슈 추적 웹 서비스 🚀
+
+<b>애자일</b>은 변화에 빠르게 적응하고 반복적으로 개선하는 프로젝트 관리 방법이에요.
 <br>
-프로젝트 진행의 모든 순간을 쉽고 빠르게, 당신과 팀의 완벽한 꿀조합으로 관리하세요!</b>
+복잡한 설명 없이도, 우리 서비스로 당신의 프로젝트를 더욱 유연하고 효과적으로 관리해 보세요!
 <br>
 <br>
 
 ## 서비스 소개
 
-<br>
-<br>
-
-![image2]()
-
-![image]()
+![image2](https://github.com/AgileHub-DQ/Backend/assets/82764703/1c62b721-3f5c-4ff7-809e-39540faa19af)
+![이슈](https://github.com/AgileHub-DQ/Backend/assets/82764703/83517937-9ecb-450e-9e79-9ae8099eb350)
+![스프린트](https://github.com/AgileHub-DQ/Backend/assets/82764703/fb6fdd90-acc8-4ae9-bf37-a60e19b91682)
+![백로그](https://github.com/AgileHub-DQ/Backend/assets/82764703/d55709b4-a0d8-415b-a346-7906f1fc40ef)
+![타임라인](https://github.com/AgileHub-DQ/Backend/assets/82764703/8a767b90-6cca-4d7c-b3b4-5fc3addfde49)
+![멤버](https://github.com/AgileHub-DQ/Backend/assets/82764703/efbe79ed-9f18-4508-9b63-853ac9e217b6)
 
 ### [AgileHub 바로가기 ](https://www.agilehub.store)
 
@@ -28,6 +30,9 @@
 
 </div>
 
+<br>
+<img width="811" alt="image" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/26a05011-6a72-4521-9e1c-8486e21ca5dd">
+<br>
 <br>
 
 ## 🛠️ 기술 스택
