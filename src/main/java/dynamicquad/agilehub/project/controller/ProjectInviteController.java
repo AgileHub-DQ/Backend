@@ -4,6 +4,8 @@ import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectInviteRequestDto;
+import dynamicquad.agilehub.project.controller.response.ProjectResponseDto;
+import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.ProjectInviteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,10 +41,11 @@ public class ProjectInviteController {
             @ApiResponse(responseCode = "EMAIL_4001", description = "초대 코드를 찾을 수 없습니다.")
     })
     @PostMapping("/receive")
-    public CommonResponse<Void> receiveInviteEmail(@Auth AuthMember authMember,
-                                                   @RequestBody ProjectInviteRequestDto.ReceiveInviteMail receiveInviteMail) {
-        projectInviteService.receiveInviteEmail(authMember, receiveInviteMail.getInviteCode());
-        return CommonResponse.onSuccess(null);
+    public CommonResponse<ProjectResponseDto> receiveInviteEmail(
+            @Auth AuthMember authMember,
+            @RequestBody ProjectInviteRequestDto.ReceiveInviteMail receiveInviteMail) {
+        Project project = projectInviteService.receiveInviteEmail(authMember, receiveInviteMail.getInviteCode());
+        return CommonResponse.onSuccess(ProjectResponseDto.fromEntity(project));
     }
 
 }
