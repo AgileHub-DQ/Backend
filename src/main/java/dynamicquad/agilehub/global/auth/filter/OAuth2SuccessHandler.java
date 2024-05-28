@@ -1,6 +1,6 @@
 package dynamicquad.agilehub.global.auth.filter;
 
-import static dynamicquad.agilehub.global.auth.repository.CustomAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static dynamicquad.agilehub.global.auth.repository.CustomAuthorizationRequestRepository.REDIRECT_URL_PARAM_COOKIE_NAME;
 
 import dynamicquad.agilehub.global.auth.model.GeneratedToken;
 import dynamicquad.agilehub.global.auth.model.JwtRefreshToken;
@@ -48,7 +48,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
-        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URL_PARAM_COOKIE_NAME)
                 .map(cookie -> cookie.getValue());
 
         clearAuthenticationAttributes(request, response);
