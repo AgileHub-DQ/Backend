@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class CustomAuthorizationRequestRepository implements
         AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
@@ -48,5 +50,5 @@ public class CustomAuthorizationRequestRepository implements
         CookieUtil.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
         CookieUtil.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
     }
-    
+
 }
