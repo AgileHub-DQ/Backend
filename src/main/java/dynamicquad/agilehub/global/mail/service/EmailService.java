@@ -4,6 +4,7 @@ import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.mail.model.EmailInfo;
 import dynamicquad.agilehub.project.model.InviteEmailInfo;
+import dynamicquad.agilehub.report.SummaryEmailInfo;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,9 @@ public class EmailService {
         if (type.equals("invite") && emailInfo instanceof InviteEmailInfo inviteEmailMessage) {
             context.setVariable("projectName", inviteEmailMessage.getProjectName());
             context.setVariable("inviteCode", inviteEmailMessage.getInviteCode());
+        } else if (type.equals("reportSummary") && emailInfo instanceof SummaryEmailInfo summaryEmailMessage) {
+            context.setVariable("projectName", summaryEmailMessage.getProjectName());
+            context.setVariable("report", summaryEmailMessage.getReport());
         }
         return templateEngine.process(type, context);
     }
