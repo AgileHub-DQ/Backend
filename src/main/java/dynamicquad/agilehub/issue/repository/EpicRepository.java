@@ -3,6 +3,7 @@ package dynamicquad.agilehub.issue.repository;
 import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.project.domain.Project;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,7 @@ public interface EpicRepository extends JpaRepository<Epic, Long> {
         + "LEFT JOIN (SELECT issue_id, status from issue WHERE project_id = :projectId) i ON i.issue_id = s.issue_id "
         + "GROUP BY e.issue_id;", nativeQuery = true)
     List<EpicResponseDto.EpicStatistic> getEpicStatics(Long projectId);
+
+    @Query(value = "SELECT i.content FROM Epic e inner join Issue i on e.id=i.id WHERE e.startDate <= :endDate AND e.endDate >= :startDate AND i.project.id=:projectId")
+    List<String> findContentsByMonth(LocalDate endDate, LocalDate startDate, Long projectId);
 }

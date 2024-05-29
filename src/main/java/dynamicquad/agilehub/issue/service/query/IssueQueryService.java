@@ -22,14 +22,18 @@ import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.service.MemberProjectService;
 import dynamicquad.agilehub.project.service.ProjectQueryService;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class IssueQueryService {
 
     private final IssueFactoryProvider issueFactoryProvider;
@@ -136,6 +140,22 @@ public class IssueQueryService {
             })
             .toList();
     }
+
+    public MonthlyReportDto getIssuesForMonth(String yearMonth, Long projectId) {
+
+        YearMonth ym = YearMonth.parse(yearMonth); // "2024-05"와 같은 형식의 문자열
+        LocalDate startDate = ym.atDay(1);
+        LocalDate endDate = ym.atEndOfMonth();
+
+        List<String> contentsByEpic = epicRepository.findContentsByMonth(endDate, startDate, projectId);
+        List<String> contentsByStory = storyRepository.findContentsByMonth(endDate, startDate, projectId);
+        List<String> contentsByTask = taskRepository.findContentsByMonth(endDate, startDate, projectId);
+
+        return new MonthlyReportDto(contentsByEpic, contentsByStory, contentsByTask);
+
+
+    }
+
 
     private List<EpicResponseDto.EpicDetailWithStatistic> getEpicWithStatisticResponses(
         List<EpicResponseDto.EpicDetailForBacklog> epics,
