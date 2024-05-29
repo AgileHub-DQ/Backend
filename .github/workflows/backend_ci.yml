@@ -16,6 +16,7 @@ jobs:
       REDIS_HOST: localhost
       MAIL_USERNAME: 1234
       MAIL_PASSWORD: 1234
+      OPEN_API_KEY: 1234
 
     steps:
       - name: 레포지토리를 가져옵니다
