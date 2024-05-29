@@ -3,8 +3,10 @@ package dynamicquad.agilehub.project.controller.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class ProjectInviteRequestDto {
 
@@ -27,6 +29,8 @@ public class ProjectInviteRequestDto {
     @Schema(description = "초대 메일 수신")
     @Getter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ReceiveInviteMail {
         @Schema(description = "메일로부터 온 인증번호")
         @NotBlank
