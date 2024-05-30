@@ -43,13 +43,14 @@ public class ProjectInviteService {
         emailService.sendMail(emailInfo, "invite");
     }
 
+    @Transactional
     public Project receiveInviteEmail(MemberRequestDto.AuthMember authMember,
                                       String inviteCode) {
         InviteRedisEntity inviteRedisEntity = inviteRedisService.findByInviteCode(inviteCode);
         Project project = Project.createPojoProject(Long.parseLong(inviteRedisEntity.getProjectId()));
 
         memberProjectService.createMemberProject(authMember, project, MemberProjectRole.EDITOR);
-        return project;
+        return projectQueryService.findProjectById(Long.parseLong(inviteRedisEntity.getProjectId()));
     }
 
     private String generateInviteCode() {
