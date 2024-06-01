@@ -17,12 +17,6 @@
 
 ## 서비스 소개
 
-![image2](https://github.com/AgileHub-DQ/Backend/assets/82764703/1c62b721-3f5c-4ff7-809e-39540faa19af)
-![이슈](https://github.com/AgileHub-DQ/Backend/assets/82764703/83517937-9ecb-450e-9e79-9ae8099eb350)
-![스프린트](https://github.com/AgileHub-DQ/Backend/assets/82764703/fb6fdd90-acc8-4ae9-bf37-a60e19b91682)
-![백로그](https://github.com/AgileHub-DQ/Backend/assets/82764703/d55709b4-a0d8-415b-a346-7906f1fc40ef)
-![타임라인](https://github.com/AgileHub-DQ/Backend/assets/82764703/8a767b90-6cca-4d7c-b3b4-5fc3addfde49)
-![멤버](https://github.com/AgileHub-DQ/Backend/assets/82764703/efbe79ed-9f18-4508-9b63-853ac9e217b6)
 
 ### [AgileHub 바로가기 ](https://www.agilehub.store)
 
@@ -30,24 +24,15 @@
 
 </div>
 
-<br>
-<img width="811" alt="image" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/26a05011-6a72-4521-9e1c-8486e21ca5dd">
-<br>
-<br>
-
 ## 🛠️ 기술 스택
-
-### 프론트엔드
-
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/06f863f9-a9e5-4f48-90c4-a03ea935f456">
 
 ### 백엔드
 
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/5ae46555-02d5-41e0-bf05-f9b6cdfa809e">
+<img width="50%" alt="스크린샷 2024-01-22 오후 11 43 16" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/5ae46555-02d5-41e0-bf05-f9b6cdfa809e">
 
 ### 인프라
 
-<img width="80%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/80aa0b22-01a3-4b9d-98b9-3d569c9f1647">
+<img width="50%" alt="스크린샷 2024-01-22 오후 11 44 27" src="https://github.com/AgileHub-DQ/Backend/assets/82764703/80aa0b22-01a3-4b9d-98b9-3d569c9f1647">
 
 <br>
 
