@@ -7,7 +7,7 @@
 <br>
 <br>
 
-<b> 🚀 애자일 기반 이슈 추적 웹 서비스 🚀
+<b> 🚀 애자일 기반 이슈 추적 웹 서비스 🚀 </b>
 
 <b>애자일</b>은 변화에 빠르게 적응하고 반복적으로 개선하는 프로젝트 관리 방법이에요.
 <br>
@@ -68,6 +68,39 @@
 
 - 팀원들의 CI/CD 학습 부담 경감을 위해 GitHub Actions와 Jenkins 비교 및 문서화
 - GitHub Actions의 간편한 워크플로우 구축과 SSH 보안 문제 해결을 위해 self-hosted runners 도입
+
+### 3. 개발 서버에서 간단한 에러를 신속하게 확인하고 해결
+[Logback 파일 설정](https://babgeuleus.tistory.com/entry/%EC%84%9C%EB%B2%84-%EC%97%90%EB%9F%AC%EB%A5%BC-%EB%B9%A0%EB%A5%B4%EA%B2%8C-%EB%B0%9C%EA%B2%AC%ED%95%98%EA%B3%A0-%ED%95%B4%EA%B2%B0%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-%EB%A1%9C%EA%B7%B8-%EB%B6%84%EC%84%9D%EC%9D%98-%ED%95%B5%EC%8B%AC)
+<br>
+[volume경로 잘못된 설정으로 생긴 로그 추출 못하는 문제 해결](https://babgeuleus.tistory.com/entry/%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85-docker-volume-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EC%84%A4%EC%A0%95%ED%95%98%EC%9E%90)
+<br>
+[모니터링 구축](https://azure-capston.atlassian.net/wiki/x/FoB0Ag)
+<br><br>
+**[문제점]** <br>
+개발 서버에서 발생한 간단한 에러조차 신속하게 확인하고 해결하는 데 어려움 <br>
+
+**[문제 해결을 위한 접근법]** <br>
+1. **vim nohup.out 실행**
+  - 로그파일 생성에 예상보다 많은 시간 소요
+  - 자주 ssh 세션이 멈추는 문제로 인해 결국 예외가 발생한 부분을 확인하지 못하는 어려움을 겪음
+2. **서버 종료 후 java -jar 명령어로 직접 실행**
+  - 서버를 종료하고 jar 파일을 직접 실행하여 예외 발생 시 로컬에서 터미널을 통해 바로 확인할 수 있게 해 에러를 해결
+3. **배포를 jar파일에서 docker image로 변경**
+  - 예외 발생 시 docker logs [컨테이너 ID]를 통해 컨테이너 상태와 로그를 더 쉽게 확인 가능
+  - 하지만 이전 에러 기록을 찾는 것이 번거로움
+4. **Logback 파일 설정**
+  - Prod 서버에서 ERROR 로그 레벨 부터 로그파일 생성
+  - 로그 파일의 최대 용량과 보존 기간을 매일 최대 50MB, 최대 7일 보존 기간으로 설정
+5. **로키와 그라파나를 이용한 로그 모니터링**
+  - 스프링 액추에이터를 이용해 로그와 JVM memory 사용률 추출
+  - 프로메테우스로 JVM 메모리 사용률 pull 해서 그라파나로 시각화
+  - 프롬테일에서 액추에이터에서 추출한 로그내역 로키에 push, 로키는 pull하여 그라파나로 시각화
+ 
+
+
+
+<br>
+<br>
 
 
 ## 추가정보
