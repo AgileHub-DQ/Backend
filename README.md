@@ -18,7 +18,13 @@
 ## 서비스 소개
 
 
-### 👉 [소개 페이지 바로가기](https://github.com/AgileHub-DQ)
+![image2](https://github.com/AgileHub-DQ/Backend/assets/82764703/1c62b721-3f5c-4ff7-809e-39540faa19af)
+![이슈](https://github.com/AgileHub-DQ/Backend/assets/82764703/83517937-9ecb-450e-9e79-9ae8099eb350)
+![스프린트](https://github.com/AgileHub-DQ/Backend/assets/82764703/fb6fdd90-acc8-4ae9-bf37-a60e19b91682)
+![백로그용GIF](https://github.com/AgileHub-DQ/Backend/assets/82764703/dbb4d960-16e8-41ee-baa2-d6e5abb4a9d5)
+![타임라인](https://github.com/AgileHub-DQ/Backend/assets/82764703/7d02b3e1-62d5-48b8-bfae-6197e84f68c4)
+![멤버](https://github.com/AgileHub-DQ/Backend/assets/82764703/efbe79ed-9f18-4508-9b63-853ac9e217b6)
+
 
 <br>
 
