@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.global.domain.BaseEntity;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
@@ -21,6 +22,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -36,13 +38,16 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name = "issue_type")
 @Table(name = "issue")
 @Entity
-public abstract class Issue {
+public abstract class Issue extends BaseEntity {
 
     @Id
     @Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "issue_id")
     private Long id;
+
+    @Version
+    private Long version;
 
     private String title;
 
@@ -96,6 +101,10 @@ public abstract class Issue {
         this.status = request.getStatus();
         this.label = request.getLabel();
         this.assignee = assignee;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 
 

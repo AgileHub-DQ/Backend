@@ -2,6 +2,7 @@ package dynamicquad.agilehub.issue.controller;
 
 import dynamicquad.agilehub.global.auth.model.Auth;
 import dynamicquad.agilehub.global.header.CommonResponse;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.global.header.status.SuccessStatus;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto.IssueAndSubIssueDetail;
@@ -17,8 +18,10 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -71,8 +74,16 @@ public class IssueController {
                                               @PathVariable("key") String key, @PathVariable("issueId") Long issueId,
                                               @Auth AuthMember authMember) {
 
-        issueService.updateIssue(key, issueId, request, authMember);
-        return ResponseEntity.noContent().build();
+        try {
+            issueService.updateIssue(key, issueId, request, authMember);
+            return ResponseEntity.ok().build();
+        } catch (ObjectOptimisticLockingFailureException e) {
+            String viewIssueUrl = "/projects/" + key + "/issues/" + issueId;
+
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(CommonResponse.of(ErrorStatus.OPTIMISTIC_LOCK_EXCEPTION, viewIssueUrl));
+        }
+
     }
 
 
