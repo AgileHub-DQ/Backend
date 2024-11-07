@@ -30,6 +30,7 @@ create table issue (
                        sprint_id bigint,
                        issue_type varchar(31) not null,
                        content varchar(255),
+                       version bigint,
                        title varchar(255),
                        status enum ('DO','PROGRESS','DONE'),
                        label enum ('NONE', 'PLAN', 'DESIGN', 'DEVELOP', 'TEST', 'FEEDBACK'),
