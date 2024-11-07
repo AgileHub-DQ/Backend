@@ -31,18 +31,19 @@ public class ProjectQueryService {
     }
 
     public Project findProject(String originKey) {
+        log.info("findProject: {}", originKey);
         return projectRepository.findByKey(originKey)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
     public Long findProjectId(String originKey) {
         return projectRepository.findIdByKey(originKey)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
     public Project findProjectById(long projectId) {
         return projectRepository.findById(projectId)
-                .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
+            .orElseThrow(() -> new GeneralException(ErrorStatus.PROJECT_NOT_FOUND));
     }
 
 }
