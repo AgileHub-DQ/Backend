@@ -14,9 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
 
-    @Query("select count(*) from Issue i join i.project p where p.key = :key")
-    Long countByProjectKey(String key);
-
     @Query(value = "select issue_type from issue i where i.issue_id = :id", nativeQuery = true)
     Optional<String> findIssueTypeById(@Param("id") Long id);
 

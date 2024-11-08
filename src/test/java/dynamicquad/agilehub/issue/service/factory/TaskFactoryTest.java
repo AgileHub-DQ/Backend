@@ -6,11 +6,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.issue.domain.ProjectIssueSequence;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.repository.ProjectIssueSequenceRepository;
 import dynamicquad.agilehub.project.domain.Project;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,12 +32,17 @@ class TaskFactoryTest {
     @Autowired
     private TaskFactory taskFactory;
 
+    @Autowired
+    private ProjectIssueSequenceRepository projectIssueSequenceRepository;
+
     @Test
     @Transactional
     void 부모이슈가_에픽이거나_테스크일때_예외처리() {
         // given
         Project project = createProject("프로젝트1", "project124151");
         em.persist(project);
+
+        projectIssueSequenceRepository.save(new ProjectIssueSequence(project.getKey()));
 
         Epic epic = Epic.builder()
             .title("에픽제목")
@@ -85,6 +92,7 @@ class TaskFactoryTest {
         // given
         Project project = createProject("프로젝트1", "proje123ct1");
         em.persist(project);
+        projectIssueSequenceRepository.save(new ProjectIssueSequence(project.getKey()));
 
         Story story = Story.builder()
             .title("story제목")

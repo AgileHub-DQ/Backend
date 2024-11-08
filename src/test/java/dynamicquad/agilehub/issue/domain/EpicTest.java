@@ -75,7 +75,7 @@ class EpicTest {
         Epic epic = Epic.builder()
             .title("에픽1")
             .content("에픽1 내용")
-            .number(1)
+            .number("")
             .status(IssueStatus.DO)
             .startDate(LocalDate.of(2024, 1, 1))
             .endDate(LocalDate.of(2024, 1, 10))

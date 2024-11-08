@@ -62,7 +62,8 @@ public enum ErrorStatus implements BaseStatus {
     INVITE_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "EMAIL_4001", "초대 코드를 찾을 수 없습니다."),
 
     // Optimistic Lock Exception
-    OPTIMISTIC_LOCK_EXCEPTION(HttpStatus.LOCKED, "LOCK_4000", "다른 사용자가 이미 수정했습니다. 새로 고침 후 다시 시도해주세요.");
+    OPTIMISTIC_LOCK_EXCEPTION(HttpStatus.LOCKED, "LOCK_4000", "다른 사용자가 이미 수정했습니다. 새로 고침 후 다시 시도해주세요."),
+    OPTIMISTIC_LOCK_EXCEPTION_ISSUE_NUMBER(HttpStatus.LOCKED, "LOCK_4001", "이슈 번호 생성 실패. 다시 시도해주세요.");
 
     private final HttpStatus httpStatus;
     private final String code;

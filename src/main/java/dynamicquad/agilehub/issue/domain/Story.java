@@ -38,7 +38,7 @@ public class Story extends Issue {
     private List<Task> tasks = new ArrayList<>();
 
     @Builder
-    private Story(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+    private Story(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                   Project project,
                   int storyPoint, LocalDate startDate, LocalDate endDate, Epic epic) {
         super(title, content, number, status, label, assignee, project);

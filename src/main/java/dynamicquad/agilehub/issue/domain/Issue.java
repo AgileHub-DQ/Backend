@@ -22,7 +22,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -46,14 +45,14 @@ public abstract class Issue extends BaseEntity {
     @Column(name = "issue_id")
     private Long id;
 
-    @Version
-    private Long version;
+//    @Version
+//    private Long version;
 
     private String title;
 
     private String content;
 
-    private int number;
+    private String number;
 
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
@@ -84,7 +83,7 @@ public abstract class Issue extends BaseEntity {
     }
 
 
-    protected Issue(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+    protected Issue(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                     Project project) {
         this.title = title;
         this.content = content;

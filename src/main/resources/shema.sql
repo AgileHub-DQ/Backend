@@ -23,7 +23,7 @@ create table image (
                        primary key (image_id)
 ) engine=InnoDB;
 create table issue (
-                       number integer not null,
+                       number varchar(255),
                        issue_id bigint not null auto_increment,
                        member_id bigint,
                        project_id bigint,
@@ -36,6 +36,15 @@ create table issue (
                        label enum ('NONE', 'PLAN', 'DESIGN', 'DEVELOP', 'TEST', 'FEEDBACK'),
                        primary key (issue_id)
 ) engine=InnoDB;
+
+CREATE TABLE project_issue_sequence (
+                        project_key VARCHAR(255) PRIMARY KEY,
+                        last_number INT NOT NULL DEFAULT 0,
+                        version BIGINT DEFAULT 0,
+                        created_at timestamp(6) not null,
+                        updated_at timestamp(6) not null
+) ENGINE=InnoDB;
+
 create table member (
                         created_at timestamp(6) not null,
                         member_id bigint not null auto_increment,

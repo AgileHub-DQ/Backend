@@ -10,6 +10,7 @@ import dynamicquad.agilehub.issue.dto.IssueResponseDto.SubIssueDetail;
 import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.repository.StoryRepository;
 import dynamicquad.agilehub.issue.service.command.ImageService;
+import dynamicquad.agilehub.issue.service.command.IssueNumberGenerator;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.service.MemberService;
@@ -30,6 +31,7 @@ public class EpicFactory implements IssueFactory {
     private final IssueRepository issueRepository;
     private final StoryRepository storyRepository;
     private final ImageService imageService;
+    private final IssueNumberGenerator issueNumberGenerator;
 
     private final MemberService memberService;
 
@@ -39,14 +41,20 @@ public class EpicFactory implements IssueFactory {
     @Transactional
     @Override
     public Long createIssue(IssueRequestDto.CreateIssue request, Project project) {
-        // TODO: 이슈가 삭제되면 이슈 번호가 중복될 수 있음 1번,2번,3번 이슈 생성뒤 2번 삭제하면 4번 이슈 생성시 3번이 되어 중복 [ ]
-        // TODO: 이슈 번호 생성 로직을 따로 만들기 - number 최대로 큰 숫자 + 1로 로직 변경 [ ]
-        int issueNumber = (int) (issueRepository.countByProjectKey(project.getKey()) + 1);
 
+        // 이슈 번호 생성
+        // 리트라이 3번
+
+        String issueNumber = issueNumberGenerator.generate(project.getKey());
+
+        // 멤버를 찾기
         Member assignee = memberService.findMember(request.getAssigneeId(), project.getId());
         Epic epic = toEntity(request, project, issueNumber, assignee);
 
+        // 이슈 저장
         issueRepository.save(epic);
+
+        // S3에 이미지 저장
         if (request.getFiles() != null && !request.getFiles().isEmpty()) {
             log.info("uploading images");
             imageService.saveImages(epic, request.getFiles(), WORKING_DIRECTORY);
@@ -104,7 +112,7 @@ public class EpicFactory implements IssueFactory {
     }
 
 
-    private Epic toEntity(IssueRequestDto.CreateIssue request, Project project, int issueNumber, Member assignee) {
+    private Epic toEntity(IssueRequestDto.CreateIssue request, Project project, String issueNumber, Member assignee) {
         return Epic.builder()
             .title(request.getTitle())
             .content(request.getContent())

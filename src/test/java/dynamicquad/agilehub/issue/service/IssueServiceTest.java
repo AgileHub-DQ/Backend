@@ -30,13 +30,13 @@ class IssueServiceTest {
     @PersistenceContext
     EntityManager em;
 
-
     @Transactional
     @Test
     void 에픽이_지워지면_스토리_테스크_모두_지워진다() {
         // given
         Project project1 = createProject("프로젝트1", "project12311");
         em.persist(project1);
+
         Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
         em.persist(epic1P1);
         Epic epic2P1 = createEpic("에픽2", "에픽2 내용", project1);

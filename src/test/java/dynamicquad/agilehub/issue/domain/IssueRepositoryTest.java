@@ -24,49 +24,6 @@ class IssueRepositoryTest {
     @Autowired
     private IssueRepository issueRepository;
 
-    @Test
-    @Transactional
-    void 특정_프로젝트키를_가진_이슈들의_총_개수를_구한다() {
-        // given
-        Project project1 = createProject("프로젝트1", "project1");
-        em.persist(project1);
-
-        Project project2 = createProject("프로젝트2", "project2");
-        em.persist(project2);
-
-        Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
-        em.persist(epic1P1);
-
-        Epic epic2P1 = createEpic("에픽2", "에픽2 내용", project1);
-        em.persist(epic2P1);
-
-        Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
-        em.persist(story1P1);
-
-        Story storyP2 = createStory("스토리2", "스토리2 내용", project2);
-        em.persist(storyP2);
-
-        Task taskP2 = createTask("태스크1", "태스크1 내용", project2);
-        em.persist(taskP2);
-
-        // when
-        // then
-        assertThat(issueRepository.countByProjectKey("project1")).isEqualTo(3);
-        assertThat(issueRepository.countByProjectKey("project2")).isEqualTo(2);
-
-    }
-
-
-    @Test
-    @Transactional
-    void 특정_프로젝트키를_가진_이슈가_없을때_0을_반환한다() {
-        // given
-        Project project1 = createProject("프로젝트1", "project1141");
-        em.persist(project1);
-        // when
-        // then
-        assertThat(issueRepository.countByProjectKey("project1")).isEqualTo(0);
-    }
 
     @Test
     @Transactional

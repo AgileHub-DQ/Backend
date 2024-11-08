@@ -32,7 +32,7 @@ public class StoryResponseDto {
             return StoryDetailForBacklog.builder()
                 .id(story.getId())
                 .title(story.getTitle())
-                .key(projectKey + "-" + story.getNumber())
+                .key(story.getNumber())
                 .status(String.valueOf(story.getStatus()))
                 .label(String.valueOf(story.getLabel()))
                 .type(IssueType.STORY.toString())
