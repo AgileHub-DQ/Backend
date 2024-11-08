@@ -4,9 +4,9 @@ import dynamicquad.agilehub.dummy.bulkRepository.IssueBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.MemberBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.MemberProjectBulkRepository;
 import dynamicquad.agilehub.dummy.bulkRepository.ProjectBulkRepository;
+import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.member.domain.Member;
@@ -98,7 +98,7 @@ public class DummyDataLoader {
             epics.add(Epic.builder()
                 .title("에픽" + i)
                 .content("에픽 내용" + i)
-                .number((int) i)
+                .number("")
                 .status(IssueStatus.DO)
                 .startDate(LocalDate.of(2021, 1, 1))
                 .endDate(LocalDate.of(2021, 10, 23))
@@ -126,7 +126,7 @@ public class DummyDataLoader {
             stories.add(Story.builder()
                 .title("스토리" + i)
                 .content("스토리 내용" + i)
-                .number((int) i)
+                .number("")
                 .status(IssueStatus.DO)
                 .startDate(LocalDate.of(2021, 1, 1))
                 .endDate(LocalDate.of(2021, 10, 23))
@@ -156,7 +156,7 @@ public class DummyDataLoader {
             tasks.add(Task.builder()
                 .title("태스크" + i)
                 .content("태스크 내용" + i)
-                .number((int) i)
+                .number("")
                 .status(IssueStatus.DO)
                 .build());
         }

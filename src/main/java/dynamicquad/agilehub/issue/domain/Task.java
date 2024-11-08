@@ -31,7 +31,7 @@ public class Task extends Issue {
     private Story story;
 
     @Builder
-    private Task(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+    private Task(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                  Project project, LocalDate startDate, LocalDate endDate, Story story) {
         super(title, content, number, status, label, assignee, project);
         this.story = story;

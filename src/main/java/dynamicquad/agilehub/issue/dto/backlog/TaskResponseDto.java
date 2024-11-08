@@ -32,7 +32,7 @@ public class TaskResponseDto {
             return TaskDetailForBacklog.builder()
                 .id(task.getId())
                 .title(task.getTitle())
-                .key(projectKey + "-" + task.getNumber())
+                .key(task.getNumber())
                 .status(String.valueOf(task.getStatus()))
                 .label(String.valueOf(task.getLabel()))
                 .type(IssueType.TASK.toString())

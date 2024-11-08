@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Image;
+import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto.ContentDto;
@@ -83,7 +83,6 @@ class EpicFactoryTest {
         //then
         assertThat(epic.getTitle()).isEqualTo("이슈 제목");
         assertThat(epic.getContent()).isEqualTo("content 내용");
-        assertThat(epic.getNumber()).isEqualTo(1);
         assertThat(epic.getStatus()).isEqualTo(IssueStatus.DO);
         assertThat(epic.getStartDate()).isEqualTo(LocalDate.of(2024, 2, 19));
         assertThat(epic.getEndDate()).isEqualTo(LocalDate.of(2024, 2, 23));
@@ -168,7 +167,7 @@ class EpicFactoryTest {
         Epic epic = Epic.builder()
             .title("이슈 제목")
             .content("content 내용")
-            .number(1)
+            .number("")
             .status(IssueStatus.DO)
             .assignee(null)
             .project(project1)
@@ -207,7 +206,7 @@ class EpicFactoryTest {
         Epic epic = Epic.builder()
             .title("이슈 제목")
             .content("content 내용")
-            .number(1)
+            .number("")
             .status(IssueStatus.DO)
             .assignee(null)
             .project(project1)
@@ -255,7 +254,7 @@ class EpicFactoryTest {
         Epic epic = Epic.builder()
             .title("이슈 제목")
             .content("content 내용")
-            .number(1)
+            .number("")
             .status(IssueStatus.DO)
             .assignee(member1)
             .project(project1)

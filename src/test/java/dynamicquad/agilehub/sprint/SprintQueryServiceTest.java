@@ -79,7 +79,7 @@ class SprintQueryServiceTest {
         return Epic.builder()
             .title(title)
             .content(content)
-            .number(1)
+            .number("")
             .project(project)
             .build();
     }
@@ -89,7 +89,7 @@ class SprintQueryServiceTest {
             .title(title)
             .content(content)
             .project(project)
-            .number(2)
+            .number("")
             .build();
     }
 
@@ -98,7 +98,7 @@ class SprintQueryServiceTest {
             .title(title)
             .content(content)
             .project(project)
-            .number(3)
+            .number("")
             .build();
     }
 

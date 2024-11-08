@@ -31,6 +31,7 @@ public class IssueService {
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
     private final MemberProjectService memberProjectService;
+    private final IssueNumberGenerator issueNumberGenerator;
 
     private final IssueRepository issueRepository;
 
@@ -63,6 +64,7 @@ public class IssueService {
 
         Issue issue = issueValidator.findIssue(issueId);
         issueRepository.delete(issue);
+        issueNumberGenerator.decrement(key);
     }
 
     @Transactional

@@ -131,7 +131,7 @@ public class IssueUpdateConcurrencyTest {
                         <p>이슈 내용입니다.</p>    
                     """
             )
-            .number(1)
+            .number("")
             .status(IssueStatus.DO)
             .assignee(null)
             .label(IssueLabel.TEST)
