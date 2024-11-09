@@ -43,8 +43,6 @@ public class EpicFactory implements IssueFactory {
     public Long createIssue(IssueRequestDto.CreateIssue request, Project project) {
 
         // 이슈 번호 생성
-        // 리트라이 3번
-
         String issueNumber = issueNumberGenerator.generate(project.getKey());
 
         // 멤버를 찾기

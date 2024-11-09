@@ -21,6 +21,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public Member findMember(Long assigneeId, Long projectId) {
         if (assigneeId == null) {
             return null;

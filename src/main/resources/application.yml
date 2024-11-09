@@ -18,6 +18,10 @@ springdoc:
 
 
 aws:
+  credentials:
+    accessKey: ${AWS_ACCESS_KEY}
+    secretKey: ${AWS_SECRET_KEY}
+  region: ap-northeast-2
   s3:
     rootURL: https://image.agilehub.store
     bucket: agilehub
