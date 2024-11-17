@@ -11,7 +11,7 @@ spring:
 
     hikari:
       # 풀 사이즈 설정
-      maximum-pool-size: 20          # VUser 20 기준, 톰캣 스레드(200)의 1/10
+      maximum-pool-size: 50          # VUser 20 기준, 톰캣 스레드(200)의 1/10
       minimum-idle: 20               # 응답속도가 중요한 시스템이므로 maximum과 동일하게
 
       # 시간 관련 설정
