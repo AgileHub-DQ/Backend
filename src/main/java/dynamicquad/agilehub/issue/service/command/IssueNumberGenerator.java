@@ -4,6 +4,7 @@ import dynamicquad.agilehub.issue.domain.ProjectIssueSequence;
 import dynamicquad.agilehub.issue.repository.ProjectIssueSequenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -12,7 +13,7 @@ public class IssueNumberGenerator {
 
     private final ProjectIssueSequenceRepository issueSequenceRepository;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String generate(String projectKey) {
         ProjectIssueSequence sequence = issueSequenceRepository.findByProjectKey(projectKey)
             .orElseThrow(() -> new IllegalArgumentException("ProjectIssueSequence not found"));
