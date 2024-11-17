@@ -37,11 +37,6 @@
     <springProfile name="prod">
         <include resource="file-error-appender.xml"/>
 
-        <!-- HikariCP 모니터링용 로그 설정 추가 -->
-        <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG"/>
-        <logger name="com.zaxxer.hikari" level="TRACE"/>
-        <logger name="org.springframework.transaction" level="TRACE"/>
-
         <root level="ERROR">
             <appender-ref ref="FILE-ERROR"/>
         </root>
