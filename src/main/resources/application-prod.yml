@@ -31,3 +31,11 @@ management:
       enabled: true
     logfile:
       external-file: ./logs/agilehub-prod.log
+
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: debug
+    com.zaxxer.hikari: TRACE
+    org.springframework.transaction: TRACE
+  file:
+    name: hikari-pool.log
