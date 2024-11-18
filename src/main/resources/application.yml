@@ -10,9 +10,9 @@ spring:
       enabled: true
   server:
     tomcat:
-      max-threads: 50
-      min-spare-threads: 50
-      
+      max-threads: 100
+      min-spare-threads: 100
+
   hikari:
     # 풀 사이즈 설정
     maximum-pool-size: 75
