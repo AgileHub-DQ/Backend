@@ -8,10 +8,6 @@ spring:
       max-request-size: 100MB
       file-size-threshold: 0B
       enabled: true
-  server:
-    tomcat:
-      max-threads: 75
-      min-spare-threads: 75
 
   hikari:
     # 풀 사이즈 설정
@@ -20,7 +16,7 @@ spring:
 
     # 시간 관련 설정
     max-lifetime: 50000           # 50초, DB wait_timeout보다 작게
-    connection-timeout: 5000      # 3초, 빠른 응답이 필요한 API
+    connection-timeout: 5000      # 5초, 빠른 응답이 필요한 API
     validation-timeout: 1000      # 1초, connection-timeout보다 작게
 
 springdoc:
