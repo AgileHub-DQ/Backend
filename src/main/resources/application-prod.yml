@@ -9,17 +9,6 @@ spring:
     password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
-    hikari:
-      # 풀 사이즈 설정
-      maximum-pool-size: 50          # VUser 20 기준, 톰캣 스레드(200)의 1/10
-      minimum-idle: 20               # 응답속도가 중요한 시스템이므로 maximum과 동일하게
-
-      # 시간 관련 설정
-      max-lifetime: 50000           # 50초, DB wait_timeout보다 작게
-      connection-timeout: 3000      # 3초, 빠른 응답이 필요한 API
-      validation-timeout: 1000      # 1초, connection-timeout보다 작게
-
   sql:
     init:
       mode: never
