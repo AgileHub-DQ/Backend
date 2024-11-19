@@ -4,3 +4,8 @@ spring:
       host: ${REDIS_HOST}
       port: 6379
 #      password:
+
+redis:
+  issue:
+    number:
+      prefix: ISSUE
