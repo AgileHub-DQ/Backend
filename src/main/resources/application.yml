@@ -12,8 +12,8 @@ spring:
   datasource:
     hikari:
       # 풀 사이즈 설정
-      maximum-pool-size: 2
-      minimum-idle: 2
+      maximum-pool-size: 5
+      minimum-idle: 5
 
       # 시간 관련 설정
       max-lifetime: 50000           # 50초, DB wait_timeout보다 작게
