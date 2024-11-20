@@ -38,21 +38,32 @@ public class IssueNumberGenerator {
         return projectKey + "-" + nextNumber;
     }
 
-    @Scheduled(fixedDelay = 1000L * 18L)
+    @Scheduled(fixedDelay = 1000L * 30L)
     @Transactional
     public void syncWithDatabase() {
-        log.info("찍히나?");
         issueSequenceRepository.findAll().forEach(sequence -> {
             String redisKey = REDIS_ISSUE_PREFIX + sequence.getProjectKey();
             String currentValue = redisTemplate.opsForValue().get(redisKey);
+
             if (currentValue != null) {
-                sequence.updateLastNumber(Integer.parseInt(currentValue));
+                try {
+                    int redisValue = Integer.parseInt(currentValue);
+
+                    // 현재 DB 값보다 큰 경우에만 업데이트
+                    if (redisValue > sequence.getLastNumber()) {
+                        sequence.updateLastNumber(redisValue);
+                        log.debug("Synced sequence for project {}: {}",
+                            sequence.getProjectKey(), redisValue);
+                    }
+
+                } catch (NumberFormatException e) {
+                    log.error("Invalid number format in Redis for key: {}", redisKey, e);
+                    redisTemplate.delete(redisKey);
+                }
             }
         });
     }
 
-
-    @Transactional
     public void decrement(String projectKey) {
         ProjectIssueSequence sequence = issueSequenceRepository.findByProjectKey(projectKey)
             .orElseThrow(() -> new IllegalArgumentException("ProjectIssueSequence not found"));
@@ -68,9 +79,4 @@ public class IssueNumberGenerator {
         });
     }
 
-    // 내부 트랜잭션 호출이라 안됨
-//    @PreDestroy
-//    public void saveToDatabase() {
-//        syncWithDatabase(); // 종료 전 마지막 동기화
-//    }
 }
