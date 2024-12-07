@@ -1,41 +1,54 @@
 package dynamicquad.agilehub.issue.aspect;
 
-import static dynamicquad.agilehub.global.header.status.ErrorStatus.OPTIMISTIC_LOCK_EXCEPTION_ISSUE_NUMBER;
-
-import dynamicquad.agilehub.global.exception.GeneralException;
+import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
 @Aspect
-@Order(Ordered.LOWEST_PRECEDENCE - 1)  // 트랜잭션보다 더 낮은 순서로 실행
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 @Slf4j
 public class RetryAspect {
-    private static final int MAX_RETRIES = 5;
 
     @Around("@annotation(dynamicquad.agilehub.issue.aspect.Retry)")
     public Object retry(ProceedingJoinPoint joinPoint) throws Throwable {
+        // Retry 어노테이션 정보 가져오기
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Retry retry = signature.getMethod().getAnnotation(Retry.class);
+
         int attempts = 0;
-        while (attempts < MAX_RETRIES) {
+        int maxAttempts = retry.maxRetries();
+
+        while (attempts < maxAttempts) {
             try {
-                log.info("시작 시도: {}", attempts + 1);
+                log.info("시도 #{}", attempts + 1);
                 return joinPoint.proceed();
-            } catch (ObjectOptimisticLockingFailureException e) {
+            } catch (Exception e) {
                 attempts++;
-                if (attempts == MAX_RETRIES) {
-                    log.error("Failed after {} attempts", MAX_RETRIES, e);
-                    throw new GeneralException(OPTIMISTIC_LOCK_EXCEPTION_ISSUE_NUMBER);
+
+                // 설정된 예외 타입들 중 하나와 일치하는지 확인
+                boolean shouldRetry = Arrays.stream(retry.retryFor())
+                    .anyMatch(exceptionType -> exceptionType.isInstance(e));
+
+                if (!shouldRetry) {
+                    throw e; // 재시도 대상이 아닌 예외는 즉시 던짐
                 }
-                log.warn("Retry attempt {} of {}", attempts, MAX_RETRIES);
-                Thread.sleep(100); // 재시도 전 잠시 대기
+
+                if (attempts == maxAttempts) {
+                    log.error("{}회 시도 후 실패", maxAttempts, e);
+                    throw e;
+                }
+
+                log.warn("재시도 {}/{}", attempts, maxAttempts);
+                Thread.sleep(retry.delay());
             }
         }
-        throw new GeneralException(OPTIMISTIC_LOCK_EXCEPTION_ISSUE_NUMBER);
+        throw new RuntimeException("예기치 않은 재시도 실패");
     }
 }
