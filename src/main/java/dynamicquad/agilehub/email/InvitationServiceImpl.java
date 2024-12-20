@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.email;
 
+import dynamicquad.agilehub.global.util.RandomStringUtil;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectInviteRequestDto.SendInviteMail;
 import dynamicquad.agilehub.project.service.MemberProjectService;
@@ -23,7 +24,7 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private String generateInviteToken() {
-        return null;
+        return RandomStringUtil.generateUUID();
     }
 
     @Override
