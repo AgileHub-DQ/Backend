@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class InvitationServiceImpl implements InvitationService {
 
     private final MemberProjectService memberProjectService;
+    
 
     @Override
     public void sendInvitation(AuthMember authMember, SendInviteMail sendInviteMail) {
@@ -21,6 +22,10 @@ public class InvitationServiceImpl implements InvitationService {
 
         // 초대 토큰 생성
         String token = generateInviteToken();
+
+        // 초대 토큰 저장
+
+        // 이메일 전송
     }
 
     private String generateInviteToken() {
