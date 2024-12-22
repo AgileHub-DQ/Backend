@@ -6,9 +6,14 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.issue.aspect.Retry;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -25,12 +30,21 @@ public class AmazonSESService implements SMTPService {
     private String from;
 
     @Override
-    public void sendEmail(String subject, Map<String, Object> variables, String... to) {
+    @Async("emailExecutor")
+    @Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 1000)
+    public CompletableFuture<Void> sendEmail(String subject, Map<String, Object> variables, String... to) {
         // Amazon SES를 이용한 이메일 발송
-        String content = htmlTemplateEngine.process("invite", createContext(variables));
-        SendEmailRequest request = createSendEmailRequest(subject, content, to);
+        return CompletableFuture.runAsync(() -> {
+            try {
+                String content = htmlTemplateEngine.process("invite", createContext(variables));
+                SendEmailRequest request = createSendEmailRequest(subject, content, to);
 
-        amazonSimpleEmailService.sendEmail(request);
+                amazonSimpleEmailService.sendEmail(request);
+            } catch (Exception e) {
+                throw new GeneralException(ErrorStatus.EMAIL_NOT_SENT);
+            }
+        });
+
 
     }
 
