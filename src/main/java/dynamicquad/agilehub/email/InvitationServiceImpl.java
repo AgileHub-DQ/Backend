@@ -21,21 +21,34 @@ public class InvitationServiceImpl implements InvitationService {
     private final SMTPService smtpService;
     private final ProjectQueryService projectQueryService;
 
-    private static final String INVITATION_KEY_PREFIX = "invitation:";
+    // 초대 코드 저장 key prefix
+    private static final String KEY_PREFIX = "i:";
+
+    // 초대 코드 만료 시간
     private static final int EXPIRATION_MINUTES = 10;
 
     @Override
     public void sendInvitation(AuthMember authMember, SendInviteMail sendInviteMail) {
-        // 멤버 유효검사
         validateMember(authMember, sendInviteMail.getProjectId());
 
-        // 초대 토큰 생성
         String token = generateInviteToken();
         storeInviteToken(token, sendInviteMail);
 
-        // 이메일 전송
         sendEmail(sendInviteMail, token);
     }
+
+    private void storeInviteToken(String token, SendInviteMail sendInviteMail) {
+        String tokenBase64 = RandomStringUtil.uuidToBase64(token);
+        String key = KEY_PREFIX + tokenBase64;
+
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("p", String.valueOf(sendInviteMail.getProjectId())); // projectId -> p
+        fields.put("u", "0");  // used 상태
+
+        redisTemplate.opsForHash().putAll(key, fields);
+        redisTemplate.expire(key, EXPIRATION_MINUTES, TimeUnit.MINUTES);
+    }
+
 
     private void sendEmail(SendInviteMail sendInviteMail, String token) {
         final String projectName = projectQueryService.findProjectById(sendInviteMail.getProjectId()).getName();
@@ -47,18 +60,6 @@ public class InvitationServiceImpl implements InvitationService {
         smtpService.sendEmail("AgileHub 초대 메일", variables, sendInviteMail.getEmail());
     }
 
-    private void storeInviteToken(String token, SendInviteMail sendInviteMail) {
-        String key = INVITATION_KEY_PREFIX + token;
-        Map<String, String> fields = new HashMap<>();
-        fields.put("projectId", Long.toString(sendInviteMail.getProjectId()));
-        fields.put("email", sendInviteMail.getEmail());
-        fields.put("used", "false");
-        fields.put("createdAt", String.valueOf(System.currentTimeMillis()));
-
-        redisTemplate.opsForHash().putAll(key, fields);
-        redisTemplate.expire(key, EXPIRATION_MINUTES, TimeUnit.MINUTES);
-    }
-
     private void validateMember(AuthMember authMember, long projectId) {
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
         memberProjectService.validateMemberRole(authMember, projectId);
@@ -67,6 +68,7 @@ public class InvitationServiceImpl implements InvitationService {
     private String generateInviteToken() {
         return RandomStringUtil.generateUUID();
     }
+
 
     @Override
     public void validateInvitation(String inviteToken) {
