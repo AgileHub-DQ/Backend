@@ -1,5 +1,6 @@
 package dynamicquad.agilehub.global.config;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
@@ -23,6 +24,10 @@ public class DefaultSESConfig {
         return AmazonSimpleEmailServiceClientBuilder.standard()
             .withRegion(Regions.AP_NORTHEAST_2)
             .withCredentials(new AWSStaticCredentialsProvider(credentials))
+            .withClientConfiguration(new ClientConfiguration()
+                .withConnectionTimeout(3000)
+                .withSocketTimeout(5000)
+                .withRequestTimeout(10000))
             .build();
     }
 }
