@@ -8,12 +8,13 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
-import dynamicquad.agilehub.issue.aspect.Retry;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -33,8 +34,13 @@ public class AmazonSESService implements SMTPService {
 
     @Override
     @Async("emailExecutor")
+    //@Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 500)
+    @Retryable(retryFor = {GeneralException.class}, maxAttempts = 3, backoff = @Backoff(delay = 500))
     public CompletableFuture<Void> sendEmail(String subject, Map<String, Object> variables, String... to) {
         // Amazon SES를 이용한 이메일 발송
+        // 재시도 로직
+        int attempts = 0;
+        log.error("시도 #{}", attempts + 1);
         return CompletableFuture.runAsync(() -> {
             doSendEmail(subject, variables, to);
         });
@@ -43,7 +49,6 @@ public class AmazonSESService implements SMTPService {
     }
 
 
-    @Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 500)
     public void doSendEmail(String subject, Map<String, Object> variables, String[] to) {
         try {
             String content = htmlTemplateEngine.process("invite", createContext(variables));
