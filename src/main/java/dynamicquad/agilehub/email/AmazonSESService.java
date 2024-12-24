@@ -34,31 +34,22 @@ public class AmazonSESService implements SMTPService {
 
     @Override
     @Async("emailExecutor")
-    //@Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 500)
     @Retryable(retryFor = {GeneralException.class}, maxAttempts = 3, backoff = @Backoff(delay = 500))
     public CompletableFuture<Void> sendEmail(String subject, Map<String, Object> variables, String... to) {
-        // Amazon SES를 이용한 이메일 발송
-        // 재시도 로직
-        int attempts = 0;
-        log.error("시도 #{}", attempts + 1);
+
         return CompletableFuture.runAsync(() -> {
-            doSendEmail(subject, variables, to);
+            try {
+                String content = htmlTemplateEngine.process("invite", createContext(variables));
+                SendEmailRequest request = createSendEmailRequest(subject, content, to);
+
+                amazonSimpleEmailService.sendEmail(request);
+            } catch (Exception e) {
+                log.error("AmazonSESService 이메일 발송 실패: {}", e.getMessage());
+                throw new GeneralException(ErrorStatus.EMAIL_NOT_SENT);
+            }
         });
 
 
-    }
-
-
-    public void doSendEmail(String subject, Map<String, Object> variables, String[] to) {
-        try {
-            String content = htmlTemplateEngine.process("invite", createContext(variables));
-            SendEmailRequest request = createSendEmailRequest(subject, content, to);
-
-            amazonSimpleEmailService.sendEmail(request);
-        } catch (Exception e) {
-            log.error("AmazonSESService 이메일 발송 실패: {}", e.getMessage());
-            throw new GeneralException(ErrorStatus.EMAIL_NOT_SENT);
-        }
     }
 
     private SendEmailRequest createSendEmailRequest(String subject, String content, String... to) {

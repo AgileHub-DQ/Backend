@@ -105,7 +105,8 @@ public class InvitationServiceImpl implements InvitationService {
                 log.info("이메일 전송 완료");
             })
             .exceptionally(e -> {
-                log.error("이메일 전송 실패", e);
+                // 여기서는 모든 재시도가 실패한 후의 최종 실패 처리
+                log.error("이메일 전송 최종 실패", e);
                 storeInvitationStatus(sendInviteMail.getEmail(), InvitationStatus.FAILED);
                 return null;
             });
