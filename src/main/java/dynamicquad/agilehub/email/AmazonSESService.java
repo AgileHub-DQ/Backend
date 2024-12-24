@@ -31,7 +31,7 @@ public class AmazonSESService implements SMTPService {
 
     @Override
     @Async("emailExecutor")
-    @Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 1000)
+    @Retry(maxRetries = 3, retryFor = {GeneralException.class}, delay = 500)
     public CompletableFuture<Void> sendEmail(String subject, Map<String, Object> variables, String... to) {
         // Amazon SES를 이용한 이메일 발송
         return CompletableFuture.runAsync(() -> {
