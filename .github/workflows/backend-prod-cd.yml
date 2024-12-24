@@ -49,5 +49,6 @@ jobs:
             docker rm -f agilehub-backend || true
             docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
             docker run -v /var/log/backend:/app/logs \
+            -e HOST_IP=${{ secrets.NCP_HOST }} \
             --env-file .env \
-            -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}   
+            -d -p 8080:8080 -p 9010:9010 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}   

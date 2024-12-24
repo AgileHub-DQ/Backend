@@ -27,5 +27,16 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*.jar /app/agile.jar
 
 EXPOSE 8080
+EXPOSE 9010
+
 ENTRYPOINT ["java"]
-CMD ["-jar","-Dspring.profiles.active=prod","agile.jar"]
+CMD ["-jar", \
+    "-Dspring.profiles.active=prod", \
+    "-Dcom.sun.management.jmxremote=true", \
+    "-Dcom.sun.management.jmxremote.local.only=false", \
+    "-Dcom.sun.management.jmxremote.port=9010", \
+    "-Dcom.sun.management.jmxremote.rmi.port=9010", \
+    "-Dcom.sun.management.jmxremote.ssl=false", \
+    "-Dcom.sun.management.jmxremote.authenticate=false", \
+    "-Djava.rmi.server.hostname=223.130.129.226", \
+    "agile.jar"]
