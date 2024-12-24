@@ -12,6 +12,7 @@ import dynamicquad.agilehub.issue.aspect.Retry;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.thymeleaf.context.IContext;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AmazonSESService implements SMTPService {
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
@@ -41,6 +43,7 @@ public class AmazonSESService implements SMTPService {
 
                 amazonSimpleEmailService.sendEmail(request);
             } catch (Exception e) {
+                log.error("AmazonSESService 이메일 발송 실패: {}", e.getMessage());
                 throw new GeneralException(ErrorStatus.EMAIL_NOT_SENT);
             }
         });

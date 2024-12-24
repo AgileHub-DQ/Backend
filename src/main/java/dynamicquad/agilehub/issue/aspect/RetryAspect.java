@@ -27,7 +27,7 @@ public class RetryAspect {
 
         while (attempts < maxAttempts) {
             try {
-                log.info("시도 #{}", attempts + 1);
+                log.error("시도 #{}", attempts + 1);
                 return joinPoint.proceed();
             } catch (Exception e) {
                 attempts++;
@@ -45,7 +45,7 @@ public class RetryAspect {
                     throw e;
                 }
 
-                log.warn("재시도 {}/{}", attempts, maxAttempts);
+                log.error("재시도 {}/{}", attempts, maxAttempts);
                 Thread.sleep(retry.delay());
             }
         }
