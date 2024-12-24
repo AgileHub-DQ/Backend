@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvitationServiceImpl implements InvitationService {
 
     private final MemberProjectService memberProjectService;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final SMTPService smtpService;
     private final ProjectQueryService projectQueryService;
 
@@ -39,23 +39,26 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public void sendInvitation(AuthMember authMember, SendInviteMail sendInviteMail) {
         validateMember(authMember, sendInviteMail.getProjectId());
-
         // 진행 중인 초대가 있는 지 확인
-        String email = sendInviteMail.getEmail();
-        if (hasActiveInvitation(email)) {
-            throw new GeneralException(ErrorStatus.ALREADY_INVITATION);
-        }
-        else if (isEmailServiceDown(email)) {
-            // 이메일 서비스가 고장나 있을 때
-
-            throw new GeneralException(ErrorStatus.EMAIL_SEND_FAIL);
-        }
+        String email = validateMail(sendInviteMail);
 
         String token = generateInviteToken();
         storeInviteToken(token, sendInviteMail);
         storeInvitationStatus(email, InvitationStatus.PENDING);
 
         sendEmail(sendInviteMail, token);
+    }
+
+    private String validateMail(SendInviteMail sendInviteMail) {
+        String email = sendInviteMail.getEmail();
+        if (hasActiveInvitation(email)) {
+            throw new GeneralException(ErrorStatus.ALREADY_INVITATION);
+        }
+        else if (isEmailServiceDown(email)) {
+            // 이메일 서비스가 고장나 있을 때
+            throw new GeneralException(ErrorStatus.EMAIL_SEND_FAIL);
+        }
+        return email;
     }
 
     private boolean isEmailServiceDown(String email) {
@@ -72,7 +75,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private boolean hasActiveInvitation(String email) {
         String statusKey = STATUS_PREFIX + email;
-        String status = (String) redisTemplate.opsForValue().get(statusKey);
+        String status = redisTemplate.opsForValue().get(statusKey);
         return status != null && (InvitationStatus.isPendingOrSending(status));
     }
 
