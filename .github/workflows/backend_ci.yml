@@ -12,13 +12,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    # Docker 사용을 위한 서비스 컨테이너 추가
-    services:
-      docker:
-        image: docker:dind
-        options: --privileged
-        ports:
-          - 2375:2375
+
     env:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       REDIS_HOST: localhost
@@ -29,11 +23,13 @@ jobs:
       AWS_SES_SECRET_KEY: 1234
       AWS_SES_FROM: no-reply@agilehub.info
 
-      # Docker 데몬 연결을 위한 환경변수 추가
-      DOCKER_HOST: tcp://localhost:2375
-      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
 
     steps:
+      - name: redis 서버 실행
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: '6.2.5'
+          redis-port: 6379
       - name: 레포지토리를 가져옵니다
         uses: actions/checkout@v3
 
@@ -42,6 +38,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
 
       - name: 그래들 캐시
         uses: actions/cache@v2
