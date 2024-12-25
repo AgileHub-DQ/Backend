@@ -63,8 +63,9 @@ public class IssueService {
         validateMemberInProject(key, authMember);
 
         Issue issue = issueValidator.findIssue(issueId);
-        issueRepository.delete(issue);
         issueNumberGenerator.decrement(key);
+        issueRepository.delete(issue);
+
     }
 
     @Transactional

@@ -49,7 +49,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) {
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URL_PARAM_COOKIE_NAME)
-                .map(cookie -> cookie.getValue());
+            .map(cookie -> cookie.getValue());
 
         clearAuthenticationAttributes(request, response);
         return redirectUri.orElse(getDefaultTargetUrl());
@@ -61,8 +61,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private String getRedirectUrl(String targetUrl, GeneratedToken generatedToken) {
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("accessToken", generatedToken.getAccessToken())
-                .build().toUriString();
+            .queryParam("accessToken", generatedToken.getAccessToken())
+            .build().toUriString();
     }
 
     private GeneratedToken generateMemberToken(Authentication authentication) {
@@ -71,7 +71,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String distinctId = principal.getId();
         String name = principal.getName();
         String role = principal.getAuthorities().stream().findFirst()
-                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_ROLE_NOT_EXIST)).getAuthority();
+            .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_ROLE_NOT_EXIST)).getAuthority();
 
         GeneratedToken token = jwtUtil.generateToken(name, role, provider, distinctId);
 

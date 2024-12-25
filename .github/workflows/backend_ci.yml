@@ -11,12 +11,23 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    # Docker 사용을 위한 서비스 컨테이너 추가
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
+        ports:
+          - 2375:2375
     env:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       REDIS_HOST: localhost
       MAIL_USERNAME: 1234
       MAIL_PASSWORD: 1234
       OPEN_API_KEY: 1234
+      # Docker 데몬 연결을 위한 환경변수 추가
+      DOCKER_HOST: tcp://localhost:2375
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
 
     steps:
       - name: 레포지토리를 가져옵니다
