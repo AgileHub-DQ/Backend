@@ -1,9 +1,9 @@
 package dynamicquad.agilehub.dummy;
 
-import dynamicquad.agilehub.dummy.bulkRepository.IssueBulkRepository;
-import dynamicquad.agilehub.dummy.bulkRepository.MemberBulkRepository;
-import dynamicquad.agilehub.dummy.bulkRepository.MemberProjectBulkRepository;
-import dynamicquad.agilehub.dummy.bulkRepository.ProjectBulkRepository;
+import dynamicquad.agilehub.dummy.bulk.repository.IssueBulkRepository;
+import dynamicquad.agilehub.dummy.bulk.repository.MemberBulkRepository;
+import dynamicquad.agilehub.dummy.bulk.repository.MemberProjectBulkRepository;
+import dynamicquad.agilehub.dummy.bulk.repository.ProjectBulkRepository;
 import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.IssueStatus;

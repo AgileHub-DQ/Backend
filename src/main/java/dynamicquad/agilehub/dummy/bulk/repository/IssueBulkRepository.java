@@ -1,7 +1,7 @@
-package dynamicquad.agilehub.dummy.bulkRepository;
+package dynamicquad.agilehub.dummy.bulk.repository;
 
-import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.domain.Story;
 import dynamicquad.agilehub.issue.domain.Task;
 import java.sql.PreparedStatement;

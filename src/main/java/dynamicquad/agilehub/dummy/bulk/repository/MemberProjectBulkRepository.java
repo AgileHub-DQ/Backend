@@ -1,4 +1,4 @@
-package dynamicquad.agilehub.dummy.bulkRepository;
+package dynamicquad.agilehub.dummy.bulk.repository;
 
 import dynamicquad.agilehub.project.domain.MemberProject;
 import jakarta.transaction.Transactional;
