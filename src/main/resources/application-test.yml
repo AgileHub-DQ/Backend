@@ -3,6 +3,10 @@ spring:
   config:
     activate:
       on-profile: test
+    import:
+      - optional:classpath:.env[.properties]
+
+
   h2:
     console:
       enabled: true
@@ -34,6 +38,7 @@ spring:
   sql:
     init:
       mode: never
+
 logging:
   level:
     org.hibernate.SQL: debug

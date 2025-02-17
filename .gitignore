@@ -40,4 +40,4 @@ out/
 
 /redis/
 
-.env
+src/main/resources/.env
