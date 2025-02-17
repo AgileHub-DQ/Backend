@@ -16,9 +16,10 @@ spring:
       minimum-idle: 20
 
       # 시간 관련 설정
-      max-lifetime: 50000           # 50초, DB wait_timeout보다 작게
+      max-lifetime: 500000           # 500초, DB wait_timeout보다 작게
       connection-timeout: 5000      # 5초, 빠른 응답이 필요한 API
       validation-timeout: 1000      # 1초, connection-timeout보다 작게
+      idle-timeout: 100000
 
 # 톰켓 설정
 server:
