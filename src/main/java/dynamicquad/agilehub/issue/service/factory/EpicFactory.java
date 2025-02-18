@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component("EPIC_FACTORY")
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class EpicFactory implements IssueFactory {
