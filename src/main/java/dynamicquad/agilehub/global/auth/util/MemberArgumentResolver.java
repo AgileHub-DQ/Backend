@@ -12,16 +12,41 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+
 public class MemberArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private final String activeProfile;
+
+    public MemberArgumentResolver(String activeProfile) {
+        this.activeProfile = activeProfile;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(Auth.class) && parameter.getParameterType().equals(AuthMember.class);
     }
 
+
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+
+        if (activeProfile.equals("prod")) {
+            return resolveProductionAuthMember();
+        }
+
+        return resolveTestAuthMember();
+    }
+
+    private Object resolveTestAuthMember() {
+        return AuthMember.builder()
+            .id(1L)
+            .name("User1")
+            .profileImageUrl("adada")
+            .build();
+    }
+
+    private Object resolveProductionAuthMember() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         SecurityMember principal = (SecurityMember) authentication.getPrincipal();

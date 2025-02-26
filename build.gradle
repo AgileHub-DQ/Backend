@@ -57,6 +57,9 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    // test-containers
+    testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.17.2'
+
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
@@ -65,6 +68,11 @@ dependencies {
 
     // mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.12.408'
+
+    // retry
+    implementation 'org.springframework.retry:spring-retry:2.0.10'
+
 
     // thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -73,6 +81,9 @@ dependencies {
     // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    
+    // .env 로드
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 }
 
 tasks.named('test') {

@@ -5,8 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import dynamicquad.agilehub.comment.domain.Comment;
 import dynamicquad.agilehub.comment.response.CommentResponse.CommentCreateResponse;
 import dynamicquad.agilehub.comment.service.CommentService;
-import dynamicquad.agilehub.issue.domain.IssueStatus;
+import dynamicquad.agilehub.config.RedisTestContainer;
 import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.MemberProject;
@@ -17,11 +18,13 @@ import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@Import(RedisTestContainer.class)
 class CommentServiceTest {
 
     @PersistenceContext

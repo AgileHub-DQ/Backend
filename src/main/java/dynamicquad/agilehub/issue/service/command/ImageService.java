@@ -17,7 +17,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
     private final PhotoS3Manager photoS3Manager;
-
+    
     public void saveImages(Issue issue, List<MultipartFile> files, String workingDirectory) {
         List<String> imagePath = photoS3Manager.uploadPhotos(files, workingDirectory);
         if (imagePath.isEmpty()) {

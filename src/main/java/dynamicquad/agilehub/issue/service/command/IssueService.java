@@ -19,22 +19,23 @@ import dynamicquad.agilehub.project.service.ProjectQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(readOnly = true)
 public class IssueService {
 
     private final ProjectQueryService projectQueryService;
     private final IssueFactoryProvider issueFactoryProvider;
     private final IssueValidator issueValidator;
     private final MemberProjectService memberProjectService;
+    private final IssueNumberGenerator issueNumberGenerator;
 
     private final IssueRepository issueRepository;
 
-    @Transactional
+
     public Long createIssue(String key, IssueRequestDto.CreateIssue request, AuthMember authMember) {
 
         Project project = validateMemberInProject(key, authMember);
@@ -44,11 +45,9 @@ public class IssueService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void updateIssue(String key, Long issueId, IssueRequestDto.EditIssue request, AuthMember authMember) {
-
         Project project = validateMemberInProject(key, authMember);
-
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(project.getId(), issueId);
         issueValidator.validateEqualsIssueType(issue, request.getType());
@@ -64,7 +63,9 @@ public class IssueService {
         validateMemberInProject(key, authMember);
 
         Issue issue = issueValidator.findIssue(issueId);
+        issueNumberGenerator.decrement(key);
         issueRepository.delete(issue);
+
     }
 
     @Transactional
@@ -89,10 +90,12 @@ public class IssueService {
         if (issue instanceof Epic epic) {
             epic.updatePeriod(request.getStartDate(), request.getEndDate());
             return;
-        } else if (issue instanceof Story story) {
+        }
+        else if (issue instanceof Story story) {
             story.updatePeriod(request.getStartDate(), request.getEndDate());
             return;
-        } else if (issue instanceof Task task) {
+        }
+        else if (issue instanceof Task task) {
             task.updatePeriod(request.getStartDate(), request.getEndDate());
             return;
         }

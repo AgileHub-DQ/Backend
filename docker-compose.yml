@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: agilehubdb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "0.0.0.0:3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=500
+    networks:
+      - app-network
+    restart: always
+
+  redis-master:
+    image: redis:7.0
+    container_name: redis-master
+    ports:
+      - "0.0.0.0:6379:6379"
+    volumes:
+      - ./redis/data:/data
+    command: redis-server --requirepass ready!action --appendonly yes
+    networks:
+      - app-network
+    restart: always
+
+  redis-slave1:
+    image: redis:7.0
+    container_name: redis-slave1
+    ports:
+      - "0.0.0.0:6380:6379"
+    command: redis-server --requirepass yourstrong!password --masterauth ready!action --replicaof redis-master 6379 --appendonly yes
+    networks:
+      - app-network
+    restart: always
+    depends_on:
+      - redis-master
+
+  redis-slave2:
+    image: redis:7.0
+    container_name: redis-slave2
+    ports:
+      - "0.0.0.0:6381:6379"
+    command: redis-server --requirepass yourstrong!password --masterauth ready!action --replicaof redis-master 6379 --appendonly yes
+    networks:
+      - app-network
+    restart: always
+    depends_on:
+      - redis-master
+
+networks:
+  app-network:
+    driver: bridge

@@ -30,7 +30,7 @@ public class Epic extends Issue {
     private List<Story> stories = new ArrayList<>();
 
     @Builder
-    private Epic(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+    private Epic(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                  Project project, LocalDate startDate, LocalDate endDate) {
         super(title, content, number, status, label, assignee, project);
         this.startDate = startDate;

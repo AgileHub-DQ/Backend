@@ -57,7 +57,7 @@ public class IssueResponseDto {
                                        IssueType issueType) {
             IssueDetail issueDetail = IssueDetail.builder()
                 .issueId(issue.getId())
-                .key(issue.getProject().getKey() + "-" + issue.getNumber())
+                .key(issue.getNumber())
                 .title(issue.getTitle())
                 .type(issueType.toString())
                 .status(String.valueOf(issue.getStatus()))
@@ -71,12 +71,14 @@ public class IssueResponseDto {
                 Epic epic = Epic.extractFromIssue(issue);
                 issueDetail.startDate = epic.getStartDate() == null ? "" : epic.getStartDate().toString();
                 issueDetail.endDate = epic.getEndDate() == null ? "" : epic.getEndDate().toString();
-            } else if (IssueType.STORY.equals(issueType)) {
+            }
+            else if (IssueType.STORY.equals(issueType)) {
 
                 Story story = Story.extractFromIssue(issue);
                 issueDetail.startDate = story.getStartDate() == null ? "" : story.getStartDate().toString();
                 issueDetail.endDate = story.getEndDate() == null ? "" : story.getEndDate().toString();
-            } else if (IssueType.TASK.equals(issueType)) {
+            }
+            else if (IssueType.TASK.equals(issueType)) {
 
                 Task task = Task.extractFromIssue(issue);
                 issueDetail.startDate = task.getStartDate() == null ? "" : task.getStartDate().toString();
@@ -133,7 +135,7 @@ public class IssueResponseDto {
         public static SubIssueDetail from(Issue issue, IssueType issueType, AssigneeDto assigneeDto) {
             return SubIssueDetail.builder()
                 .issueId(issue.getId())
-                .key(issue.getProject().getKey() + "-" + issue.getNumber())
+                .key(issue.getNumber())
                 .status(String.valueOf(issue.getStatus()))
                 .label(String.valueOf(issue.getLabel()))
                 .type(issueType.toString())
@@ -165,7 +167,7 @@ public class IssueResponseDto {
                 .status(String.valueOf(issue.getStatus()))
                 .label(String.valueOf(issue.getLabel()))
                 .assignee(assignee)
-                .key(projectKey + "-" + issue.getNumber())
+                .key(issue.getNumber())
                 .build();
         }
 

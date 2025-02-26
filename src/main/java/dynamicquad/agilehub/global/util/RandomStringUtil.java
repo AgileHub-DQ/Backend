@@ -1,7 +1,10 @@
 package dynamicquad.agilehub.global.util;
 
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Random;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -12,6 +15,7 @@ public class RandomStringUtil {
     private static final String CHAR_SPECIAL = "!@#$%^&*";
 
     private static final String ALL_CHARS = CHAR_UPPERCASE + CHAR_LOWERCASE + CHAR_DIGITS + CHAR_SPECIAL;
+
 
     private RandomStringUtil() {
     }
@@ -28,5 +32,27 @@ public class RandomStringUtil {
 
         return sb.toString();
     }
+
+    public static String generateUUID() {
+        return java.util.UUID.randomUUID().toString();
+    }
+
+    public static String uuidToBase64(String str) {
+        UUID uuid = UUID.fromString(str);
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bb.array());
+    }
+
+    public static String base64ToUUID(String str) {
+        byte[] bytes = Base64.getDecoder().decode(str);
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        UUID uuid = new UUID(bb.getLong(), bb.getLong());
+
+        return uuid.toString();
+    }
+
 
 }

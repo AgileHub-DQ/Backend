@@ -29,7 +29,7 @@ public class EpicResponseDto {
             return EpicDetailForBacklog.builder()
                 .id(epic.getId())
                 .title(epic.getTitle())
-                .key(key + "-" + epic.getNumber())
+                .key(epic.getNumber())
                 .status(epic.getStatus().toString())
                 .label(String.valueOf(epic.getLabel()))
                 .type(IssueType.EPIC.toString())

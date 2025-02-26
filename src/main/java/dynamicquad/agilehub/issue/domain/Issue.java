@@ -1,6 +1,7 @@
 package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.comment.domain.Comment;
+import dynamicquad.agilehub.global.domain.BaseEntity;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
@@ -36,7 +37,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn(name = "issue_type")
 @Table(name = "issue")
 @Entity
-public abstract class Issue {
+public abstract class Issue extends BaseEntity {
 
     @Id
     @Include
@@ -44,11 +45,14 @@ public abstract class Issue {
     @Column(name = "issue_id")
     private Long id;
 
+//    @Version
+//    private Long version;
+
     private String title;
 
     private String content;
 
-    private int number;
+    private String number;
 
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
@@ -79,7 +83,7 @@ public abstract class Issue {
     }
 
 
-    protected Issue(String title, String content, int number, IssueStatus status, IssueLabel label, Member assignee,
+    protected Issue(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                     Project project) {
         this.title = title;
         this.content = content;
@@ -96,6 +100,10 @@ public abstract class Issue {
         this.status = request.getStatus();
         this.label = request.getLabel();
         this.assignee = assignee;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 
 

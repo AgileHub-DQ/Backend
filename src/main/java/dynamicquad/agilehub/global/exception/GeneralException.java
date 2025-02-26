@@ -2,13 +2,16 @@ package dynamicquad.agilehub.global.exception;
 
 import dynamicquad.agilehub.global.header.ReasonDto;
 import dynamicquad.agilehub.global.header.status.BaseStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class GeneralException extends RuntimeException {
     private final BaseStatus status;
+
+    public GeneralException(BaseStatus status) {
+        super(status.getReason().getMessage());
+        this.status = status;
+    }
 
     public ReasonDto getErrorReason() {
         return this.status.getReason();

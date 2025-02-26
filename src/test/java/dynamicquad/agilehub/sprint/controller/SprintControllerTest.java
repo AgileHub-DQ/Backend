@@ -12,7 +12,6 @@ import dynamicquad.agilehub.global.auth.filter.OAuth2SuccessHandler;
 import dynamicquad.agilehub.global.auth.service.CustomOAuth2UserService;
 import dynamicquad.agilehub.global.auth.service.RefreshTokenRedisService;
 import dynamicquad.agilehub.global.auth.util.JwtUtil;
-import dynamicquad.agilehub.global.auth.util.MemberArgumentResolver;
 import dynamicquad.agilehub.global.config.SpringSecurityConfig;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
@@ -39,7 +38,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @ActiveProfiles("test")
 @WebMvcTest(SprintController.class)
-@Import({SpringSecurityConfig.class, MemberArgumentResolver.class})
+@Import({SpringSecurityConfig.class})
 class SprintControllerTest {
 
     @Autowired
@@ -95,8 +94,8 @@ class SprintControllerTest {
             .build();
         AuthMember authMember = AuthMember.builder()
             .id(1L)
-            .name("testUser")
-            .profileImageUrl("profile")
+            .name("User1")
+            .profileImageUrl("adada")
             .build();
 
         String key = "P1";

@@ -7,11 +7,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories
+//@EnableRedisRepositories
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -20,21 +19,24 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(host);
-        redisStandaloneConfiguration.setPort(port);
-//        redisStandaloneConfiguration.setPassword("password");
-
-        return new LettuceConnectionFactory(redisStandaloneConfiguration);
-    }
+    @Value("${spring.data.redis.password}")
+    private String password;
 
     @Bean
     public RedisTemplate<String, String> redisTemplate() {
-        StringRedisTemplate redisTemplate = new StringRedisTemplate();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-        return redisTemplate;
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setConnectionFactory(redisConnectionFactory());
+        return template;
+    }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        config.setPassword(password);
+        
+        return new LettuceConnectionFactory(config);
     }
 
 }

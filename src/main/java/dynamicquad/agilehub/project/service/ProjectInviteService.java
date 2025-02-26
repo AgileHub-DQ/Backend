@@ -9,12 +9,15 @@ import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.model.InviteEmailInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class ProjectInviteService {
 
     private static final String INVITE_SUBJECT = "[AgileHub] 초대코드";
@@ -25,7 +28,7 @@ public class ProjectInviteService {
     private final InviteRedisService inviteRedisService;
 
     public void sendInviteEmail(MemberRequestDto.AuthMember authMember,
-                                ProjectInviteRequestDto.SendInviteMail sendInviteMail) {
+            ProjectInviteRequestDto.SendInviteMail sendInviteMail) {
         memberProjectService.validateMemberInProject(authMember.getId(), sendInviteMail.getProjectId());
         memberProjectService.validateMemberRole(authMember, sendInviteMail.getProjectId());
 
@@ -40,12 +43,17 @@ public class ProjectInviteService {
                 .inviteCode(inviteCode)
                 .build();
 
-        emailService.sendMail(emailInfo, "invite");
+        emailService.sendMail(emailInfo, "invite")
+                .thenRun(() -> log.info("이메일 전송 완료"))
+                .exceptionally(e -> {
+                    log.error("이메일 전송 실패", e);
+                    return null;
+                });
     }
 
     @Transactional
     public Project receiveInviteEmail(MemberRequestDto.AuthMember authMember,
-                                      String inviteCode) {
+            String inviteCode) {
         InviteRedisEntity inviteRedisEntity = inviteRedisService.findByInviteCode(inviteCode);
         Project project = Project.createPojoProject(Long.parseLong(inviteRedisEntity.getProjectId()));
 

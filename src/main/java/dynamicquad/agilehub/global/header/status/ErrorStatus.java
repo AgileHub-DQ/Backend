@@ -60,7 +60,13 @@ public enum ErrorStatus implements BaseStatus {
     // Email Error
     EMAIL_NOT_SENT(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL_5001", "이메일이 정상적으로 송신되지 않았습니다."),
     INVITE_CODE_NOT_EXIST(HttpStatus.BAD_REQUEST, "EMAIL_4001", "초대 코드를 찾을 수 없습니다."),
-    ;
+    ALREADY_INVITATION(HttpStatus.BAD_REQUEST, "EMAIL_4002", "이미 진행 중인 초대가 있습니다"),
+    EMAIL_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL_4003", "이메일 서비스에 문제가 발생했습니다. 나중에 다시 시도해주세요."),
+
+    // Optimistic Lock Exception
+    OPTIMISTIC_LOCK_EXCEPTION(HttpStatus.LOCKED, "LOCK_4000", "다른 사용자가 이미 수정했습니다. 새로 고침 후 다시 시도해주세요."),
+    OPTIMISTIC_LOCK_EXCEPTION_ISSUE_NUMBER(HttpStatus.LOCKED, "LOCK_4001", "이슈 번호 생성 실패. 다시 시도해주세요.");
+
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -69,19 +75,19 @@ public enum ErrorStatus implements BaseStatus {
     @Override
     public ReasonDto getReason() {
         return ReasonDto.builder()
-                .message(message)
-                .code(code)
-                .isSuccess(false)
-                .build();
+            .message(message)
+            .code(code)
+            .isSuccess(false)
+            .build();
     }
 
     @Override
     public ReasonDto getReasonHttpStatus() {
         return ReasonDto.builder()
-                .status(httpStatus)
-                .message(message)
-                .code(code)
-                .isSuccess(false)
-                .build();
+            .status(httpStatus)
+            .message(message)
+            .code(code)
+            .isSuccess(false)
+            .build();
     }
 }

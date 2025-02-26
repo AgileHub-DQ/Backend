@@ -27,3 +27,7 @@ logging:
     org.hibernate.SQL: debug
     root: info
     org.hibernate.orm.jdbc.bind: trace
+    com.zaxxer.hikari: debug
+    com.zaxxer.hikari.HikariConfig: debug
+    com.zaxxer.hikari.HikariPool: debug
+    com.zaxxer.hikari.pool.PoolBase: DEBUG

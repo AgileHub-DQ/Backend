@@ -9,6 +9,31 @@ spring:
       file-size-threshold: 0B
       enabled: true
 
+  datasource:
+    hikari:
+      # 풀 사이즈 설정
+      maximum-pool-size: 400
+      minimum-idle: 20
+
+      # 시간 관련 설정
+      max-lifetime: 500000           # 500초, DB wait_timeout보다 작게
+      connection-timeout: 5000      # 5초, 빠른 응답이 필요한 API
+      validation-timeout: 1000      # 1초, connection-timeout보다 작게
+      idle-timeout: 100000
+
+# 톰켓 설정
+server:
+  tomcat:
+    accept-count: 100 # max-connections를 초과하는 요청에 대한 대기열 크기, 대기열이 가득 차면 추가 요청은 거절됨, OS 레벨에서 관리되는 설정
+    max-connections: 8192 # 서버가 동시에 유지할 수 있는 최대 연결 수, 실제 활성화된 TCP 연결의 수가 아님, 시스템이 할당한 소켓 파일 디스크립터의 수를 의미, 연결이 종료되어도 TIME_WAIT 상태 때문에 파일 디스크립터는 바로 해제되지 않음
+    threads:
+      max: 500 # 최대 스레드 수
+      min-spare: 500 # 초기 스레드 풀 사이즈
+
+
+
+
+
 springdoc:
   swagger-ui:
     path: /swagger-ui
@@ -18,12 +43,20 @@ springdoc:
 
 
 aws:
+  credentials:
+    accessKey: ${AWS_ACCESS_KEY}
+    secretKey: ${AWS_SECRET_KEY}
+  region: ap-northeast-2
   s3:
     rootURL: https://image.agilehub.store
     bucket: agilehub
     directory: /images
     workingDirectory:
       issue: issue
+  ses:
+    accessKey: ${AWS_SES_ACCESS_KEY}
+    secretKey: ${AWS_SES_SECRET_KEY}
+    from: ${AWS_SES_FROM}
 
 
 openai:

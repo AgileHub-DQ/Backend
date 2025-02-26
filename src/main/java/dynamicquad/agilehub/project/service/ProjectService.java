@@ -2,6 +2,8 @@ package dynamicquad.agilehub.project.service;
 
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
+import dynamicquad.agilehub.issue.domain.ProjectIssueSequence;
+import dynamicquad.agilehub.issue.repository.ProjectIssueSequenceRepository;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectCreateRequest;
 import dynamicquad.agilehub.project.controller.request.ProjectRequest.ProjectUpdateRequest;
@@ -23,12 +25,17 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberProjectService memberProjectService;
 
+    private final ProjectIssueSequenceRepository issueSequenceRepository;
+
     @Transactional
     public String createProject(ProjectCreateRequest request, AuthMember authMember) {
         validateKeyUniqueness(request.getKey());
         Project project = projectRepository.save(request.toEntity());
         // 프로젝트 생성자는 프로젝트에 대한 모든 권한을 가짐(ADMIN)
         memberProjectService.createMemberProject(authMember, project, MemberProjectRole.ADMIN);
+
+        // 이슈 시퀀스 생성
+        issueSequenceRepository.save(new ProjectIssueSequence(project.getKey()));
 
         return project.getKey();
     }

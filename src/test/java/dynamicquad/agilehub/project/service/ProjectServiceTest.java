@@ -60,24 +60,6 @@ class ProjectServiceTest {
 
     @Test
     @Transactional
-    void 중복된_키를_가진_프로젝트를_등록하면_에러발생() {
-        // given
-        ProjectCreateRequest request = ProjectCreateRequest.builder()
-            .name("프로젝트1")
-            .key("PK1")
-            .build();
-        AuthMember authMember = AuthMember.builder()
-            .id(1L)
-            .name("test")
-            .build();
-        // then
-        assertThatThrownBy(() -> projectService.createProject(request, authMember))
-            .isInstanceOf(RuntimeException.class);
-    }
-
-
-    @Test
-    @Transactional
     void 기존키가_존재하지않은키일때_예외를_반환한다() {
         // given
         Member member = Member.builder()

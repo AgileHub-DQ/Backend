@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - develop
     paths:
       - "src/**"
 jobs:
@@ -33,26 +34,21 @@ jobs:
           push: true
           # 이미지를 레지스트리에 푸시
           tags: ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
-          platforms: linux/arm64
+          platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-  backend-docker-pull-and-run:
-    needs: [ backend-docker-build-and-push ]
-    if: ${{ needs.backend-docker-build-and-push.result == 'success' }}
-    runs-on: [ self-hosted, ec2-runner ]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup SSH Key
-        run: |
-          echo "${{ secrets.PEM_KEY }}" > pem_key
-          chmod 600 pem_key
       - name: WAS인스턴스 접속 및 애플리케이션 실행
-        run: |
-          ssh -i pem_key -o StrictHostKeyChecking=no ${{ secrets.WAS_USERNAME }}@${{ secrets.WAS_PUBLIC_IP }} << EOF
-          docker rm -f agilehub-backend || true
-          docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
-          docker run -v /var/log/backend:/app/logs \
-          --env-file .env \
-          -d -p 8080:8080 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
-          EOF
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          password: ${{ secrets.NCP_PASSWORD }}
+          key: ${{ secrets.NCP_PEM_KEY }}
+          port: 22
+          script: |
+            docker rm -f agilehub-backend || true
+            docker pull ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}
+            docker run -v /var/log/backend:/app/logs \
+            -e HOST_IP=${{ secrets.NCP_HOST }} \
+            --env-file .env \
+            -d -p 8080:8080 -p 9010:9010 --name agilehub-backend ${{ env.DOCKER_HUB_REPOSITORY }}:${{ github.sha }}   
