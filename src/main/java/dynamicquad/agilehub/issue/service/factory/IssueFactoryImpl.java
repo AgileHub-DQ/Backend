@@ -81,6 +81,8 @@ public class IssueFactoryImpl implements IssueFactory {
         else if (IssueType.TASK.equals(request.getType())) {
             return Issue.createTask(request, assignee, issueNumber, project);
         }
+
+        throw new IllegalArgumentException("Invalid issue type");
     }
 
 

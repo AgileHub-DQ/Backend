@@ -1,9 +1,7 @@
 package dynamicquad.agilehub.sprint.dto;
 
-import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import java.util.List;
@@ -96,35 +94,21 @@ public class SprintResponseDto {
 
 
         public static IssueDetailInSprint from(Issue issue, String key, AssigneeDto assigneeDto) {
-            if (issue instanceof Epic) {
+            if (issue.getIssueType().equals(IssueType.EPIC)) {
                 return new IssueDetailInSprint();
-            } else if (issue instanceof Story story) {
-                return IssueDetailInSprint.builder()
-                    .title(story.getTitle())
-                    .type("STORY")
-                    .issueId(story.getId())
-                    .key(key + "-" + story.getNumber())
-                    .status(String.valueOf(story.getStatus()))
-                    .label(String.valueOf(story.getLabel()))
-                    .startDate(story.getStartDate() != null ? story.getStartDate().toString() : "")
-                    .endDate(story.getEndDate() != null ? story.getEndDate().toString() : "")
-                    .assigneeDto(assigneeDto)
-                    .build();
-            } else if (issue instanceof Task task) {
-                return IssueDetailInSprint.builder()
-                    .title(task.getTitle())
-                    .type("TASK")
-                    .issueId(task.getId())
-                    .key(key + "-" + task.getNumber())
-                    .status(String.valueOf(task.getStatus()))
-                    .label(String.valueOf(task.getLabel()))
-                    .startDate(task.getStartDate() != null ? task.getStartDate().toString() : "")
-                    .endDate(task.getEndDate() != null ? task.getEndDate().toString() : "")
-                    .assigneeDto(assigneeDto)
-                    .build();
             }
 
-            return new IssueDetailInSprint();
+            return IssueDetailInSprint.builder()
+                .title(issue.getTitle())
+                .type(issue.getIssueType().toString())
+                .issueId(issue.getId())
+                .key(issue.getNumber())
+                .status(String.valueOf(issue.getStatus()))
+                .label(String.valueOf(issue.getLabel()))
+                .startDate(issue.getStartDate() != null ? issue.getStartDate().toString() : "")
+                .endDate(issue.getEndDate() != null ? issue.getEndDate().toString() : "")
+                .assigneeDto(assigneeDto)
+                .build();
         }
 
     }
