@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.issue.dto.backlog;
 
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Story;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,7 @@ public class StoryResponseDto {
         private Long parentId;
         private AssigneeDto assignee;
 
-        public static StoryDetailForBacklog from(Story story, String projectKey, Long parentId,
+        public static StoryDetailForBacklog from(Issue story, String projectKey, Long parentId,
                                                  AssigneeDto assigneeDto) {
             return StoryDetailForBacklog.builder()
                 .id(story.getId())

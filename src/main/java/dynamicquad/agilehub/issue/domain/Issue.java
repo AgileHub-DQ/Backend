@@ -4,6 +4,7 @@ import dynamicquad.agilehub.comment.domain.Comment;
 import dynamicquad.agilehub.global.domain.BaseEntity;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
+import dynamicquad.agilehub.issue.dto.IssueRequestDto.CreateIssue;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.domain.Sprint;
@@ -23,9 +24,11 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
 @Table(name = "issue_new")  // 기존 테이블(issue) 대신 issue_new 사용
 @Entity
+@Getter
 public class Issue extends BaseEntity {
 
     protected Issue() {
@@ -94,26 +97,21 @@ public class Issue extends BaseEntity {
         this.parentIssueId = parentIssueId;
     }
 
-    public static Issue createEpic(String title, String content, String number, IssueStatus status, IssueLabel label,
-                                   Member assignee,
-                                   Project project, LocalDate startDate, LocalDate endDate) {
-        return new Issue(title, content, number, status, label, assignee, project, IssueType.EPIC, startDate, endDate,
-            null, null);
+    public static Issue createEpic(CreateIssue request, Member assignee, String issueNumber, Project project) {
+        return new Issue(request.getTitle(), request.getContent(), issueNumber, request.getStatus(), request.getLabel(),
+            assignee, project, IssueType.EPIC, request.getStartDate(), request.getEndDate(), null, null);
     }
 
-    public static Issue createStory(String title, String content, String number, IssueStatus status, IssueLabel label,
-                                    Member assignee,
-                                    Project project, LocalDate startDate, LocalDate endDate, Integer storyPoint,
-                                    Long epicId) {
-        return new Issue(title, content, number, status, label, assignee, project, IssueType.STORY, startDate, endDate,
-            storyPoint, epicId);
+    public static Issue createStory(CreateIssue request, Member assignee, String issueNumber, Project project) {
+        return new Issue(request.getTitle(), request.getContent(), issueNumber, request.getStatus(), request.getLabel(),
+            assignee, project, IssueType.STORY, request.getStartDate(), request.getEndDate(), null,
+            request.getParentId());
     }
 
-    public static Issue createTask(String title, String content, String number, IssueStatus status, IssueLabel label,
-                                   Member assignee,
-                                   Project project, LocalDate startDate, LocalDate endDate, Long storyId) {
-        return new Issue(title, content, number, status, label, assignee, project, IssueType.TASK, startDate, endDate,
-            null, storyId);
+    public static Issue createTask(CreateIssue request, Member assignee, String issueNumber, Project project) {
+        return new Issue(request.getTitle(), request.getContent(), issueNumber, request.getStatus(), request.getLabel(),
+            assignee, project, IssueType.TASK, request.getStartDate(), request.getEndDate(), null,
+            request.getParentId());
     }
 
     public void updateIssue(IssueRequestDto.EditIssue request, Member assignee) {
@@ -136,5 +134,10 @@ public class Issue extends BaseEntity {
 
     public void updateStatus(IssueStatus updateStatus) {
         this.status = updateStatus;
+    }
+
+    public void updatePeriod(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 }

@@ -1,7 +1,7 @@
 package dynamicquad.agilehub.issue.dto.backlog;
 
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
+import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,7 +25,7 @@ public class EpicResponseDto {
         private String endDate;
         private AssigneeDto assignee;
 
-        public static EpicDetailForBacklog from(Epic epic, String key, AssigneeDto assignee) {
+        public static EpicDetailForBacklog from(Issue epic, String key, AssigneeDto assignee) {
             return EpicDetailForBacklog.builder()
                 .id(epic.getId())
                 .title(epic.getTitle())

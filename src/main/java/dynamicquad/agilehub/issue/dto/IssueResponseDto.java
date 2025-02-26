@@ -1,11 +1,8 @@
 package dynamicquad.agilehub.issue.dto;
 
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Image;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -53,37 +50,19 @@ public class IssueResponseDto {
         private ContentDto content;
         private AssigneeDto assignee;
 
-        public static IssueDetail from(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto,
-                                       IssueType issueType) {
+        public static IssueDetail from(Issue issue, ContentDto contentDto, AssigneeDto assigneeDto) {
             IssueDetail issueDetail = IssueDetail.builder()
                 .issueId(issue.getId())
                 .key(issue.getNumber())
                 .title(issue.getTitle())
-                .type(issueType.toString())
+                .type(issue.getIssueType().toString())
                 .status(String.valueOf(issue.getStatus()))
                 .label(String.valueOf(issue.getLabel()))
                 .content(contentDto)
                 .assignee(assigneeDto)
+                .startDate(String.valueOf(issue.getStartDate()))
+                .endDate(String.valueOf(issue.getEndDate()))
                 .build();
-
-            if (IssueType.EPIC.equals(issueType)) {
-
-                Epic epic = Epic.extractFromIssue(issue);
-                issueDetail.startDate = epic.getStartDate() == null ? "" : epic.getStartDate().toString();
-                issueDetail.endDate = epic.getEndDate() == null ? "" : epic.getEndDate().toString();
-            }
-            else if (IssueType.STORY.equals(issueType)) {
-
-                Story story = Story.extractFromIssue(issue);
-                issueDetail.startDate = story.getStartDate() == null ? "" : story.getStartDate().toString();
-                issueDetail.endDate = story.getEndDate() == null ? "" : story.getEndDate().toString();
-            }
-            else if (IssueType.TASK.equals(issueType)) {
-
-                Task task = Task.extractFromIssue(issue);
-                issueDetail.startDate = task.getStartDate() == null ? "" : task.getStartDate().toString();
-                issueDetail.endDate = task.getEndDate() == null ? "" : task.getEndDate().toString();
-            }
 
             return issueDetail;
         }
@@ -132,13 +111,13 @@ public class IssueResponseDto {
             this.assignee = new AssigneeDto();
         }
 
-        public static SubIssueDetail from(Issue issue, IssueType issueType, AssigneeDto assigneeDto) {
+        public static SubIssueDetail from(Issue issue, AssigneeDto assigneeDto) {
             return SubIssueDetail.builder()
                 .issueId(issue.getId())
                 .key(issue.getNumber())
                 .status(String.valueOf(issue.getStatus()))
                 .label(String.valueOf(issue.getLabel()))
-                .type(issueType.toString())
+                .type(issue.getIssueType().toString())
                 .title(issue.getTitle())
                 .assignee(assigneeDto)
                 .build();
