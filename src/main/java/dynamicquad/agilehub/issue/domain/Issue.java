@@ -2,13 +2,13 @@ package dynamicquad.agilehub.issue.domain;
 
 import dynamicquad.agilehub.comment.domain.Comment;
 import dynamicquad.agilehub.global.domain.BaseEntity;
+import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.sprint.domain.Sprint;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,42 +16,28 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Inheritance(strategy = InheritanceType.JOINED)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@DiscriminatorColumn(name = "issue_type")
-@Table(name = "issue")
+@Table(name = "issue_new")  // 기존 테이블(issue) 대신 issue_new 사용
 @Entity
-public abstract class Issue extends BaseEntity {
+public class Issue extends BaseEntity {
+
+    protected Issue() {
+    }
 
     @Id
-    @Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "issue_id")
     private Long id;
 
-//    @Version
-//    private Long version;
-
     private String title;
-
     private String content;
-
     private String number;
 
     @Enumerated(EnumType.STRING)
@@ -59,6 +45,15 @@ public abstract class Issue extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private IssueLabel label;
+
+    @Enumerated(EnumType.STRING)
+    private IssueType issueType;  // Epic, Story, Task 구분을 위한 필드 추가
+
+    private LocalDate startDate;  // Epic, Story, Task 공통 사용
+    private LocalDate endDate;
+
+    private Integer storyPoint;  // Story 전용 필드
+    private Long parentIssueId;  // 계층 구조 (Epic → Story → Task) 표현
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -82,9 +77,9 @@ public abstract class Issue extends BaseEntity {
         this.sprint = newSprint;
     }
 
-
     protected Issue(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
-                    Project project) {
+                    Project project, IssueType issueType, LocalDate startDate, LocalDate endDate, Integer storyPoint,
+                    Long parentIssueId) {
         this.title = title;
         this.content = content;
         this.number = number;
@@ -92,20 +87,52 @@ public abstract class Issue extends BaseEntity {
         this.label = label;
         this.assignee = assignee;
         this.project = project;
+        this.issueType = issueType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.storyPoint = storyPoint;
+        this.parentIssueId = parentIssueId;
     }
 
-    protected void updateIssue(IssueRequestDto.EditIssue request, Member assignee) {
+    public static Issue createEpic(String title, String content, String number, IssueStatus status, IssueLabel label,
+                                   Member assignee,
+                                   Project project, LocalDate startDate, LocalDate endDate) {
+        return new Issue(title, content, number, status, label, assignee, project, IssueType.EPIC, startDate, endDate,
+            null, null);
+    }
+
+    public static Issue createStory(String title, String content, String number, IssueStatus status, IssueLabel label,
+                                    Member assignee,
+                                    Project project, LocalDate startDate, LocalDate endDate, Integer storyPoint,
+                                    Long epicId) {
+        return new Issue(title, content, number, status, label, assignee, project, IssueType.STORY, startDate, endDate,
+            storyPoint, epicId);
+    }
+
+    public static Issue createTask(String title, String content, String number, IssueStatus status, IssueLabel label,
+                                   Member assignee,
+                                   Project project, LocalDate startDate, LocalDate endDate, Long storyId) {
+        return new Issue(title, content, number, status, label, assignee, project, IssueType.TASK, startDate, endDate,
+            null, storyId);
+    }
+
+    public void updateIssue(IssueRequestDto.EditIssue request, Member assignee) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.status = request.getStatus();
         this.label = request.getLabel();
         this.assignee = assignee;
+
+        if (this.issueType == IssueType.EPIC || this.issueType == IssueType.STORY) {
+            this.startDate = request.getStartDate();
+            this.endDate = request.getEndDate();
+        }
+
     }
 
     public void updateContent(String content) {
         this.content = content;
     }
-
 
     public void updateStatus(IssueStatus updateStatus) {
         this.status = updateStatus;
