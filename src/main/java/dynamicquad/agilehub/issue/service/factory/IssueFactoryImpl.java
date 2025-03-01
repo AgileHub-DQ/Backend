@@ -1,5 +1,7 @@
 package dynamicquad.agilehub.issue.service.factory;
 
+import dynamicquad.agilehub.global.exception.GeneralException;
+import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
 import dynamicquad.agilehub.issue.domain.Issue;
 import dynamicquad.agilehub.issue.dto.IssueRequestDto.CreateIssue;
@@ -98,12 +100,24 @@ public class IssueFactoryImpl implements IssueFactory {
 
     @Override
     public SubIssueDetail createParentIssue(Issue issue) {
-        return new IssueResponseDto.SubIssueDetail();
+        Long parentIssueId = issue.getParentIssueId();
+
+        if (parentIssueId == null) {
+            return new IssueResponseDto.SubIssueDetail();
+        }
+
+        Issue parentIssue = issueRepository.findById(parentIssueId).orElseThrow(() -> {
+            log.error("Parent issue not found. issueId: {}", parentIssueId);
+            throw new GeneralException(ErrorStatus.ISSUE_NOT_FOUND);
+        });
+
+        AssigneeDto assigneeDto = AssigneeDto.from(parentIssue);
+        return IssueResponseDto.SubIssueDetail.from(parentIssue, assigneeDto);
     }
 
     @Override
     public List<SubIssueDetail> createChildIssueDtos(Issue issue) {
-        List<Issue> childIssues = issueRepository.findByParentId(issue.getId());
+        List<Issue> childIssues = issueRepository.findByParentIssueId(issue.getId());
         if (childIssues.isEmpty()) {
             return List.of();
         }

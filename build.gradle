@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.3'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'jacoco'
 }
 
 group = 'dynamicquad'
@@ -50,6 +51,7 @@ dependencies {
     // test : JUnit5
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+
     // aws s3
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.676'
 
@@ -59,6 +61,8 @@ dependencies {
 
     // test-containers
     testImplementation group: 'org.testcontainers', name: 'testcontainers', version: '1.17.2'
+    testImplementation "org.testcontainers:mysql:1.17.2" // mysql 컨테이너를 사용한다면 추가
+
 
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -81,11 +85,31 @@ dependencies {
     // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    
+
     // .env 로드
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// JaCoCo 설정 (테스트 커버리지 측정)
+jacoco {
+    toolVersion = "0.8.10"
+    reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true  // CI 툴 연동용
+        html.required = true // 로컬 확인용
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: ['**/config/**', '**/dto/**', '**/response/**', '**/request/**', '**/global/**', '**/domain/**', '**/model/**'])
+            // 특정 패키지 제외
+        }))
+    }
 }

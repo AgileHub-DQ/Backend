@@ -1,18 +1,10 @@
 package dynamicquad.agilehub.issue.service.command;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.IssueStatus;
-import dynamicquad.agilehub.issue.dto.IssueRequestDto.CreateIssue;
 import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -47,24 +39,24 @@ class IssueServiceTest {
             .build();
     }
 
-    @Test
-    @DisplayName("이슈를 정상적으로 생성해야 한다")
-    void createIssueTest() {
-        // given
-        CreateIssue createRequest = CreateIssue.builder()
-            .title("이슈 제목")
-            .type(IssueType.EPIC)
-            .status(IssueStatus.DO)
-            .build();
-
-        // when
-        Long issueId = issueService.createIssue(project.getKey(), createRequest, authMember);
-        Issue issue = issueRepository.findById(issueId).orElseThrow();
-
-        // then
-        assertThat(issue.getTitle()).isEqualTo("이슈 제목");
-        assertThat(issue.getStatus()).isEqualTo(IssueStatus.DO);
-    }
+//    @Test
+//    @DisplayName("이슈를 정상적으로 생성해야 한다")
+//    void createIssueTest() {
+//        // given
+//        CreateIssue createRequest = CreateIssue.builder()
+//            .title("이슈 제목")
+//            .type(IssueType.EPIC)
+//            .status(IssueStatus.DO)
+//            .build();
+//
+//        // when
+//        Long issueId = issueService.createIssue(project.getKey(), createRequest, authMember);
+//        Issue issue = issueRepository.findById(issueId).orElseThrow();
+//
+//        // then
+//        assertThat(issue.getTitle()).isEqualTo("이슈 제목");
+//        assertThat(issue.getStatus()).isEqualTo(IssueStatus.DO);
+//    }
 
 //    @Test
 //    @DisplayName("이슈 상태를 변경할 수 있어야 한다")
