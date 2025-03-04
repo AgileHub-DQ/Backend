@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 public class IssueResponseDto {
     private IssueResponseDto() {
@@ -18,6 +19,7 @@ public class IssueResponseDto {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
+    @ToString
     public static class IssueAndSubIssueDetail {
         private IssueDetail issue;
         private SubIssueDetail parentIssue;
@@ -38,6 +40,7 @@ public class IssueResponseDto {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
+    @ToString
     public static class IssueDetail {
         private Long issueId;
         private String key;
@@ -72,6 +75,7 @@ public class IssueResponseDto {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
+    @ToString
     public static class ContentDto {
         private String text;
         private List<String> imagesURLs;
@@ -93,6 +97,7 @@ public class IssueResponseDto {
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
+    @ToString
     public static class SubIssueDetail {
         private Long issueId;
         private String key;

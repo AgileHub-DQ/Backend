@@ -6,6 +6,7 @@ import dynamicquad.agilehub.member.dto.AssigneeDto;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 public class EpicResponseDto {
     private EpicResponseDto() {
@@ -14,6 +15,7 @@ public class EpicResponseDto {
     @Builder
     @Getter
     @EqualsAndHashCode
+    @ToString
     public static class EpicDetailForBacklog {
         private Long id;
         private String title;
@@ -43,6 +45,7 @@ public class EpicResponseDto {
     @Getter
     @Builder
     @EqualsAndHashCode
+    @ToString
     public static class EpicDetailWithStatistic {
         private EpicDetailForBacklog issue;
         private EpicStatistic statistic;

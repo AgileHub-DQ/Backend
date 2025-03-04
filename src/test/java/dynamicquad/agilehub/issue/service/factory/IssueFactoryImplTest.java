@@ -191,6 +191,7 @@ public class IssueFactoryImplTest {
         assertThat(issueDetail).isNotNull();
         assertThat(issueDetail.getTitle()).isEqualTo("테스트 제목");
         assertThat(issueDetail.getKey()).isEqualTo("TEST-5");
+        assertThat(issueDetail.getType()).isEqualTo("TASK");
         assertThat(issueDetail.getContent().getText()).isEqualTo("테스트 내용");
         assertThat(issueDetail.getAssignee().getName()).isEqualTo("테스트 멤버");
     }

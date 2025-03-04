@@ -41,6 +41,7 @@ public class IssueQueryService {
     public IssueResponseDto.IssueAndSubIssueDetail getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectQueryService.findProjectId(key);
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
+
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
 

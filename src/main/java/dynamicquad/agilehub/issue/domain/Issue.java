@@ -24,9 +24,10 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 
-@Table(name = "issue_new")  // 기존 테이블(issue) 대신 issue_new 사용
+@Table(name = "issue_new") // 기존 테이블(issue) 대신 issue_new 사용
 @Entity
 @Getter
 public class Issue extends BaseEntity {
@@ -50,13 +51,13 @@ public class Issue extends BaseEntity {
     private IssueLabel label;
 
     @Enumerated(EnumType.STRING)
-    private IssueType issueType;  // Epic, Story, Task 구분을 위한 필드 추가
+    private IssueType issueType; // Epic, Story, Task 구분을 위한 필드 추가
 
-    private LocalDate startDate;  // Epic, Story, Task 공통 사용
+    private LocalDate startDate; // Epic, Story, Task 공통 사용
     private LocalDate endDate;
 
-    private Integer storyPoint;  // Story 전용 필드
-    private Long parentIssueId;  // 계층 구조 (Epic → Story → Task) 표현
+    private Integer storyPoint; // Story 전용 필드
+    private Long parentIssueId; // 계층 구조 (Epic → Story → Task) 표현
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -80,6 +81,7 @@ public class Issue extends BaseEntity {
         this.sprint = newSprint;
     }
 
+    @Builder
     protected Issue(String title, String content, String number, IssueStatus status, IssueLabel label, Member assignee,
                     Project project, IssueType issueType, LocalDate startDate, LocalDate endDate, Integer storyPoint,
                     Long parentIssueId) {
@@ -139,5 +141,9 @@ public class Issue extends BaseEntity {
     public void updatePeriod(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void setParentIssue(Issue parentIssue) {
+        this.parentIssueId = parentIssue.getId();
     }
 }

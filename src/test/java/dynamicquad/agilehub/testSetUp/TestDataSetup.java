@@ -1,5 +1,9 @@
 package dynamicquad.agilehub.testSetUp;
 
+import dynamicquad.agilehub.issue.IssueType;
+import dynamicquad.agilehub.issue.domain.Issue;
+import dynamicquad.agilehub.issue.domain.IssueLabel;
+import dynamicquad.agilehub.issue.domain.IssueStatus;
 import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.member.domain.Member;
 import dynamicquad.agilehub.member.domain.MemberStatus;
@@ -9,6 +13,7 @@ import dynamicquad.agilehub.project.domain.MemberProjectRepository;
 import dynamicquad.agilehub.project.domain.MemberProjectRole;
 import dynamicquad.agilehub.project.domain.Project;
 import dynamicquad.agilehub.project.domain.ProjectRepository;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -61,4 +66,20 @@ public class TestDataSetup {
     }
 
 
+    public Issue createIssue(Project testProject, String title, IssueType issueType, Member assignee) {
+        Issue issue = Issue.builder()
+            .project(testProject)
+            .title(title)
+            .label(IssueLabel.TEST)
+            .content("content")
+            .startDate(LocalDate.of(2021, 1, 1))
+            .endDate(LocalDate.of(2021, 1, 2))
+            .number("TEST-X")
+            .issueType(issueType)
+            .assignee(assignee)
+            .status(IssueStatus.DO)
+            .build();
+
+        return issue;
+    }
 }
