@@ -35,7 +35,7 @@ public class Project extends BaseEntity {
     private String key;
 
     @Builder
-    private Project(String name, String key) {
+    public Project(String name, String key) {
         this.name = name;
         this.key = key;
     }

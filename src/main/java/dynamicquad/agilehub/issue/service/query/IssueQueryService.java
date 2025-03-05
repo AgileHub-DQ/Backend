@@ -3,20 +3,14 @@ package dynamicquad.agilehub.issue.service.query;
 import dynamicquad.agilehub.global.exception.GeneralException;
 import dynamicquad.agilehub.global.header.status.ErrorStatus;
 import dynamicquad.agilehub.issue.IssueType;
-import dynamicquad.agilehub.issue.domain.Epic;
 import dynamicquad.agilehub.issue.domain.Issue;
-import dynamicquad.agilehub.issue.domain.Story;
-import dynamicquad.agilehub.issue.domain.Task;
 import dynamicquad.agilehub.issue.dto.IssueResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.StoryResponseDto;
 import dynamicquad.agilehub.issue.dto.backlog.TaskResponseDto;
-import dynamicquad.agilehub.issue.repository.EpicRepository;
-import dynamicquad.agilehub.issue.repository.StoryRepository;
-import dynamicquad.agilehub.issue.repository.TaskRepository;
+import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.issue.service.IssueValidator;
 import dynamicquad.agilehub.issue.service.factory.IssueFactory;
-import dynamicquad.agilehub.issue.service.factory.IssueFactoryProvider;
 import dynamicquad.agilehub.member.dto.AssigneeDto;
 import dynamicquad.agilehub.member.dto.MemberRequestDto.AuthMember;
 import dynamicquad.agilehub.project.domain.Project;
@@ -32,27 +26,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Slf4j
 public class IssueQueryService {
 
-    private final IssueFactoryProvider issueFactoryProvider;
+    private final IssueFactory issueFactory;
+    private final IssueRepository issueRepository;
+
     private final IssueValidator issueValidator;
     private final ProjectQueryService projectQueryService;
     private final MemberProjectService memberProjectService;
 
-    private final EpicRepository epicRepository;
-    private final StoryRepository storyRepository;
-    private final TaskRepository taskRepository;
 
-
+    @Transactional(readOnly = true)
     public IssueResponseDto.IssueAndSubIssueDetail getIssue(String key, Long issueId, AuthMember authMember) {
         Long projectId = projectQueryService.findProjectId(key);
         memberProjectService.validateMemberInProject(authMember.getId(), projectId);
+
         Issue issue = issueValidator.findIssue(issueId);
         issueValidator.validateIssueInProject(projectId, issueId);
-
-        IssueFactory issueFactory = issueFactoryProvider.getIssueFactory(issueValidator.getIssueType(issueId));
 
         IssueResponseDto.IssueDetail issueDetail = issueFactory.createIssueDetail(issue,
             issueFactory.createContentDto(issue), AssigneeDto.from(issue));
@@ -63,22 +54,24 @@ public class IssueQueryService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<EpicResponseDto.EpicDetailWithStatistic> getEpicsWithStats(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
 
-        List<Epic> epicsByProject = epicRepository.findByProject(project);
+        List<Issue> epicsByProject = issueRepository.findEpicByProject(project, IssueType.EPIC);
         List<EpicResponseDto.EpicDetailForBacklog> epicDetailForBacklogs = getEpicResponses(epicsByProject, project);
-        List<EpicResponseDto.EpicStatistic> epicStatics = epicRepository.getEpicStatics(project.getId());
+        List<EpicResponseDto.EpicStatistic> epicStatics = issueRepository.getEpicStatics(project.getId());
 
         return getEpicWithStatisticResponses(epicDetailForBacklogs, epicStatics);
     }
 
+    @Transactional(readOnly = true)
     public List<StoryResponseDto.StoryDetailForBacklog> getStoriesByEpic(String key, Long epicId,
                                                                          AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        List<Story> storiesByEpic = storyRepository.findStoriesByEpicId(epicId);
+        List<Issue> storiesByEpic = issueRepository.findStoriesByEpicId(epicId);
 
         return storiesByEpic.stream()
             .map(story -> {
@@ -88,10 +81,11 @@ public class IssueQueryService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<TaskResponseDto.TaskDetailForBacklog> getTasksByStory(String key, Long storyId, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        List<Task> tasksByStory = taskRepository.findByStoryId(storyId);
+        List<Issue> tasksByStory = issueRepository.findTasksByStoryId(storyId);
 
         return tasksByStory.stream()
             .map(task -> {
@@ -101,10 +95,11 @@ public class IssueQueryService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<IssueResponseDto.ReadSimpleIssue> getEpics(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        List<Epic> epicsByProject = epicRepository.findByProject(project);
+        List<Issue> epicsByProject = issueRepository.findEpicsByProject(project);
 
         return epicsByProject.stream()
             .map(epic -> {
@@ -115,10 +110,11 @@ public class IssueQueryService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<IssueResponseDto.ReadSimpleIssue> getStories(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        List<Story> storiesByProject = storyRepository.findByProject(project);
+        List<Issue> storiesByProject = issueRepository.findStoriesByProject(project);
 
         return storiesByProject.stream()
             .map(story -> {
@@ -128,10 +124,11 @@ public class IssueQueryService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<IssueResponseDto.ReadSimpleIssue> getTasks(String key, AuthMember authMember) {
         Project project = projectQueryService.findProject(key);
         memberProjectService.validateMemberInProject(authMember.getId(), project.getId());
-        List<Task> tasksByProject = taskRepository.findByProject(project);
+        List<Issue> tasksByProject = issueRepository.findTasksByProject(project);
 
         return tasksByProject.stream()
             .map(task -> {
@@ -141,15 +138,16 @@ public class IssueQueryService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public MonthlyReportDto getIssuesForMonth(String yearMonth, Long projectId) {
 
         YearMonth ym = YearMonth.parse(yearMonth); // "2024-05"와 같은 형식의 문자열
         LocalDate startDate = ym.atDay(1);
         LocalDate endDate = ym.atEndOfMonth();
 
-        List<String> contentsByEpic = epicRepository.findContentsByMonth(endDate, startDate, projectId);
-        List<String> contentsByStory = storyRepository.findContentsByMonth(endDate, startDate, projectId);
-        List<String> contentsByTask = taskRepository.findContentsByMonth(endDate, startDate, projectId);
+        List<String> contentsByEpic = issueRepository.findEpicContentsByMonth(endDate, startDate, projectId);
+        List<String> contentsByStory = issueRepository.findStoryContentsByMonth(endDate, startDate, projectId);
+        List<String> contentsByTask = issueRepository.findTaskContentsByMonth(endDate, startDate, projectId);
 
         return new MonthlyReportDto(contentsByEpic, contentsByStory, contentsByTask);
 
@@ -171,7 +169,7 @@ public class IssueQueryService {
             .toList();
     }
 
-    private List<EpicResponseDto.EpicDetailForBacklog> getEpicResponses(List<Epic> epicsByProject, Project project) {
+    private List<EpicResponseDto.EpicDetailForBacklog> getEpicResponses(List<Issue> epicsByProject, Project project) {
         return epicsByProject.stream()
             .map(epic -> {
                 AssigneeDto assignee = AssigneeDto.from(epic);

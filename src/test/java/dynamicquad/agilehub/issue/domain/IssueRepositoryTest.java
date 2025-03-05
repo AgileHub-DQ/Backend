@@ -2,112 +2,186 @@ package dynamicquad.agilehub.issue.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import dynamicquad.agilehub.config.MySQLTestContainer;
+import dynamicquad.agilehub.issue.IssueType;
+import dynamicquad.agilehub.issue.dto.backlog.EpicResponseDto;
 import dynamicquad.agilehub.issue.repository.IssueRepository;
 import dynamicquad.agilehub.project.domain.Project;
+import dynamicquad.agilehub.sprint.domain.Sprint;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
 
-@ActiveProfiles("test")
+@Sql(scripts = "/sql/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @SpringBootTest
+@ExtendWith(MySQLTestContainer.class) // MySQL 컨테이너 적용
+@ActiveProfiles("test") // test 환경 적용
 class IssueRepositoryTest {
-
-    @PersistenceContext
-    EntityManager em;
 
     @Autowired
     private IssueRepository issueRepository;
 
+    @Autowired
+    EntityManager entityManager;
 
     @Test
-    @Transactional
-    void 스토리이슈의_타입을_조회하면_story_string을_반환한다() {
-        // given
-        Project project1 = createProject("프로젝트1", "project11214");
-        em.persist(project1);
-
-        Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
-        em.persist(story1P1);
-
-        // when
-        String issueType = issueRepository.findIssueTypeById(story1P1.getId())
-            .orElseThrow(() -> new IllegalArgumentException("이슈가 없습니다."));
-        // then
-        assertThat(issueType).isEqualTo("STORY");
-
-    }
-
-    @Test
-    @Transactional
-    void 없는_이슈를_타입조회하면_빈_Optional을_반환한다() {
-        // given
+    void 이슈_타입_조회_테스트() {
         // when
         Optional<String> issueType = issueRepository.findIssueTypeById(1L);
+
         // then
-        assertThat(issueType).isEmpty();
+        assertThat(issueType).isPresent();
+        assertThat(issueType.get()).isEqualTo("EPIC");
     }
 
     @Test
-    @Transactional
-    void 프로젝트에_소속된_이슈들을_조회한다() {
-        // given
-        Project project1 = createProject("프로젝트1", "project1231");
-        em.persist(project1);
-
-        Epic epic1P1 = createEpic("에픽1", "에픽1 내용", project1);
-        em.persist(epic1P1);
-
-        Epic epic2P1 = createEpic("에픽2", "에픽2 내용", project1);
-        em.persist(epic2P1);
-
-        Story story1P1 = createStory("스토리1", "스토리1 내용", project1);
-        em.persist(story1P1);
-
+    void 특정_프로젝트에_이슈가_존재하는지_테스트() {
         // when
-        List<Issue> byProject = issueRepository.findByProject(project1);
+        boolean exists = issueRepository.existsByProjectIdAndId(1L, 1L);
 
         // then
-        assertThat(byProject).hasSize(3);
-        assertThat(byProject.get(0).getTitle()).isEqualTo("에픽1");
-        assertThat(byProject.get(1).getTitle()).isEqualTo("에픽2");
-        assertThat(byProject.get(2).getTitle()).isEqualTo("스토리1");
+        assertThat(exists).isTrue();
     }
 
-    private Project createProject(String projectName, String projectKey) {
-        return Project.builder()
-            .name(projectName)
-            .key(projectKey)
-            .build();
+    @Test
+    void 특정_스프린트에_속한_이슈_조회_테스트() {
+        // given
+        Sprint sprint = entityManager.getReference(Sprint.class, 1L);
+
+        // when
+        List<Issue> issues = issueRepository.findBySprint(sprint);
+
+        // then
+        assertThat(issues).isNotEmpty();
     }
 
-    private Epic createEpic(String title, String content, Project project) {
-        return Epic.builder()
-            .title(title)
-            .content(content)
-            .project(project)
-            .build();
+    @Test
+    void 특정_에픽에_속한_스토리_조회_테스트() {
+        // when
+        List<Issue> stories = issueRepository.findStoriesByEpicId(1L);
+
+        // then
+        assertThat(stories).isNotEmpty();
+        assertThat(stories.get(0).getIssueType()).isEqualTo(IssueType.STORY);
     }
 
-    private Story createStory(String title, String content, Project project) {
-        return Story.builder()
-            .title(title)
-            .content(content)
-            .project(project)
-            .build();
+    @Test
+    void 특정_스토리에_속한_태스크_조회_테스트() {
+        // when
+        List<Issue> tasks = issueRepository.findTasksByStoryId(2L);
+
+        // then
+        assertThat(tasks).isNotEmpty();
+        assertThat(tasks.get(0).getIssueType()).isEqualTo(IssueType.TASK);
     }
 
-    private Task createTask(String title, String content, Project project) {
-        return Task.builder()
-            .title(title)
-            .content(content)
-            .project(project)
-            .build();
+    @Test
+    void 특정_프로젝트의_에픽_조회_테스트() {
+        // given
+        Project project = entityManager.getReference(Project.class, 1L);
+
+        // when
+        List<Issue> epics = issueRepository.findEpicsByProject(project);
+
+        // then
+        assertThat(epics).isNotEmpty();
+        assertThat(epics.get(0).getIssueType()).isEqualTo(IssueType.EPIC);
+    }
+
+    @Test
+    void 특정_프로젝트의_스토리_조회_테스트() {
+        // given
+        Project project = entityManager.getReference(Project.class, 1L);
+
+        // when
+        List<Issue> stories = issueRepository.findStoriesByProject(project);
+
+        // then
+        assertThat(stories).isNotEmpty();
+        assertThat(stories.get(0).getIssueType()).isEqualTo(IssueType.STORY);
+    }
+
+    @Test
+    void 특정_프로젝트의_태스크_조회_테스트() {
+        // given
+        Project project = entityManager.getReference(Project.class, 1L);
+
+        // when
+        List<Issue> tasks = issueRepository.findTasksByProject(project);
+
+        // then
+        assertThat(tasks).isNotEmpty();
+        assertThat(tasks.get(0).getIssueType()).isEqualTo(IssueType.TASK);
+    }
+
+    @Test
+    void 특정_날짜_범위_내_에픽_내용_조회_테스트() {
+        // given
+        LocalDate startDate = LocalDate.of(2024, 3, 1);
+        LocalDate endDate = LocalDate.of(2024, 3, 15);
+
+        // when
+        List<String> contents = issueRepository.findEpicContentsByMonth(startDate, endDate, 1L);
+
+        // then
+        assertThat(contents).isNotEmpty();
+    }
+
+    @Test
+    void 특정_날짜_범위_내_스토리_내용_조회_테스트() {
+        // given
+        LocalDate startDate = LocalDate.of(2024, 3, 1);
+        LocalDate endDate = LocalDate.of(2024, 3, 10);
+
+        // when
+        List<String> contents = issueRepository.findStoryContentsByMonth(startDate, endDate, 1L);
+
+        // then
+        assertThat(contents).isNotEmpty();
+    }
+
+    @Test
+    void 특정_날짜_범위_내_태스크_내용_조회_테스트() {
+        // given
+        LocalDate startDate = LocalDate.of(2024, 3, 3);
+        LocalDate endDate = LocalDate.of(2024, 3, 7);
+
+        // when
+        List<String> contents = issueRepository.findTaskContentsByMonth(startDate, endDate, 1L);
+
+        // then
+        assertThat(contents).isNotEmpty();
+    }
+
+    @Test
+    @Sql(scripts = "/sql/epic-statistics-test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void 에픽_통계_기본_테스트() {
+        // given
+        Long projectId = 1L;
+
+        // when
+        List<EpicResponseDto.EpicStatistic> statistics = issueRepository.getEpicStatics(projectId);
+
+        // then
+        assertThat(statistics).isNotEmpty();
+
+        // 각 에픽 통계 검증
+        for (EpicResponseDto.EpicStatistic statistic : statistics) {
+            assertThat(statistic.getEpicId()).isNotNull();
+            assertThat(statistic.getStoriesCount()).isNotNull();
+            // 상태별 카운트의 합이 전체 스토리 수와 일치해야 함
+            assertThat(statistic.getStatusDo() + statistic.getStatusProgress() + statistic.getStatusDone())
+                    .isEqualTo(statistic.getStoriesCount());
+        }
     }
 
 }
