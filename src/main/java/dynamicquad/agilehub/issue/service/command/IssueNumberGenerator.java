@@ -22,16 +22,6 @@ public class IssueNumberGenerator {
     @Value("${redis.issue.number.prefix}")
     private String REDIS_ISSUE_PREFIX;
 
-//    @Transactional
-//    public String generate(String projectKey) {
-//        ProjectIssueSequence sequence = issueSequenceRepository.findByProjectKey(projectKey)
-//            .orElseThrow(() -> new IllegalArgumentException("ProjectIssueSequence not found"));
-//
-//        sequence.updateLastNumber(sequence.getNextNumber());
-//
-//        return projectKey + "-" + sequence.getLastNumber();
-//    }
-
     public String generate(String projectKey) {
         String redisKey = REDIS_ISSUE_PREFIX + projectKey;
         Long nextNumber = redisTemplate.opsForValue().increment(redisKey);
@@ -65,6 +55,7 @@ public class IssueNumberGenerator {
     }
 
     public void decrement(String projectKey) {
+        syncWithDatabase();
         ProjectIssueSequence sequence = issueSequenceRepository.findByProjectKey(projectKey)
             .orElseThrow(() -> new IllegalArgumentException("ProjectIssueSequence not found"));
 

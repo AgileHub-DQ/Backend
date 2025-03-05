@@ -6,7 +6,6 @@ spring:
     import:
       - optional:classpath:.env[.properties]
 
-
   h2:
     console:
       enabled: true
@@ -24,13 +23,6 @@ spring:
 
     open-in-view: false
 
-  
   sql:
     init:
       mode: never
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    root: info
-    org.hibernate.orm.jdbc.bind: trace
