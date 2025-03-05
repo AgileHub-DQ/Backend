@@ -55,6 +55,7 @@ public class IssueNumberGenerator {
     }
 
     public void decrement(String projectKey) {
+        syncWithDatabase();
         ProjectIssueSequence sequence = issueSequenceRepository.findByProjectKey(projectKey)
             .orElseThrow(() -> new IllegalArgumentException("ProjectIssueSequence not found"));
 

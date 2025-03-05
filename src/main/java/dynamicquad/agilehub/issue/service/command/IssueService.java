@@ -30,6 +30,7 @@ public class IssueService {
     private final IssueRepository issueRepository;
 
 
+    @Transactional
     public Long createIssue(String key, IssueRequestDto.CreateIssue request, AuthMember authMember) {
         Project project = validateMemberInProject(key, authMember);
         return issueFactory.createIssue(request, project);
