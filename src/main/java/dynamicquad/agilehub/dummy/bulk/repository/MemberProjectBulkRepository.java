@@ -16,10 +16,19 @@ public class MemberProjectBulkRepository {
 
     @Transactional
     public void saveAll(List<MemberProject> memberProjects) {
-        String sql = "INSERT INTO member_project (member_id,project_id,role) "
-            + "VALUES (?, ?,?)";
+        // 1. 현재 최대 ID 값을 조회
+        Long maxMemberId = jdbcTemplate.queryForObject(
+            "SELECT COALESCE(MAX(member_id), 0) FROM member_project", Long.class);
+        Long maxProjectId = jdbcTemplate.queryForObject(
+            "SELECT COALESCE(MAX(project_id), 0) FROM member_project", Long.class);
 
-        AtomicLong index = new AtomicLong(1L);
+        // 두 ID 중 더 큰 값을 시작점으로 사용
+        Long startIndex = Math.max(maxMemberId, maxProjectId) + 1;
+
+        String sql = "INSERT INTO member_project (member_id, project_id, role) "
+            + "VALUES (?, ?, ?)";
+
+        AtomicLong index = new AtomicLong(startIndex);
         jdbcTemplate.batchUpdate(sql, memberProjects, memberProjects.size(),
             (PreparedStatement ps, MemberProject memberProject) -> {
                 ps.setLong(1, index.get());
