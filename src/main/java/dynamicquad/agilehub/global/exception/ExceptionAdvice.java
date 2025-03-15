@@ -79,9 +79,9 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<Object> handleOthers(Exception e, WebRequest request) {
-        log.error("handleOthers", e);
+        log.error("handleOthers: ", e.getMessage());
         return handleExceptionInternalOthers(e, ErrorStatus.INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY,
-            ErrorStatus.INTERNAL_SERVER_ERROR.getHttpStatus(), request, e.getMessage());
+            ErrorStatus.INTERNAL_SERVER_ERROR.getHttpStatus(), request, ErrorStatus.INTERNAL_SERVER_ERROR.getMessage());
     }
 
 

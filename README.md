@@ -15,8 +15,8 @@
 ![image2](https://github.com/AgileHub-DQ/Backend/assets/82764703/1c62b721-3f5c-4ff7-809e-39540faa19af)
 ![이슈](https://github.com/AgileHub-DQ/Backend/assets/82764703/83517937-9ecb-450e-9e79-9ae8099eb350)
 ![스프린트](https://github.com/AgileHub-DQ/Backend/assets/82764703/fb6fdd90-acc8-4ae9-bf37-a60e19b91682)
-![백로그](./backlog.gif)
-![타임라인](./timeline.gif)
+![백로그](readme-image/backlog.gif)
+![타임라인](readme-image/timeline.gif)
 ![멤버](https://github.com/AgileHub-DQ/Backend/assets/82764703/efbe79ed-9f18-4508-9b63-853ac9e217b6)
 
 
@@ -135,11 +135,11 @@
 
 ### 👉 [팀위키](https://azure-capston.atlassian.net/wiki/x/3IAH)
 
-![img_2.png](img_2.png)
+![img_2.png](readme-image/img_2.png)
 
 ### 👉 API 문서
 
-![img.png](img.png)
+![img.png](readme-image/img.png)
 
 ### 👉 ERD
 
